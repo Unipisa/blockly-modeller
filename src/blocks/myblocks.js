@@ -73,7 +73,7 @@ const myBlocks = [
   "args0": [
     {
       "type": "field_input",
-      "name": "ROLE",
+      "name": "NAME",
       "text": "..............."
     },
     {
@@ -110,25 +110,12 @@ const myBlocks = [
   },
   {
   "type": "default_actor",
-  "message0": "ACTOR with role: %1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the actor's attributes? %7 %8",
+  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the actor's attributes? %7 %8",
   "args0": [
     {
-      "type": "field_dropdown",
-      "name": "ROLE",
-      "options": [
-        [
-          "User",
-          "User"
-        ],
-        [
-          "Farmer",
-          "Farmer"
-        ],
-        [
-          "Advisor",
-          "Advisor"
-        ]
-      ]
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "User"
     },
     {
       "type": "input_dummy"
@@ -167,7 +154,14 @@ const myBlocks = [
   // ------------------------------------------------------------- ATTRIBUTI ------------------------------------------------------------- // 
   {
   "type": "username",
-  "message0": "username",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "username"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": '#D5698E',
@@ -176,7 +170,14 @@ const myBlocks = [
   },
   {
   "type": "password",
-  "message0": "password",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "password"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": "#D5698E",
@@ -189,7 +190,7 @@ const myBlocks = [
   "args0": [
     {
       "type": "field_input",
-      "name": "ATTRIBUTE",
+      "name": "NAME",
       "text": "..............."
     }
   ],
@@ -201,7 +202,14 @@ const myBlocks = [
   },
   {
   "type": "id",
-  "message0": "id",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "id"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": "#D5698E",
@@ -210,7 +218,14 @@ const myBlocks = [
   },
   {
   "type": "coords",
-  "message0": "coords",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "coords"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": "#D5698E",
@@ -219,7 +234,14 @@ const myBlocks = [
   },
   {
   "type": "area",
-  "message0": "area",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "area"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": "#D5698E",
@@ -234,7 +256,7 @@ const myBlocks = [
   "args0": [
     {
       "type": "field_input",
-      "name": "OPERATION",
+      "name": "NAME",
       "text": "..............."
     },
     {
@@ -265,7 +287,14 @@ const myBlocks = [
   },
   {
   "type": "login",
-  "message0": "login",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "login"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": "#90B763",
@@ -277,8 +306,13 @@ const myBlocks = [
   {
   "type": "field_resource",
   "lastDummyAlign0": "CENTRE",
-  "message0": "Field %1 DOES %2 %3 -------------------------------------------------- %4 Advanced settings: %5 What are the actor's attributes? %6 %7",
+  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the actor's attributes? %7 %8",
   "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "Field"
+    },
     {
       "type": "input_dummy"
     },
@@ -313,8 +347,13 @@ const myBlocks = [
   },
   {
   "type": "water_resource",
-  "message0": "Water %1 DOES %2 %3 -------------------------------------------------- %4 Advanced settings: %5 What are the resource attributes? %6 %7 The resource comes in different forms? %8 If so, which ones? %9 %10",
+  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the resource attributes? %7 %8 The resource comes in different forms? %9 If so, which ones? %10 %11",
   "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "Water"
+    },
     {
       "type": "input_dummy"
     },
@@ -415,8 +454,13 @@ const myBlocks = [
 
   {
   "type": "irrigation_tool",
-  "message0": "Irrigation tool %1 DOES %2 %3 -------------------------------------------------- %4 Advanced settings: %5 What are the attributes of the tool? %6 %7 The tool comes in different forms? %8 If so, which ones? %9 %10",
+  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the attributes of the tool? %7 %8 The tool comes in different forms? %9 If so, which ones? %10 %11",
   "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "Irrigation tool"
+    },
     {
       "type": "input_dummy"
     },
@@ -517,8 +561,13 @@ const myBlocks = [
 
   {
   "type": "dss_infrastructure",
-  "message0": "DSS infrastructure %1 DOES %2 %3 -------------------------------------------------- %4 Advaced settings: %5 What are the attributes of the tool? %6 %7",
+  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advaced settings: %6 What are the attributes of the tool? %7 %8",
   "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "DSS infrastructure"
+    },
     {
       "type": "input_dummy"
     },
@@ -594,8 +643,13 @@ const myBlocks = [
   },
   {
   "type": "wsn",
-  "message0": "WSN %1 DOES %2 %3 -------------------------------------------------- %4 Advaced settings: %5 What are the attributes of the tool? %6 %7 Does it compose another item? %8 If so, which one? %9",
+  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advaced settings: %6 What are the attributes of the tool? %7 %8 Does it compose another item? %9 If so, which one? %10",
   "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "WSN"
+    },
     {
       "type": "input_dummy"
     },
@@ -638,8 +692,13 @@ const myBlocks = [
   },
   {
   "type": "internet_gateway",
-  "message0": "Internet gateway %1 DOES %2 %3 -------------------------------------------------- %4 Advaced settings: %5 What are the attributes of the tool? %6 %7 Does it compose another item? %8 If so, which one? %9",
+  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advaced settings: %6 What are the attributes of the tool? %7 %8 Does it compose another item? %9 If so, which one? %10",
   "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "Internet gateway"
+    },
     {
       "type": "input_dummy"
     },
@@ -682,8 +741,13 @@ const myBlocks = [
   },
   {
   "type": "dss_software",
-  "message0": "DSS software %1 DOES %2 %3 -------------------------------------------------- %4 Advaced settings: %5 What are the attributes of the tool? %6 %7 Does it compose another item? %8 If so, which one? %9",
+  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advaced settings: %6 What are the attributes of the tool? %7 %8 Does it compose another item? %9 If so, which one? %10",
   "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "DSS software"
+    },
     {
       "type": "input_dummy"
     },
@@ -783,7 +847,7 @@ const myBlocks = [
   "args0": [
     {
       "type": "field_input",
-      "name": "GENERALIZATION",
+      "name": "NAME",
       "text": "..............."
     }
   ],
@@ -795,7 +859,14 @@ const myBlocks = [
   },
   {
   "type": "dam",
-  "message0": "Dam",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "Dam"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": '#D5698E',
@@ -804,7 +875,14 @@ const myBlocks = [
   },
   {
   "type": "river",
-  "message0": "River",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "River"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": '#D5698E',
@@ -813,7 +891,14 @@ const myBlocks = [
   },
   {
   "type": "well",
-  "message0": "Well",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "Well"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": '#D5698E',
@@ -822,7 +907,14 @@ const myBlocks = [
   },
   {
   "type": "dripper",
-  "message0": "Dripper",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "Dripper"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": '#D5698E',
@@ -831,7 +923,14 @@ const myBlocks = [
   },
   {
   "type": "sprinkler",
-  "message0": "Sprinkler",
+  "message0": "%1",
+  "args0": [
+    {
+      "type": "field_label_serializable",
+      "name": "NAME",
+      "text": "Sprinkler"
+    }
+  ],
   "previousStatement": null,
   "nextStatement": null,
   "colour": '#D5698E',

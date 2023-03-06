@@ -7,9 +7,7 @@
    <body>
     <div id="pageContainer">
       <div id="blocklyDiv">
-
         <input id="customTitle" type='text' placeholder='Your diagram...' style="font-family: Helvetica"/>
-
         <!-- h3 style="font-family: Helvetica", id="codeTitle">Schema Blockly per modello UML</h3 -->
       </div>
       <div id="outputPane">
@@ -17,7 +15,7 @@
         <pre id="generatedCode"><code id="xmiCode"></code></pre>
         <h3 style="font-family: Helvetica", id="reportTitle">Text report</h3>
         <div id="schemeReport">
-          <div id="headTxtReport">Text report for your diagram /* TODO */
+          <div id="txtReport">
             <!-- script type="text/javascript">
               var headTxtReport = document.getElementById("headTxtReport");
               headTxtReport.innerText = document.getElementById("customTitle").value;
@@ -41,12 +39,23 @@
               const content = document.getElementById("xmiCode").innerText;
               const file = new Blob([content], { type: 'text/xml' });
               link.href = URL.createObjectURL(file);
-              link.download = "UML_model.xmi";
+              link.download = "diagram_UML.xmi";
               link.click();
               URL.revokeObjectURL(link.href);
             };
           </script>
-          <button id="downloadButton" class="button-13" onclick="">Download report</button>          
+          <button id="downloadButton" class="button-13" onclick="downloadReport()">Download report</button>
+          <script>
+            const downloadReport = () => {
+              const link = document.createElement("a");
+              const content = document.getElementById("txtReport").innerText;
+              const file = new Blob([content], { type: 'text/xml' });
+              link.href = URL.createObjectURL(file);
+              link.download = "diagram_REPORT.txt";
+              link.click();
+              URL.revokeObjectURL(link.href);
+            };
+          </script>          
         </div>
         <div id="output"></div>
       </div>

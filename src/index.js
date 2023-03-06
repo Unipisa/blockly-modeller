@@ -19,6 +19,7 @@ Object.assign(javascriptGenerator, generator);
 // Set up UI elements and inject Blockly
 const codeDiv = document.getElementById('generatedCode').firstChild;
 const outputDiv = document.getElementById('output');
+const reportDiv = document.getElementById('txtReport');
 const blocklyDiv = document.getElementById('blocklyDiv');
 const ws = Blockly.inject(blocklyDiv, {toolbox, 
         grid: {
@@ -48,10 +49,93 @@ const ws = Blockly.inject(blocklyDiv, {toolbox,
 var xmlText = '<xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"><block type="info" id="TBgAn^~ir@P9*e=ib?;@" x="120" y="50"></block></xml>';
 Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xmlText), ws);
 
-export function getBlocksInWS(){
-  // TODO
+function generateID(nomeClasse) {
+  nomeClasse = nomeClasse.trim().toLowerCase();
+  var id = new String();
+  for(let c = 0; c < nomeClasse.length; c++){
+    var charCode = nomeClasse.charCodeAt(c);
+    id = id + charCode;
+  }
+  return id;
 }
 
+export function removeLastTypedBlock(type){
+  let blocks = ws.getBlocksByType(type, true);
+  const index = (blocks.length) - 1;
+  blocks[index].dispose(true);
+}
+
+export function blockAlreadyInWs(new_block_name){
+  let blocks = ws.getAllBlocks(true);
+  let counter = -1;
+
+  let i = 1;
+  while(i < blocks.length){
+    if(new_block_name.localeCompare(blocks[i].getFieldValue('NAME').toLowerCase()) == 0){
+      counter++;
+    }
+    i++;
+  }
+
+   //un blocco lo trova sempre perchè è se stesso
+   if(counter == 0){
+    return false;
+   }
+   else if(counter > 0){
+    return true;
+   }
+}
+
+export function ass_agg_AlreadyInWs(new_ass_name){
+  let blocks = ws.getAllBlocks(true);
+  let bool = false;
+
+  let i = 1;
+  while(i < blocks.length){
+    if(new_ass_name.localeCompare(blocks[i].getFieldValue('NAME').toLowerCase()) == 0){
+      bool = true;
+    }
+    i++;
+  }
+  return bool;
+}
+
+export function getAlreadyInWsBlockType(new_block_name){
+  let blocks = ws.getAllBlocks(true);
+  let i = 1;
+  let index = -1;
+
+  while(i < blocks.length){
+    if(new_block_name.localeCompare(blocks[i].getFieldValue('NAME').toLowerCase()) == 0){
+      index = i;
+    }
+    i++;
+  }
+  return blocks[index].type;
+}
+
+const textReport = new Map(); //ogni oggetto è il text report di una classe (identificata con l'id -> chiave)
+export function setReport(id, text){
+  textReport.set(id, text);
+  showReport();
+}
+
+
+export function generateReport() {
+  let i = 0;
+  var concatTextReport = new String('Diagrams report: \n');
+  const iterator = textReport.values();
+  while(i < textReport.size){
+    concatTextReport = concatTextReport + iterator.next().value + '\n'; 
+    i++;
+  }
+  return concatTextReport;
+}
+
+export function showReport() {
+  const text = generateReport();
+  reportDiv.innerText = text;
+}
 
 // This function resets the code and output divs, shows the
 // generated code from the workspace, and evals the code.
@@ -89,5 +173,32 @@ ws.addChangeListener((e) => {
     return;
   }
   runCode();
+});
+
+ws.addChangeListener((e) => {
+  if(e.type == Blockly.Events.BLOCK_DELETE){
+    let blocks = ws.getAllBlocks(true);
+    let blocksIdInWs = []; 
+    
+    //recupero gli id di tutti i blocchi presenti nel workspace
+    let i = 0;
+    while(i < blocks.length){
+      blocksIdInWs.push(generateID(String(blocks[i].getFieldValue('NAME'))));
+      i++;
+    }
+
+    
+    //elimino da textReport i report dei blocchi non più presenti nel ws
+    let j = 0;
+    const it = textReport.keys();
+    while(j < textReport.size){
+      const value = it.next().value;
+      if(!blocksIdInWs.includes(value)){
+        textReport.delete(value);
+      }
+      j++;
+    }
+    showReport();
+  }
 });
 
