@@ -73,6 +73,7 @@ h3 {
     border-top-style: solid;
     border-left-style: solid;
     border-bottom-style: solid;
+    border-right-style: solid;
     border-width: 15px;
     border-color: rgb(247, 240, 228);
 }

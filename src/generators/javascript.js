@@ -31,29 +31,99 @@ function generateRandID() {
 }
 
 //genera il report 
-function createReport(blockName, allOperations){
+function createReport(blockName, allOperations, allAttributes, allGeneralizations, aggregation){
   const simpleReport = `\n• ${blockName.toUpperCase()} `;
   var allOpReport = new String();
-  
+  var allAttrReport = new String();
+  var allGenReport = new String();
+  var aggReport = new String();
+
+  //se ci sono attributi
+  if(allAttributes != ''){
+    const attributes = allAttributes.split(",");
+    allAttrReport = 'with attribute';
+    if(attributes.length > 2) allAttrReport = allAttrReport + 's';
+    attributes.forEach((attribute) => {
+      if(attribute != ''){
+        if(attributes.length > 2 && attributes.indexOf(attribute) == (attributes.length - 3)){
+          allAttrReport = allAttrReport + ' ' + attribute.trim() + ' and';
+        }
+        else{
+          allAttrReport = allAttrReport + ' ' + attribute.trim() + ',';
+        }
+      }
+    })
+    if(allGeneralizations == '' && aggregation == '' && allOperations == ''){
+      allAttrReport = allAttrReport.substring(0, allAttrReport.length - 1);
+    }
+  }
+
+  //se ci sono generalizzazioni
+  if(allGeneralizations != ''){
+    const generalizations = allGeneralizations.split(";");
+    allGenReport = ' which comes in the form of';
+    generalizations.forEach((generalization) => {
+      if(generalization != ''){
+        if(generalizations.length > 2 && generalizations.indexOf(generalization) == (generalizations.length - 3)){
+          allGenReport = allGenReport + ' ' + generalization.trim().toLowerCase() + ' and';
+        }
+        else{
+          allGenReport = allGenReport + ' ' + generalization.trim().toLowerCase() + ',';
+        }
+      }
+    })
+    if(allOperations == ''){
+      allGenReport = allGenReport.substring(0, allGenReport.length - 1);
+    }
+  }
+
+  if(aggregation.charCodeAt(0) != 46 && aggregation != ''){
+    aggReport = ' which is a component of ' + aggregation + ',';
+    if(allOperations == ''){
+      aggReport = aggReport.substring(0, aggReport.length - 1);
+    } 
+  }
+
   //se ci sono operazioni
   if(allOperations != ''){
-    allOpReport = 'does: \n';
+
     const operations = allOperations.split(".");
+
+    if(operations.length > 17){ 
+      allOpReport = ' does the actions of: \n';
+    }
+    else{
+      allOpReport = ' does the action of: \n';
+    }
 
     operations.forEach((operation) => {
       if(operation != ''){
-        const op = operation.split(";");
-        let op_name = op[0].trim();
-        var op_associations = op[1];
-        if(op_associations != ''){
-          op_associations = ' interacting with ' + op[1];
+        const segment = operation.split(";");
+        var op_name = segment[0];
+        var string_ass_names = segment[1];
+        const ass_names = string_ass_names.split(",");
+
+        var opReport = '\t- ' + op_name;
+
+        if(ass_names != ''){
+          opReport = opReport + ' interacting with ';
         }
-        const opReport = '\t- ' + op_name + op_associations + '\n'; 
+
+        ass_names.forEach((name) => {
+          if(name != '' && name != ' '){
+              opReport = opReport + ' ' + name + ',';           
+          }
+        })
+
+        if(ass_names != ''){
+          opReport = opReport.substring(0, opReport.length - 1);
+        }
+        opReport = opReport + '\n';
         allOpReport = allOpReport + opReport;
       }
     })
   }
-  return simpleReport + allOpReport;
+  return simpleReport + allAttrReport + allGenReport + aggReport + allOpReport;
 }
 
 
@@ -142,7 +212,7 @@ generator['default_actor'] = function(block) {
     var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
     var close_pack_code = `\t\t\t</packagedElement>\n`;
     
-    setReport(id, createReport(text_name, statements_operations));
+    setReport(id, createReport(text_name, statements_operations, statements_attributes, '', ''));
 
     var code = `${pack_code}${code_op_ass}${close_pack_code}`;
     return code;
@@ -219,7 +289,7 @@ generator['custom_actor'] = function(block) {
       var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
      
-      setReport(id, createReport(text_name, statements_operations));
+      setReport(id, createReport(text_name, statements_operations, statements_attributes, '', ''));
 
       var code = `${pack_code}${code_op_ass}${close_pack_code}`;
       return code;
@@ -304,8 +374,6 @@ generator['field_resource'] = function(block) {
     var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
     var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
 
-    setReport(id, `• Field`);
-
     const operations = statements_operations.split(".");
     var code_op_ass = new String();
 
@@ -357,7 +425,7 @@ generator['field_resource'] = function(block) {
     var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Field" xmi:type="uml:Class">\n${code_attributes}`;
     var close_pack_code = `\t\t\t</packagedElement>\n`;
 
-    setReport(id, createReport('field', statements_operations));
+    setReport(id, createReport('field', statements_operations, statements_attributes, '', ''));
 
     var code = `${pack_code}${code_op_ass}${close_pack_code}`;
     return code;
@@ -380,8 +448,6 @@ generator['water_resource'] = function(block) {
     var id = generateID('water'); 
     var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
     var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-    setReport(id, `• Water`);
 
     const operations = statements_operations.split(".");
     var code_op_ass = new String();
@@ -448,7 +514,7 @@ generator['water_resource'] = function(block) {
       }
     })
 
-    setReport(id, createReport('water', statements_operations));
+    setReport(id, createReport('water', statements_operations, statements_attributes, statements_generalizations, ''));
 
     var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
     return code;
@@ -539,7 +605,7 @@ generator['custom_resource'] = function(block) {
         }
       })
 
-      setReport(id, createReport(text_name, statements_operations));
+      setReport(id, createReport(text_name, statements_operations, statements_attributes, statements_generalizations, ''));
 
       var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
       return code;
@@ -618,7 +684,7 @@ generator['dss_infrastructure'] = function(block) {
     var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="DSS infrastructure" xmi:type="uml:Class">\n${code_attributes}`;
     var close_pack_code = `\t\t\t</packagedElement>\n`;
     
-    setReport(id, createReport('dss infrastructure', statements_operations));
+    setReport(id, createReport('dss infrastructure', statements_operations, statements_attributes, '', ''));
 
     var code = `${pack_code}${code_op_ass}${close_pack_code}`;
     return code;
@@ -695,7 +761,7 @@ generator['custom_digital'] = function(block) {
       var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
       
-      setReport(id, createReport(text_name, statements_operations));
+      setReport(id, createReport(text_name, statements_operations, statements_attributes, '', ''));
 
       var code = `${pack_code}${code_op_ass}${close_pack_code}`;
       return code;
@@ -788,7 +854,7 @@ generator['wsn'] = function(block) {
     var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="WSN" xmi:type="uml:Class">\n${code_attributes}`;
     var close_pack_code = `\t\t\t</packagedElement>\n`;
 
-    setReport(id, createReport('wsn', statements_operations));
+    setReport(id, createReport('wsn', statements_operations, statements_attributes, '', text_aggregation));
    
     var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
     return code;
@@ -881,7 +947,7 @@ generator['dss_software'] = function(block) {
     var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="DSS software" xmi:type="uml:Class">\n${code_attributes}`;
     var close_pack_code = `\t\t\t</packagedElement>\n`;
 
-    setReport(id, createReport('dss software', statements_operations));
+    setReport(id, createReport('dss software', statements_operations, statements_attributes, '', text_aggregation));
    
     var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
     return code;
@@ -973,7 +1039,7 @@ generator['internet_gateway'] = function(block) {
     var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Internet gateway" xmi:type="uml:Class">\n${code_attributes}`;
     var close_pack_code = `\t\t\t</packagedElement>\n`;
 
-    setReport(id, createReport('internet gateway', statements_operations));
+    setReport(id, createReport('internet gateway', statements_operations, statements_attributes, '', text_aggregation));
    
     var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
     return code;
@@ -1067,7 +1133,7 @@ generator['custom_digital_component'] = function(block) {
       var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
 
-      setReport(id, createReport(text_name, statements_operations));
+      setReport(id, createReport(text_name, statements_operations, statements_attributes, '', text_aggregation));
      
       var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
       return code;
@@ -1161,7 +1227,7 @@ generator['irrigation_tool'] = function(block) {
       }
     })
 
-    setReport(id, createReport('irrigation tool', statements_operations));
+    setReport(id, createReport('irrigation tool', statements_operations, statements_attributes, statements_generalizations, ''));
    
     var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
     return code;
@@ -1182,7 +1248,7 @@ generator['custom_tool'] = function(block) {
   var text_name = block.getFieldValue('NAME');
   if(text_name.charCodeAt(0) != 46 && text_name != ''){
     if(!blockAlreadyInWs(text_name.toLowerCase())){
-      var id = generateID('irrigation tool'); 
+      var id = generateID(text_name.toLowerCase()); 
       var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
       var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
 
@@ -1251,7 +1317,7 @@ generator['custom_tool'] = function(block) {
         }
       })
 
-      setReport(id, createReport(text_name, statements_operations));
+      setReport(id, createReport(text_name, statements_operations, statements_attributes, statements_generalizations, ''));
      
       var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
       return code;

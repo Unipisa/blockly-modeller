@@ -123,7 +123,7 @@ export function setReport(id, text){
 
 export function generateReport() {
   let i = 0;
-  var concatTextReport = new String('Diagrams report: \n');
+  var concatTextReport = new String('Main diagram items \n');
   const iterator = textReport.values();
   while(i < textReport.size){
     concatTextReport = concatTextReport + iterator.next().value + '\n'; 
@@ -176,7 +176,7 @@ ws.addChangeListener((e) => {
 });
 
 ws.addChangeListener((e) => {
-  if(e.type == Blockly.Events.BLOCK_DELETE){
+  if(e.type == Blockly.Events.BLOCK_DELETE || e.type == Blockly.Events.BLOCK_CHANGE){
     let blocks = ws.getAllBlocks(true);
     let blocksIdInWs = []; 
     
