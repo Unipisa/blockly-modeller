@@ -239,7 +239,7 @@ generator['default_actor'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -325,7 +325,7 @@ generator['custom_actor'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -340,7 +340,7 @@ generator['username'] = function(block) {
     return code;
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -351,7 +351,7 @@ generator['password'] = function(block) {
     return code;
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -368,7 +368,7 @@ generator['custom_attribute'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -379,7 +379,7 @@ generator['id'] = function(block) {
     return code;
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -390,7 +390,7 @@ generator['coords'] = function(block) {
     return code;
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -401,7 +401,7 @@ generator['area'] = function(block) {
     return code;
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -416,7 +416,7 @@ generator['login'] = function(block) {
     return code;
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -437,7 +437,7 @@ generator['custom_operation'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -524,7 +524,7 @@ generator['field_resource'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -622,7 +622,7 @@ generator['water_resource'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -722,7 +722,7 @@ generator['custom_resource'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -809,7 +809,7 @@ generator['dss_infrastructure'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -895,7 +895,7 @@ generator['custom_digital'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -996,7 +996,7 @@ generator['wsn'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1098,7 +1098,7 @@ generator['dss_software'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1199,7 +1199,7 @@ generator['internet_gateway'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1303,7 +1303,7 @@ generator['custom_digital_component'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1405,7 +1405,7 @@ generator['irrigation_tool'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1505,7 +1505,7 @@ generator['custom_tool'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1533,7 +1533,7 @@ generator['dam'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1557,7 +1557,7 @@ generator['river'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1581,7 +1581,7 @@ generator['well'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1605,7 +1605,7 @@ generator['dripper'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1629,7 +1629,7 @@ generator['sprinkler'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };
@@ -1660,7 +1660,7 @@ generator['custom_generalization'] = function(block) {
     }
   }
   else{
-    window.alert('Insert the block in the space provided');
+    window.alert('Positioning error. Insert the block in the corresponding space');
     block.dispose(true);
   }
 };

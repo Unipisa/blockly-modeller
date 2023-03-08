@@ -10,7 +10,7 @@ const myBlocks = [
   // ------------------------------------------------------------- SCHEMA ------------------------------------------------------------- // 
   {
   "type": "info",
-  "message0": "• Who are the actors involved? %1 Insert actors: %2 %3 • Which are the resources? %4 Resources blocks: %5 %6",
+  "message0": "• Who are the actors involved? %1 Insert actors: %2 %3 • Which are the resources? %4 Insert resources: %5 %6",
   "args0": [
     {
       "type": "input_dummy"
@@ -46,7 +46,7 @@ const myBlocks = [
   // ------------------------------------------------------------- ATTORI ------------------------------------------------------------- // 
   {
   "type": "custom_actor",
-  "message0": "Custom ACTOR: %1 %2 What are the activities carried out by the actor? %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the actor's attributes? %7 %8",
+  "message0": "Custom ACTOR: %1 %2 What are the activities carried out by the actor? %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8",
   "args0": [
     {
       "type": "field_input",
@@ -89,7 +89,7 @@ const myBlocks = [
   },
   {
   "type": "default_actor",
-  "message0": "%1 %2 What are the activities carried out by the actor? %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the actor's attributes? %7 %8",
+  "message0": "%1 %2 What are the activities carried out by the actor? %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -117,7 +117,6 @@ const myBlocks = [
     },
     {
       "type": "input_dummy",
-      "align": "CENTRE"
     },
     {
       "type": "input_statement",
@@ -233,7 +232,7 @@ const myBlocks = [
   // ------------------------------------------------------------- OPERAZIONI ------------------------------------------------------------- // 
   {
   "type": "custom_operation",
-  "message0": "Custom ACTIVITY: %1 %2 • Motivation to %3 %4 • Interacting with actors %5  (comma separated list of items) %6",
+  "message0": "Custom ACTIVITY: %1 %2 • Motivation to %3 %4 • Using resource or interacting %5  with actor %6",
   "args0": [
     {
       "type": "field_input",
@@ -287,7 +286,7 @@ const myBlocks = [
   {
   "type": "field_resource",
   "lastDummyAlign0": "CENTRE",
-  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the actor's attributes? %7 %8",
+  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -330,7 +329,7 @@ const myBlocks = [
   },
   {
   "type": "water_resource",
-  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the resource attributes? %7 %8 The resource comes in different forms? %9 If so, which ones? %10 %11",
+  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -368,9 +367,6 @@ const myBlocks = [
       "type": "input_dummy"
     },
     {
-      "type": "input_dummy"
-    },
-    {
       "type": "input_statement",
       "name": "GENERALIZATIONS",
       "check": "generalization",
@@ -384,7 +380,7 @@ const myBlocks = [
   },
   {
   "type": "custom_resource",
-  "message0": "Custom RESOURCE with name: %1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the resource attributes? %7 %8 The resource comes in different forms? %9 If so, which one? %10 %11",
+  "message0": "Custom RESOURCE: %1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
   "args0": [
     {
       "type": "field_input",
@@ -422,9 +418,6 @@ const myBlocks = [
       "type": "input_dummy"
     },
     {
-      "type": "input_dummy"
-    },
-    {
       "type": "input_statement",
       "name": "GENERALIZATIONS",
       "check": "generalization",
@@ -443,7 +436,7 @@ const myBlocks = [
 
   {
   "type": "irrigation_tool",
-  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the attributes of the tool? %7 %8 The tool comes in different forms? %9 If so, which ones? %10 %11",
+  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -481,9 +474,6 @@ const myBlocks = [
       "type": "input_dummy"
     },
     {
-      "type": "input_dummy"
-    },
-    {
       "type": "input_statement",
       "name": "GENERALIZATIONS",
       "check": "generalization",
@@ -497,7 +487,7 @@ const myBlocks = [
   },
   {
   "type": "custom_tool",
-  "message0": "Custom TOOL with name: %1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the attributes of the tool? %7 %8 The tool comes in different forms? %9 If so, which one? %10 %11",
+  "message0": "Custom TOOL: %1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
   "args0": [
     {
       "type": "field_input",
@@ -535,9 +525,6 @@ const myBlocks = [
       "type": "input_dummy"
     },
     {
-      "type": "input_dummy"
-    },
-    {
       "type": "input_statement",
       "name": "GENERALIZATIONS",
       "check": "generalization",
@@ -556,7 +543,7 @@ const myBlocks = [
 
   {
   "type": "dss_infrastructure",
-  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advaced settings: %6 What are the attributes of the tool? %7 %8",
+  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -599,7 +586,7 @@ const myBlocks = [
   },
   {
   "type": "custom_digital",
-  "message0": "Custom DIGITAL TOOL with name: %1 %2 DOES %3 %4 -------------------------------------------------- %5 Advaced settings: %6 What are the attributes of the tool? %7 %8",
+  "message0": "Custom DIGITAL TOOL: %1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8",
   "args0": [
     {
       "type": "field_input",
@@ -642,7 +629,7 @@ const myBlocks = [
   },
   {
   "type": "wsn",
-  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advaced settings: %6 What are the attributes of the tool? %7 %8 Does it compose another item? %9 If so, which one? %10",
+  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -677,9 +664,6 @@ const myBlocks = [
       "check": "attribute",
     },
     {
-      "type": "input_dummy"
-    },
-    {
       "type": "field_input",
       "name": "AGGREGATION",
       "text": "..............."
@@ -693,7 +677,7 @@ const myBlocks = [
   },
   {
   "type": "internet_gateway",
-  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advaced settings: %6 What are the attributes of the tool? %7 %8 Does it compose another item? %9 If so, which one? %10",
+  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -728,9 +712,6 @@ const myBlocks = [
       "check": "attribute",
     },
     {
-      "type": "input_dummy"
-    },
-    {
       "type": "field_input",
       "name": "AGGREGATION",
       "text": "..............."
@@ -744,7 +725,7 @@ const myBlocks = [
   },
   {
   "type": "dss_software",
-  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advaced settings: %6 What are the attributes of the tool? %7 %8 Does it compose another item? %9 If so, which one? %10",
+  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -779,9 +760,6 @@ const myBlocks = [
       "check": "attribute",
     },
     {
-      "type": "input_dummy"
-    },
-    {
       "type": "field_input",
       "name": "AGGREGATION",
       "text": "..............."
@@ -795,7 +773,7 @@ const myBlocks = [
   },
   {
   "type": "custom_digital_component",
-  "message0": "Custom DIGITAL COMPONENT with name: %1 %2 DOES %3 %4 -------------------------------------------------- %5 Advaced settings: %6 What are the attributes of the tool? %7 %8 Does it compose another item? %9 If so, which one? %10",
+  "message0": "Custom DIGITAL COMPONENT: %1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
   "args0": [
     {
       "type": "field_input",
@@ -828,9 +806,6 @@ const myBlocks = [
       "type": "input_statement",
       "name": "ATTRIBUTES",
       "check": "attribute",
-    },
-    {
-      "type": "input_dummy"
     },
     {
       "type": "field_input",
