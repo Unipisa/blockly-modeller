@@ -10,6 +10,8 @@ import {ass_agg_AlreadyInWs} from'../index.js';
 import {removeLastTypedBlock} from'../index.js';
 import {getAlreadyInWsBlockType} from'../index.js';
 import {setReport} from'../index.js';
+import {enableBlocks} from'../index.js';
+
 
 export const generator = Object.create(null);
 
@@ -86,10 +88,9 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
 
   //se ci sono operazioni
   if(allOperations != ''){
+    const operations = allOperations.split(":");
 
-    const operations = allOperations.split(".");
-
-    if(operations.length > 17){ 
+    if(operations.length > 2){ 
       allOpReport = ' does the actions of: \n';
     }
     else{
@@ -101,23 +102,28 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
         const segment = operation.split(";");
         var op_name = segment[0];
         var string_ass_names = segment[1];
+        var motivation = segment[2];
+
         const ass_names = string_ass_names.split(",");
 
         var opReport = '\t- ' + op_name;
 
-        if(ass_names != ''){
+        if(ass_names[0].charCodeAt(0) != 46 && ass_names != ''){
           opReport = opReport + ' interacting with ';
-        }
 
-        ass_names.forEach((name) => {
-          if(name != '' && name != ' '){
-              opReport = opReport + ' ' + name + ',';           
-          }
-        })
-
-        if(ass_names != ''){
+          ass_names.forEach((name) => {
+            if(name != '' && name != ' '){
+                opReport = opReport + ' ' + name + ',';           
+            }
+          })
           opReport = opReport.substring(0, opReport.length - 1);
         }
+
+
+        if(motivation[0].charCodeAt(0) != 46 && motivation != ''){
+          opReport = opReport + ' because to ' + motivation;
+        }
+
         opReport = opReport + '\n';
         allOpReport = allOpReport + opReport;
       }
@@ -131,11 +137,10 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
 // ------------------------------------------------------------- SCHEMA ------------------------------------------------------------- //
 
 generator['info'] = function(block) {
+
   block.setDeletable(false);
   var statements_actors = javascriptGenerator.statementToCode(block, 'ACTORS');
-  var statements_natural_resources = javascriptGenerator.statementToCode(block, 'NATURAL_RESOURCES');
-  var statements_tool = javascriptGenerator.statementToCode(block, 'TOOL');
-  var statements_digital_tool = javascriptGenerator.statementToCode(block, 'DIGITAL_TOOL');
+  var statements_resources_unit = javascriptGenerator.statementToCode(block, 'RESOURCES_UNIT');
   
   var xml_data = '<?xml version="1.0" encoding="UTF-8"?>\n';
   var xmi_data = '<xmi:XMI xmi:version="2.1" xmlns:uml="http://schema.omg.org/spec/UML/2.0" xmlns:xmi="http://schema.omg.org/spec/XMI/2.1">\n';
@@ -146,7 +151,7 @@ generator['info'] = function(block) {
   var close_model_data = '\t</uml:Model>\n';
   var close_pack_data = '\t\t</packagedElement>\n';
 
-  return `${xml_data}${xmi_data}${doc_data}${model_data}${pack_data}${statements_actors}${statements_natural_resources}${statements_tool}${statements_digital_tool}${close_pack_data}${close_model_data}${close_xmi_data}`;
+  return `${xml_data}${xmi_data}${doc_data}${model_data}${pack_data}${statements_actors}${statements_resources_unit}${close_pack_data}${close_model_data}${close_xmi_data}`;
 };
 
 
@@ -155,92 +160,20 @@ generator['info'] = function(block) {
 
 generator['default_actor'] = function(block) {
   var text_name = block.getFieldValue('NAME');
-
-  if(!blockAlreadyInWs(text_name.toLowerCase())){
-    var id = generateID(text_name);
-    var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
-    var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-    const operations = statements_operations.split(".");
-    var code_op_ass = new String();
-
-    operations.forEach((operation) => {
-      if(operation != ''){
-        const op = operation.split(";");
-        let op_name = op[0].trim();
-        var id_op = generateID(op_name);
-
-        const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
-
-        let op_associations = op[1];
-        const ass_names = op_associations.split(',');
-        var code_associations = new String();
-
-        ass_names.forEach((name) => {
-          if(name.charCodeAt(0) != 46 && name != ''){
-            if(ass_agg_AlreadyInWs(name.toLowerCase())){
-              var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-              var id_first_end = generateRandID();
-              var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-              var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-              var id_second_end = generateRandID();
-              var id_other_class = generateID(name);
-              var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-              var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-              var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-              var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-              var close_member_code = `\t\t\t\t</ownedMember>\n`;
-              var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-              code_associations = code_associations + name_ass_code;
-            }
-          }  
-        })
-        code_op_ass = code_op_ass + code_op + code_associations;
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs(text_name.toLowerCase()) ){
+      
+      while(block.isCollapsed()){
+        block.setOnChange(block.setCollapsed(false));
       }
-    })
-    
-    const attributes = statements_attributes.split(',');
-    var code_attributes = new String();
-    attributes.forEach((attribute) => {
-      if(attribute != ''){
-        var id_attr = generateID(attribute);
-        var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
-        code_attributes = code_attributes + code_att;
-      }
-    })
 
-    var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
-    var close_pack_code = `\t\t\t</packagedElement>\n`;
-    
-    setReport(id, createReport(text_name, statements_operations, statements_attributes, '', ''));
-
-    var code = `${pack_code}${code_op_ass}${close_pack_code}`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-generator['custom_actor'] = function(block) {
-  var text_name = block.getFieldValue('NAME');
-
-  if(text_name.charCodeAt(0) != 46 && text_name != ''){
-    if(!blockAlreadyInWs(text_name.toLowerCase())){
       var id = generateID(text_name);
       var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
       var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-      const operations = statements_operations.split(".");
+      
+      const operations = statements_operations.split(":");
       var code_op_ass = new String();
-
+      
       operations.forEach((operation) => {
         if(operation != ''){
           const op = operation.split(";");
@@ -254,8 +187,8 @@ generator['custom_actor'] = function(block) {
           var code_associations = new String();
 
           ass_names.forEach((name) => {
-            if(name.charCodeAt(0) != 46 && name != ''){ 
-              if(ass_agg_AlreadyInWs(name.toLowerCase())){
+            if(name.charCodeAt(0) != 46 && name != ''){
+              if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                 var id_first_end = generateRandID();
                 var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
@@ -275,479 +208,7 @@ generator['custom_actor'] = function(block) {
           code_op_ass = code_op_ass + code_op + code_associations;
         }
       })
-
-      const attributes = statements_attributes.split(',');
-      var code_attributes = new String();
-      attributes.forEach((attribute) => {
-        if(attribute != ''){
-          var id_attr = generateID(attribute);
-          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
-          code_attributes = code_attributes + code_att;
-        }
-      })
-
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
-      var close_pack_code = `\t\t\t</packagedElement>\n`;
-     
-      setReport(id, createReport(text_name, statements_operations, statements_attributes, '', ''));
-
-      var code = `${pack_code}${code_op_ass}${close_pack_code}`;
-      return code;
-    }
-    else{
-      window.alert('A block with this name already exists');
-      let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
-      if(block.type == existingBlockType){
-        removeLastTypedBlock(block.type);
-      }
-      else{
-        removeLastTypedBlock(existingBlockType);
-      }
-    }
-  }
-};
-
-
-
-// ------------------------------------------------------------- ATTRIBUTI ------------------------------------------------------------- //
-
-generator['username'] = function(block) {
-  var code = `username,`;
-  return code;
-};
-
-generator['password'] = function(block) {
-  var code = `password,`;
-  return code;
-};
-
-generator['custom_attribute'] = function(block) {
-  var text_name = block.getFieldValue('NAME');
-  if(text_name.charCodeAt(0) != 46 && text_name != ''){
-    var code =  `${text_name}`;
-    return code;
-  }
-};
-
-generator['id'] = function(block) {
-  var code = `id,`;
-  return code;
-};
-
-generator['coords'] = function(block) {
-  var code = `coords,`;
-  return code;
-};
-
-generator['area'] = function(block) {
-  var code = `area,`;
-  return code;
-};
-
-
-
-// ------------------------------------------------------------- OPERAZIONI ------------------------------------------------------------- //
-
-generator['login'] = function(block) {
-  var code = `login; .`;
-  return code;
-};
-
-generator['custom_operation'] = function(block) {
-  var text_name = block.getFieldValue('NAME');
-  var text_motivation = block.getFieldValue('MOTIVATION'); //da usare nel report
-  var text_associations = block.getFieldValue('ASSOCIATIONS');
-
-  if(text_name.charCodeAt(0) != 46 && text_name != ''){
-    var code = `${text_name};${text_associations}.`;
-    return code;
-  }
-};
-
-
-
-// ------------------------------------------------------------- RISORSE NATURALI ------------------------------------------------------------- //
-
-generator['field_resource'] = function(block) {
-  if(!blockAlreadyInWs('field')){
-    var id = generateID('field'); 
-    var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
-    var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-    const operations = statements_operations.split(".");
-    var code_op_ass = new String();
-
-    operations.forEach((operation) => {
-      if(operation != ''){
-        const op = operation.split(";");
-        let op_name = op[0].trim();
-        var id_op = generateID(op_name);
-
-        const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
-
-        let op_associations = op[1];
-        const ass_names = op_associations.split(',');
-        var code_associations = new String();
-
-        ass_names.forEach((name) => {
-          if(name.charCodeAt(0) != 46 && name != ''){ 
-            if(ass_agg_AlreadyInWs(name.toLowerCase())){
-              var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-              var id_first_end = generateRandID();
-              var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-              var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-              var id_second_end = generateRandID();
-              var id_other_class = generateID(name);
-              var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-              var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-              var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-              var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-              var close_member_code = `\t\t\t\t</ownedMember>\n`;
-              var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-              code_associations = code_associations + name_ass_code;
-            }
-          }  
-        })
-        code_op_ass = code_op_ass + code_op + code_associations;
-      }
-    })
-
-    const attributes = statements_attributes.split(',');
-    var code_attributes = new String();
-    attributes.forEach((attribute) => {
-      if(attribute != ''){
-        var id_attr = generateID(attribute);
-        var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
-        code_attributes = code_attributes + code_att;
-      }
-    })
-
-    var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Field" xmi:type="uml:Class">\n${code_attributes}`;
-    var close_pack_code = `\t\t\t</packagedElement>\n`;
-
-    setReport(id, createReport('field', statements_operations, statements_attributes, '', ''));
-
-    var code = `${pack_code}${code_op_ass}${close_pack_code}`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('field');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-
-generator['water_resource'] = function(block) {
-  if(!blockAlreadyInWs('water')){
-    var id = generateID('water'); 
-    var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
-    var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-    const operations = statements_operations.split(".");
-    var code_op_ass = new String();
-
-    operations.forEach((operation) => {
-      if(operation != ''){
-        const op = operation.split(";");
-        let op_name = op[0].trim();
-        var id_op = generateID(op_name);
-
-        const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
-
-        let op_associations = op[1];
-        const ass_names = op_associations.split(',');
-        var code_associations = new String();
-
-        ass_names.forEach((name) => {
-          if(name.charCodeAt(0) != 46 && name != ''){ 
-            if(ass_agg_AlreadyInWs(name.toLowerCase())){
-              var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-              var id_first_end = generateRandID();
-              var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-              var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-              var id_second_end = generateRandID();
-              var id_other_class = generateID(name);
-              var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-              var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-              var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-              var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-              var close_member_code = `\t\t\t\t</ownedMember>\n`;
-              var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-              code_associations = code_associations + name_ass_code;
-            }
-          }  
-        })
-        code_op_ass = code_op_ass + code_op + code_associations;
-      }
-    })
-
-    const attributes = statements_attributes.split(',');
-    var code_attributes = new String();
-    attributes.forEach((attribute) => {
-      if(attribute != ''){
-        var id_attr = generateID(attribute);
-        var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
-        code_attributes = code_attributes + code_att;
-      }
-    })
-
-    var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Water" xmi:type="uml:Class">\n${code_attributes}`;
-    var close_pack_code = `\t\t\t</packagedElement>\n`;
-
-    var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
-    const gen_names = statements_generalizations.split(";"); //nomi delle sottoclassi separati da ';'
-    var code_generalizations = new String();
-
-    //per ogni generalizzazione inserita creo la sottoclasse corrispondente legata all'id della super classe
-    gen_names.forEach((name) => {
-      if(name != ''){
-        var id_spec = generateID(name); //id della sotto classe
-        var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-        var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
-        code_generalizations = code_generalizations + pack_gen;
-      }
-    })
-
-    setReport(id, createReport('water', statements_operations, statements_attributes, statements_generalizations, ''));
-
-    var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('water');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-generator['custom_resource'] = function(block) {
-  var text_name = block.getFieldValue('NAME');
-
-  if(text_name.charCodeAt(0) != 46 && text_name != ''){
-    if(!blockAlreadyInWs(text_name.toLowerCase())){
-      var id = generateID(text_name); 
-      var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
-      var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-      const operations = statements_operations.split(".");
-      var code_op_ass = new String();
-
-      operations.forEach((operation) => {
-        if(operation != ''){
-          const op = operation.split(";");
-          let op_name = op[0].trim();
-          var id_op = generateID(op_name);
-
-          const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
-
-          let op_associations = op[1];
-          const ass_names = op_associations.split(',');
-          var code_associations = new String();
-
-          ass_names.forEach((name) => {
-            if(name.charCodeAt(0) != 46 && name != ''){ 
-              if(ass_agg_AlreadyInWs(name.toLowerCase())){
-                var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-                var id_first_end = generateRandID();
-                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-                var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-                var id_second_end = generateRandID();
-                var id_other_class = generateID(name);
-                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-                var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-                var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-                var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-                var close_member_code = `\t\t\t\t</ownedMember>\n`;
-                var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-                code_associations = code_associations + name_ass_code;
-              }
-            }  
-          })
-          code_op_ass = code_op_ass + code_op + code_associations;
-        }
-      })
-
-      const attributes = statements_attributes.split(',');
-      var code_attributes = new String();
-      attributes.forEach((attribute) => {
-        if(attribute != ''){
-          var id_attr = generateID(attribute);
-          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
-          code_attributes = code_attributes + code_att;
-        }
-      })
-
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
-      var close_pack_code = `\t\t\t</packagedElement>\n`;
-
-      var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
-      const gen_names = statements_generalizations.split(";"); //nomi delle sottoclassi separati da ';'
-      var code_generalizations = new String();
-
-      //per ogni generalizzazione inserita creo la sottoclasse corrispondente legata all'id della super classe
-      gen_names.forEach((name) => {
-        if(name != ''){
-          var id_spec = generateID(name); //id della sotto classe
-          var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-          var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
-          code_generalizations = code_generalizations + pack_gen;
-        }
-      })
-
-      setReport(id, createReport(text_name, statements_operations, statements_attributes, statements_generalizations, ''));
-
-      var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
-      return code;
-    }
-    else{
-      window.alert('A block with this name already exists');
-      let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
-      if(block.type == existingBlockType){
-        removeLastTypedBlock(block.type);
-      }
-      else{
-        removeLastTypedBlock(existingBlockType);
-      }
-    }
-  }
-};
-
-
-
-// ------------------------------------------------------------- STRUMENTI DIGITALI ------------------------------------------------------------- //
-
-generator['dss_infrastructure'] = function(block) {
-  if(!blockAlreadyInWs('dss infrastructure')){
-    var id = generateID('dss infrastructure'); 
-    var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
-    var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-    const operations = statements_operations.split(".");
-    var code_op_ass = new String();
-
-    operations.forEach((operation) => {
-      if(operation != ''){
-        const op = operation.split(";");
-        let op_name = op[0].trim();
-        var id_op = generateID(op_name);
-
-        const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
-
-        let op_associations = op[1];
-        const ass_names = op_associations.split(',');
-        var code_associations = new String();
-
-        ass_names.forEach((name) => {
-          if(name.charCodeAt(0) != 46 && name != ''){ 
-            if(ass_agg_AlreadyInWs(name.toLowerCase())){
-              var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-              var id_first_end = generateRandID();
-              var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-              var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-              var id_second_end = generateRandID();
-              var id_other_class = generateID(name);
-              var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-              var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-              var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-              var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-              var close_member_code = `\t\t\t\t</ownedMember>\n`;
-              var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-              code_associations = code_associations + name_ass_code;
-            }
-          }  
-        })
-        code_op_ass = code_op_ass + code_op + code_associations;
-      }
-    })
-
-    const attributes = statements_attributes.split(',');
-    var code_attributes = new String();
-    attributes.forEach((attribute) => {
-      if(attribute != ''){
-        var id_attr = generateID(attribute);
-        var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
-        code_attributes = code_attributes + code_att;
-      }
-    })
-
-    var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="DSS infrastructure" xmi:type="uml:Class">\n${code_attributes}`;
-    var close_pack_code = `\t\t\t</packagedElement>\n`;
-    
-    setReport(id, createReport('dss infrastructure', statements_operations, statements_attributes, '', ''));
-
-    var code = `${pack_code}${code_op_ass}${close_pack_code}`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('dss infrastructure');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-generator['custom_digital'] = function(block) {
-  var text_name = block.getFieldValue('NAME');
-
-  if(text_name.charCodeAt(0) != 46 && text_name != ''){
-    if(!blockAlreadyInWs(text_name.toLowerCase())){
-      var id = generateID(text_name);
-      var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
-      var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-      const operations = statements_operations.split(".");
-      var code_op_ass = new String();
-
-      operations.forEach((operation) => {
-        if(operation != ''){
-          const op = operation.split(";");
-          let op_name = op[0].trim();
-          var id_op = generateID(op_name);
-
-          const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
-
-          let op_associations = op[1];
-          const ass_names = op_associations.split(',');
-          var code_associations = new String();
-
-          ass_names.forEach((name) => {
-            if(name.charCodeAt(0) != 46 && name != ''){ 
-              if(ass_agg_AlreadyInWs(name.toLowerCase())){
-                var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-                var id_first_end = generateRandID();
-                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-                var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-                var id_second_end = generateRandID();
-                var id_other_class = generateID(name);
-                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-                var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-                var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-                var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-                var close_member_code = `\t\t\t\t</ownedMember>\n`;
-                var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-                code_associations = code_associations + name_ass_code;
-              }
-            }  
-          })
-          code_op_ass = code_op_ass + code_op + code_associations;
-        }
-      })
-
+      
       const attributes = statements_attributes.split(',');
       var code_attributes = new String();
       attributes.forEach((attribute) => {
@@ -777,294 +238,225 @@ generator['custom_digital'] = function(block) {
       }
     }
   }
-};
-
-generator['wsn'] = function(block) {
-  if(!blockAlreadyInWs('wsn')){
-    var id = generateID('wsn'); 
-    var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
-    var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-    const operations = statements_operations.split(".");
-    var code_op_ass = new String();
-
-    operations.forEach((operation) => {
-      if(operation != ''){
-        const op = operation.split(";");
-        let op_name = op[0].trim();
-        var id_op = generateID(op_name);
-
-        const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
-
-        let op_associations = op[1];
-        const ass_names = op_associations.split(',');
-        var code_associations = new String();
-
-        ass_names.forEach((name) => {
-          if(name.charCodeAt(0) != 46 && name != ''){ 
-            if(ass_agg_AlreadyInWs(name.toLowerCase())){
-              var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-              var id_first_end = generateRandID();
-              var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-              var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-              var id_second_end = generateRandID();
-              var id_other_class = generateID(name);
-              var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-              var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-              var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-              var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-              var close_member_code = `\t\t\t\t</ownedMember>\n`;
-              var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-              code_associations = code_associations + name_ass_code;
-            }
-          }  
-        })
-        code_op_ass = code_op_ass + code_op + code_associations;
-      }
-    })
-
-    var text_aggregation = block.getFieldValue('AGGREGATION');
-    var code_aggregation = new String();
-    if(text_aggregation != '' && ass_agg_AlreadyInWs(text_aggregation.toLowerCase())){
-      var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-      var id_first_end = generateRandID();
-      var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" aggregation="shared" type="${id}">\n`;
-      var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-      var id_second_end = generateRandID();
-      var id_other_class = generateID(text_aggregation);
-      var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-      var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-      var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-      var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-      var close_member_code = `\t\t\t\t</ownedMember>\n`;
-      code_aggregation = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-      window.alert('OK! Existing block correctly identified');
-    }
-
-    const attributes = statements_attributes.split(',');
-    var code_attributes = new String();
-    attributes.forEach((attribute) => {
-      if(attribute != ''){
-        var id_attr = generateID(attribute);
-        var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
-        code_attributes = code_attributes + code_att;
-      }
-    })
-
-    var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="WSN" xmi:type="uml:Class">\n${code_attributes}`;
-    var close_pack_code = `\t\t\t</packagedElement>\n`;
-
-    setReport(id, createReport('wsn', statements_operations, statements_attributes, '', text_aggregation));
-   
-    var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
-    return code;
-  }
   else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('wsn');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
   }
 };
 
-generator['dss_software'] = function(block) {
-  if(!blockAlreadyInWs('dss software')){
-    var id = generateID('dss software'); 
-   
-    var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
-    var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-    const operations = statements_operations.split(".");
-    var code_op_ass = new String();
-
-    operations.forEach((operation) => {
-      if(operation != ''){
-        const op = operation.split(";");
-        let op_name = op[0].trim();
-        var id_op = generateID(op_name);
-
-        const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
-
-        let op_associations = op[1];
-        const ass_names = op_associations.split(',');
-        var code_associations = new String();
-
-        ass_names.forEach((name) => {
-          if(name.charCodeAt(0) != 46 && name != ''){ 
-            if(ass_agg_AlreadyInWs(name.toLowerCase())){
-              var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-              var id_first_end = generateRandID();
-              var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-              var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-              var id_second_end = generateRandID();
-              var id_other_class = generateID(name);
-              var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-              var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-              var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-              var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-              var close_member_code = `\t\t\t\t</ownedMember>\n`;
-              var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-              code_associations = code_associations + name_ass_code;
-            }
-          }  
-        })
-        code_op_ass = code_op_ass + code_op + code_associations;
-      }
-    })
-
-    var text_aggregation = block.getFieldValue('AGGREGATION');
-    var code_aggregation = new String();
-    if(text_aggregation != '' && ass_agg_AlreadyInWs(text_aggregation.toLowerCase())){
-      var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-      var id_first_end = generateRandID();
-      var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" aggregation="shared" type="${id}">\n`;
-      var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-      var id_second_end = generateRandID();
-      var id_other_class = generateID(text_aggregation);
-      var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-      var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-      var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-      var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-      var close_member_code = `\t\t\t\t</ownedMember>\n`;
-      code_aggregation = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-      window.alert('OK! Existing block correctly identified');
-    }
-
-    const attributes = statements_attributes.split(',');
-    var code_attributes = new String();
-    attributes.forEach((attribute) => {
-      if(attribute != ''){
-        var id_attr = generateID(attribute);
-        var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
-        code_attributes = code_attributes + code_att;
-      }
-    })
-
-    var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="DSS software" xmi:type="uml:Class">\n${code_attributes}`;
-    var close_pack_code = `\t\t\t</packagedElement>\n`;
-
-    setReport(id, createReport('dss software', statements_operations, statements_attributes, '', text_aggregation));
-   
-    var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('dss software');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-generator['internet_gateway'] = function(block) {
-  if(!blockAlreadyInWs('internet gateway')){
-    var id = generateID('internet gateway'); 
-    var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
-    var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-    const operations = statements_operations.split(".");
-    var code_op_ass = new String();
-
-    operations.forEach((operation) => {
-      if(operation != ''){
-        const op = operation.split(";");
-        let op_name = op[0].trim();
-        var id_op = generateID(op_name);
-
-        const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
-
-        let op_associations = op[1];
-        const ass_names = op_associations.split(',');
-        var code_associations = new String();
-
-        ass_names.forEach((name) => {
-          if(name.charCodeAt(0) != 46 && name != ''){ 
-            if(ass_agg_AlreadyInWs(name.toLowerCase())){
-              var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-              var id_first_end = generateRandID();
-              var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-              var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-              var id_second_end = generateRandID();
-              var id_other_class = generateID(name);
-              var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-              var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-              var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-              var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-              var close_member_code = `\t\t\t\t</ownedMember>\n`;
-              var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-              code_associations = code_associations + name_ass_code;
-            }
-          }  
-        })
-        code_op_ass = code_op_ass + code_op + code_associations;
-      }
-    })
-
-    var text_aggregation = block.getFieldValue('AGGREGATION');
-    var code_aggregation = new String();
-    if(text_aggregation != '' && ass_agg_AlreadyInWs(text_aggregation.toLowerCase())){
-      var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-      var id_first_end = generateRandID();
-      var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" aggregation="shared" type="${id}">\n`;
-      var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-      var id_second_end = generateRandID();
-      var id_other_class = generateID(text_aggregation);
-      var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-      var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-      var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-      var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-      var close_member_code = `\t\t\t\t</ownedMember>\n`;
-      code_aggregation = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-      window.alert('OK! Existing block correctly identified');
-    }
-
-    const attributes = statements_attributes.split(',');
-    var code_attributes = new String();
-    attributes.forEach((attribute) => {
-      if(attribute != ''){
-        var id_attr = generateID(attribute);
-        var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
-        code_attributes = code_attributes + code_att;
-      }
-    })
-
-    var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Internet gateway" xmi:type="uml:Class">\n${code_attributes}`;
-    var close_pack_code = `\t\t\t</packagedElement>\n`;
-
-    setReport(id, createReport('internet gateway', statements_operations, statements_attributes, '', text_aggregation));
-   
-    var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('internet gateway');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-generator['custom_digital_component'] = function(block) {
+generator['custom_actor'] = function(block) {
   var text_name = block.getFieldValue('NAME');
-  if(text_name.charCodeAt(0) != 46 && text_name != ''){
-    if(!blockAlreadyInWs(text_name.toLowerCase())){
-      var id = generateID(text_name);
+  if(block.getParent() !== null){
+    if(text_name.charCodeAt(0) != 46 && text_name != ''){
+      if(!blockAlreadyInWs(text_name.toLowerCase())){
+        var id = generateID(text_name);
+        var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
+        var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
+
+        const operations = statements_operations.split(":");
+        var code_op_ass = new String();
+
+        operations.forEach((operation) => {
+          if(operation != ''){
+            const op = operation.split(";");
+            let op_name = op[0].trim();
+            var id_op = generateID(op_name);
+
+            const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+
+            let op_associations = op[1];
+            const ass_names = op_associations.split(',');
+            var code_associations = new String();
+
+            ass_names.forEach((name) => {
+              if(name.charCodeAt(0) != 46 && name != ''){ 
+                if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
+                  var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+                  var id_first_end = generateRandID();
+                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                  var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                  var id_second_end = generateRandID();
+                  var id_other_class = generateID(name);
+                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                  var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                  var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                  var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                  var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                  var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+                  code_associations = code_associations + name_ass_code;
+                }
+              }  
+            })
+            code_op_ass = code_op_ass + code_op + code_associations;
+          }
+        })
+
+        const attributes = statements_attributes.split(',');
+        var code_attributes = new String();
+        attributes.forEach((attribute) => {
+          if(attribute != ''){
+            var id_attr = generateID(attribute);
+            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+            code_attributes = code_attributes + code_att;
+          }
+        })
+
+        var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+        var close_pack_code = `\t\t\t</packagedElement>\n`;
+       
+        setReport(id, createReport(text_name, statements_operations, statements_attributes, '', ''));
+
+        var code = `${pack_code}${code_op_ass}${close_pack_code}`;
+        return code;
+      }
+      else{
+        window.alert('A block with this name already exists');
+        let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
+        if(block.type == existingBlockType){
+          removeLastTypedBlock(block.type);
+        }
+        else{
+          removeLastTypedBlock(existingBlockType);
+        }
+      }
+    }
+    else{
+      return '';
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+
+
+// ------------------------------------------------------------- ATTRIBUTI ------------------------------------------------------------- //
+
+generator['username'] = function(block) {
+  if(block.getParent() !== null){
+    var code = `username,`;
+    return code;
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['password'] = function(block) {
+  if(block.getParent() !== null){
+    var code = `password,`;
+    return code;
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['custom_attribute'] = function(block) {
+  var text_name = block.getFieldValue('NAME');
+  if(block.getParent() !== null){
+    if(text_name.charCodeAt(0) != 46 && text_name != ''){
+      var code =  `${text_name}`;
+      return code;
+    }
+    else{
+      return '';
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['id'] = function(block) {
+  if(block.getParent() !== null){
+    var code = `id,`;
+    return code;
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['coords'] = function(block) {
+  if(block.getParent() !== null){
+    var code = `coords,`;
+    return code;
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['area'] = function(block) {
+  if(block.getParent() !== null){
+    var code = `area,`;
+    return code;
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+
+
+// ------------------------------------------------------------- OPERAZIONI ------------------------------------------------------------- //
+
+generator['login'] = function(block) {
+  if(block.getParent() !== null){
+    var code = `login; ; .`;
+    return code;
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+//la stringa che contiene le informazioni è una concatenazione di: nomeOp;ass1,ass2,...,assN;motivazione. (per ogni operazione)
+generator['custom_operation'] = function(block) {
+  if(block.getParent() !== null){
+    var text_name = block.getFieldValue('NAME');
+    var text_motivation = block.getFieldValue('MOTIVATION'); //da usare nel report
+    var text_associations = block.getFieldValue('ASSOCIATIONS');
+
+    if(text_name.charCodeAt(0) != 46 && text_name != ''){
+      var code = `${text_name};${text_associations};${text_motivation}:`;
+      return code;
+    }
+    else{
+      return '';
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+
+
+// ------------------------------------------------------------- RISORSE NATURALI ------------------------------------------------------------- //
+
+generator['field_resource'] = function(block) {
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('field')){
+      while(block.isCollapsed()){
+        block.setOnChange(block.setCollapsed(false));
+      }
+      var id = generateID('field'); 
       var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
       var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
 
-      const operations = statements_operations.split(".");
+      const operations = statements_operations.split(":");
       var code_op_ass = new String();
 
       operations.forEach((operation) => {
@@ -1081,7 +473,461 @@ generator['custom_digital_component'] = function(block) {
 
           ass_names.forEach((name) => {
             if(name.charCodeAt(0) != 46 && name != ''){ 
-              if(ass_agg_AlreadyInWs(name.toLowerCase())){
+              if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
+                var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+                var id_first_end = generateRandID();
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                var id_second_end = generateRandID();
+                var id_other_class = generateID(name);
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+                code_associations = code_associations + name_ass_code;
+              }
+            }  
+          })
+          code_op_ass = code_op_ass + code_op + code_associations;
+        }
+      })
+
+      const attributes = statements_attributes.split(',');
+      var code_attributes = new String();
+      attributes.forEach((attribute) => {
+        if(attribute != ''){
+          var id_attr = generateID(attribute);
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          code_attributes = code_attributes + code_att;
+        }
+      })
+
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Field" xmi:type="uml:Class">\n${code_attributes}`;
+      var close_pack_code = `\t\t\t</packagedElement>\n`;
+
+      setReport(id, createReport('field', statements_operations, statements_attributes, '', ''));
+
+      var code = `${pack_code}${code_op_ass}${close_pack_code}`;
+      return code;
+    }
+    else{
+      window.alert('A block with this name already exists');
+      let existingBlockType = getAlreadyInWsBlockType('field');
+      if(block.type == existingBlockType){
+        removeLastTypedBlock(block.type);
+      }
+      else{
+        removeLastTypedBlock(existingBlockType);
+      }
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+
+generator['water_resource'] = function(block) {
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('water')){
+      while(block.isCollapsed()){
+        block.setOnChange(block.setCollapsed(false));
+      }
+      var id = generateID('water'); 
+      var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
+      var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
+
+      const operations = statements_operations.split(":");
+      var code_op_ass = new String();
+
+      operations.forEach((operation) => {
+        if(operation != ''){
+          const op = operation.split(";");
+          let op_name = op[0].trim();
+          var id_op = generateID(op_name);
+
+          const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+
+          let op_associations = op[1];
+          const ass_names = op_associations.split(',');
+          var code_associations = new String();
+
+          ass_names.forEach((name) => {
+            if(name.charCodeAt(0) != 46 && name != ''){ 
+              if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
+                var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+                var id_first_end = generateRandID();
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                var id_second_end = generateRandID();
+                var id_other_class = generateID(name);
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+                code_associations = code_associations + name_ass_code;
+              }
+            }  
+          })
+          code_op_ass = code_op_ass + code_op + code_associations;
+        }
+      })
+
+      const attributes = statements_attributes.split(',');
+      var code_attributes = new String();
+      attributes.forEach((attribute) => {
+        if(attribute != ''){
+          var id_attr = generateID(attribute);
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          code_attributes = code_attributes + code_att;
+        }
+      })
+
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Water" xmi:type="uml:Class">\n${code_attributes}`;
+      var close_pack_code = `\t\t\t</packagedElement>\n`;
+
+      var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
+      const gen_names = statements_generalizations.split(";"); //nomi delle sottoclassi separati da ';'
+      var code_generalizations = new String();
+
+      //per ogni generalizzazione inserita creo la sottoclasse corrispondente legata all'id della super classe
+      gen_names.forEach((name) => {
+        if(name != ''){
+          var id_spec = generateID(name); //id della sotto classe
+          var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
+          var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
+          code_generalizations = code_generalizations + pack_gen;
+        }
+      })
+
+      setReport(id, createReport('water', statements_operations, statements_attributes, statements_generalizations, ''));
+
+      var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
+      return code;
+    }
+    else{
+      window.alert('A block with this name already exists');
+      let existingBlockType = getAlreadyInWsBlockType('water');
+      if(block.type == existingBlockType){
+        removeLastTypedBlock(block.type);
+      }
+      else{
+        removeLastTypedBlock(existingBlockType);
+      }
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['custom_resource'] = function(block) {
+  var text_name = block.getFieldValue('NAME');
+  if(block.getParent() !== null){
+    if(text_name.charCodeAt(0) != 46 && text_name != ''){
+      if(!blockAlreadyInWs(text_name.toLowerCase())){
+        var id = generateID(text_name); 
+        var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
+        var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
+
+        const operations = statements_operations.split(":");
+        var code_op_ass = new String();
+
+        operations.forEach((operation) => {
+          if(operation != ''){
+            const op = operation.split(";");
+            let op_name = op[0].trim();
+            var id_op = generateID(op_name);
+
+            const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+
+            let op_associations = op[1];
+            const ass_names = op_associations.split(',');
+            var code_associations = new String();
+
+            ass_names.forEach((name) => {
+              if(name.charCodeAt(0) != 46 && name != ''){ 
+                if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
+                  var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+                  var id_first_end = generateRandID();
+                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                  var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                  var id_second_end = generateRandID();
+                  var id_other_class = generateID(name);
+                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                  var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                  var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                  var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                  var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                  var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+                  code_associations = code_associations + name_ass_code;
+                }
+              }  
+            })
+            code_op_ass = code_op_ass + code_op + code_associations;
+          }
+        })
+
+        const attributes = statements_attributes.split(',');
+        var code_attributes = new String();
+        attributes.forEach((attribute) => {
+          if(attribute != ''){
+            var id_attr = generateID(attribute);
+            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+            code_attributes = code_attributes + code_att;
+          }
+        })
+
+        var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+        var close_pack_code = `\t\t\t</packagedElement>\n`;
+
+        var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
+        const gen_names = statements_generalizations.split(";"); //nomi delle sottoclassi separati da ';'
+        var code_generalizations = new String();
+
+        //per ogni generalizzazione inserita creo la sottoclasse corrispondente legata all'id della super classe
+        gen_names.forEach((name) => {
+          if(name != ''){
+            var id_spec = generateID(name); //id della sotto classe
+            var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
+            var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
+            code_generalizations = code_generalizations + pack_gen;
+          }
+        })
+
+        setReport(id, createReport(text_name, statements_operations, statements_attributes, statements_generalizations, ''));
+
+        var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
+        return code;
+      }
+      else{
+        window.alert('A block with this name already exists');
+        let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
+        if(block.type == existingBlockType){
+          removeLastTypedBlock(block.type);
+        }
+        else{
+          removeLastTypedBlock(existingBlockType);
+        }
+      }
+    }
+    else{
+      return '';
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+
+
+// ------------------------------------------------------------- STRUMENTI DIGITALI ------------------------------------------------------------- //
+
+generator['dss_infrastructure'] = function(block) {
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('dss infrastructure')){
+      while(block.isCollapsed()){
+        block.setOnChange(block.setCollapsed(false));
+      }
+      var id = generateID('dss infrastructure'); 
+      var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
+      var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
+
+      const operations = statements_operations.split(":");
+      var code_op_ass = new String();
+
+      operations.forEach((operation) => {
+        if(operation != ''){
+          const op = operation.split(";");
+          let op_name = op[0].trim();
+          var id_op = generateID(op_name);
+
+          const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+
+          let op_associations = op[1];
+          const ass_names = op_associations.split(',');
+          var code_associations = new String();
+
+          ass_names.forEach((name) => {
+            if(name.charCodeAt(0) != 46 && name != ''){ 
+              if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
+                var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+                var id_first_end = generateRandID();
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                var id_second_end = generateRandID();
+                var id_other_class = generateID(name);
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+                code_associations = code_associations + name_ass_code;
+              }
+            }  
+          })
+          code_op_ass = code_op_ass + code_op + code_associations;
+        }
+      })
+
+      const attributes = statements_attributes.split(',');
+      var code_attributes = new String();
+      attributes.forEach((attribute) => {
+        if(attribute != ''){
+          var id_attr = generateID(attribute);
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          code_attributes = code_attributes + code_att;
+        }
+      })
+
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="DSS infrastructure" xmi:type="uml:Class">\n${code_attributes}`;
+      var close_pack_code = `\t\t\t</packagedElement>\n`;
+      
+      setReport(id, createReport('dss infrastructure', statements_operations, statements_attributes, '', ''));
+
+      var code = `${pack_code}${code_op_ass}${close_pack_code}`;
+      return code;
+    }
+    else{
+      window.alert('A block with this name already exists');
+      let existingBlockType = getAlreadyInWsBlockType('dss infrastructure');
+      if(block.type == existingBlockType){
+        removeLastTypedBlock(block.type);
+      }
+      else{
+        removeLastTypedBlock(existingBlockType);
+      }
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['custom_digital'] = function(block) {
+  var text_name = block.getFieldValue('NAME');
+  if(block.getParent() !== null){
+    if(text_name.charCodeAt(0) != 46 && text_name != ''){
+      if(!blockAlreadyInWs(text_name.toLowerCase())){
+        var id = generateID(text_name);
+        var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
+        var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
+
+        const operations = statements_operations.split(":");
+        var code_op_ass = new String();
+
+        operations.forEach((operation) => {
+          if(operation != ''){
+            const op = operation.split(";");
+            let op_name = op[0].trim();
+            var id_op = generateID(op_name);
+
+            const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+
+            let op_associations = op[1];
+            const ass_names = op_associations.split(',');
+            var code_associations = new String();
+
+            ass_names.forEach((name) => {
+              if(name.charCodeAt(0) != 46 && name != ''){ 
+                if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
+                  var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+                  var id_first_end = generateRandID();
+                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                  var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                  var id_second_end = generateRandID();
+                  var id_other_class = generateID(name);
+                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                  var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                  var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                  var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                  var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                  var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+                  code_associations = code_associations + name_ass_code;
+                }
+              }  
+            })
+            code_op_ass = code_op_ass + code_op + code_associations;
+          }
+        })
+
+        const attributes = statements_attributes.split(',');
+        var code_attributes = new String();
+        attributes.forEach((attribute) => {
+          if(attribute != ''){
+            var id_attr = generateID(attribute);
+            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+            code_attributes = code_attributes + code_att;
+          }
+        })
+
+        var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+        var close_pack_code = `\t\t\t</packagedElement>\n`;
+        
+        setReport(id, createReport(text_name, statements_operations, statements_attributes, '', ''));
+
+        var code = `${pack_code}${code_op_ass}${close_pack_code}`;
+        return code;
+      }
+      else{
+        window.alert('A block with this name already exists');
+        let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
+        if(block.type == existingBlockType){
+          removeLastTypedBlock(block.type);
+        }
+        else{
+          removeLastTypedBlock(existingBlockType);
+        }
+      }
+    }
+    else{
+      return '';
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['wsn'] = function(block) {
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('wsn')){
+      while(block.isCollapsed()){
+        block.setOnChange(block.setCollapsed(false));
+      }
+      var id = generateID('wsn'); 
+      var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
+      var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
+
+      const operations = statements_operations.split(":");
+      var code_op_ass = new String();
+
+      operations.forEach((operation) => {
+        if(operation != ''){
+          const op = operation.split(";");
+          let op_name = op[0].trim();
+          var id_op = generateID(op_name);
+
+          const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+
+          let op_associations = op[1];
+          const ass_names = op_associations.split(',');
+          var code_associations = new String();
+
+          ass_names.forEach((name) => {
+            if(name.charCodeAt(0) != 46 && name != ''){ 
+              if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                 var id_first_end = generateRandID();
                 var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
@@ -1104,7 +950,7 @@ generator['custom_digital_component'] = function(block) {
 
       var text_aggregation = block.getFieldValue('AGGREGATION');
       var code_aggregation = new String();
-      if(text_aggregation != '' && ass_agg_AlreadyInWs(text_aggregation.toLowerCase())){
+      if(text_aggregation.charCodeAt(0) != 46 && text_aggregation.charCodeAt(0) != 46 && text_aggregation != '' && ass_agg_AlreadyInWs(text_aggregation.toLowerCase())){
         var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
         var id_first_end = generateRandID();
         var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" aggregation="shared" type="${id}">\n`;
@@ -1130,17 +976,17 @@ generator['custom_digital_component'] = function(block) {
         }
       })
 
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="WSN" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
 
-      setReport(id, createReport(text_name, statements_operations, statements_attributes, '', text_aggregation));
+      setReport(id, createReport('wsn', statements_operations, statements_attributes, '', text_aggregation));
      
       var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
       return code;
     }
     else{
       window.alert('A block with this name already exists');
-      let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
+      let existingBlockType = getAlreadyInWsBlockType('wsn');
       if(block.type == existingBlockType){
         removeLastTypedBlock(block.type);
       }
@@ -1148,6 +994,317 @@ generator['custom_digital_component'] = function(block) {
         removeLastTypedBlock(existingBlockType);
       }
     }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['dss_software'] = function(block) {
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('dss software')){
+      while(block.isCollapsed()){
+        block.setOnChange(block.setCollapsed(false));
+      }
+      var id = generateID('dss software'); 
+     
+      var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
+      var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
+
+      const operations = statements_operations.split(":");
+      var code_op_ass = new String();
+
+      operations.forEach((operation) => {
+        if(operation != ''){
+          const op = operation.split(";");
+          let op_name = op[0].trim();
+          var id_op = generateID(op_name);
+
+          const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+
+          let op_associations = op[1];
+          const ass_names = op_associations.split(',');
+          var code_associations = new String();
+
+          ass_names.forEach((name) => {
+            if(name.charCodeAt(0) != 46 && name != ''){ 
+              if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
+                var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+                var id_first_end = generateRandID();
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                var id_second_end = generateRandID();
+                var id_other_class = generateID(name);
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+                code_associations = code_associations + name_ass_code;
+              }
+            }  
+          })
+          code_op_ass = code_op_ass + code_op + code_associations;
+        }
+      })
+
+      var text_aggregation = block.getFieldValue('AGGREGATION');
+      var code_aggregation = new String();
+      if(text_aggregation.charCodeAt(0) != 46 && text_aggregation != '' && ass_agg_AlreadyInWs(text_aggregation.toLowerCase())){
+        var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+        var id_first_end = generateRandID();
+        var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" aggregation="shared" type="${id}">\n`;
+        var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+        var id_second_end = generateRandID();
+        var id_other_class = generateID(text_aggregation);
+        var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+        var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+        var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+        var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+        var close_member_code = `\t\t\t\t</ownedMember>\n`;
+        code_aggregation = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+        window.alert('OK! Existing block correctly identified');
+      }
+
+      const attributes = statements_attributes.split(',');
+      var code_attributes = new String();
+      attributes.forEach((attribute) => {
+        if(attribute != ''){
+          var id_attr = generateID(attribute);
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          code_attributes = code_attributes + code_att;
+        }
+      })
+
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="DSS software" xmi:type="uml:Class">\n${code_attributes}`;
+      var close_pack_code = `\t\t\t</packagedElement>\n`;
+
+      setReport(id, createReport('dss software', statements_operations, statements_attributes, '', text_aggregation));
+     
+      var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
+      return code;
+    }
+    else{
+      window.alert('A block with this name already exists');
+      let existingBlockType = getAlreadyInWsBlockType('dss software');
+      if(block.type == existingBlockType){
+        removeLastTypedBlock(block.type);
+      }
+      else{
+        removeLastTypedBlock(existingBlockType);
+      }
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['internet_gateway'] = function(block) {
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('internet gateway')){
+      while(block.isCollapsed()){
+        block.setOnChange(block.setCollapsed(false));
+      }
+      var id = generateID('internet gateway'); 
+      var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
+      var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
+
+      const operations = statements_operations.split(":");
+      var code_op_ass = new String();
+
+      operations.forEach((operation) => {
+        if(operation != ''){
+          const op = operation.split(";");
+          let op_name = op[0].trim();
+          var id_op = generateID(op_name);
+
+          const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+
+          let op_associations = op[1];
+          const ass_names = op_associations.split(',');
+          var code_associations = new String();
+
+          ass_names.forEach((name) => {
+            if(name.charCodeAt(0) != 46 && name != ''){ 
+              if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
+                var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+                var id_first_end = generateRandID();
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                var id_second_end = generateRandID();
+                var id_other_class = generateID(name);
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+                code_associations = code_associations + name_ass_code;
+              }
+            }  
+          })
+          code_op_ass = code_op_ass + code_op + code_associations;
+        }
+      })
+
+      var text_aggregation = block.getFieldValue('AGGREGATION');
+      var code_aggregation = new String();
+      if(text_aggregation.charCodeAt(0) != 46 && text_aggregation != '' && ass_agg_AlreadyInWs(text_aggregation.toLowerCase())){
+        var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+        var id_first_end = generateRandID();
+        var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" aggregation="shared" type="${id}">\n`;
+        var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+        var id_second_end = generateRandID();
+        var id_other_class = generateID(text_aggregation);
+        var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+        var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+        var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+        var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+        var close_member_code = `\t\t\t\t</ownedMember>\n`;
+        code_aggregation = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+        window.alert('OK! Existing block correctly identified');
+      }
+
+      const attributes = statements_attributes.split(',');
+      var code_attributes = new String();
+      attributes.forEach((attribute) => {
+        if(attribute != ''){
+          var id_attr = generateID(attribute);
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          code_attributes = code_attributes + code_att;
+        }
+      })
+
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Internet gateway" xmi:type="uml:Class">\n${code_attributes}`;
+      var close_pack_code = `\t\t\t</packagedElement>\n`;
+
+      setReport(id, createReport('internet gateway', statements_operations, statements_attributes, '', text_aggregation));
+     
+      var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
+      return code;
+    }
+    else{
+      window.alert('A block with this name already exists');
+      let existingBlockType = getAlreadyInWsBlockType('internet gateway');
+      if(block.type == existingBlockType){
+        removeLastTypedBlock(block.type);
+      }
+      else{
+        removeLastTypedBlock(existingBlockType);
+      }
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['custom_digital_component'] = function(block) {
+  var text_name = block.getFieldValue('NAME');
+  if(block.getParent() !== null){
+    if(text_name.charCodeAt(0) != 46 && text_name != ''){
+      if(!blockAlreadyInWs(text_name.toLowerCase())){
+        var id = generateID(text_name);
+        var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
+        var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
+
+        const operations = statements_operations.split(":");
+        var code_op_ass = new String();
+
+        operations.forEach((operation) => {
+          if(operation != ''){
+            const op = operation.split(";");
+            let op_name = op[0].trim();
+            var id_op = generateID(op_name);
+
+            const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+
+            let op_associations = op[1];
+            const ass_names = op_associations.split(',');
+            var code_associations = new String();
+
+            ass_names.forEach((name) => {
+              if(name.charCodeAt(0) != 46 && name != ''){ 
+                if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
+                  var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+                  var id_first_end = generateRandID();
+                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                  var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                  var id_second_end = generateRandID();
+                  var id_other_class = generateID(name);
+                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                  var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                  var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                  var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                  var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                  var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+                  code_associations = code_associations + name_ass_code;
+                }
+              }  
+            })
+            code_op_ass = code_op_ass + code_op + code_associations;
+          }
+        })
+
+        var text_aggregation = block.getFieldValue('AGGREGATION');
+        var code_aggregation = new String();
+        if(text_aggregation.charCodeAt(0) != 46 && text_aggregation != '' && ass_agg_AlreadyInWs(text_aggregation.toLowerCase())){
+          var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+          var id_first_end = generateRandID();
+          var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" aggregation="shared" type="${id}">\n`;
+          var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+          var id_second_end = generateRandID();
+          var id_other_class = generateID(text_aggregation);
+          var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+          var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+          var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+          var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+          var close_member_code = `\t\t\t\t</ownedMember>\n`;
+          code_aggregation = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+          window.alert('OK! Existing block correctly identified');
+        }
+
+        const attributes = statements_attributes.split(',');
+        var code_attributes = new String();
+        attributes.forEach((attribute) => {
+          if(attribute != ''){
+            var id_attr = generateID(attribute);
+            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+            code_attributes = code_attributes + code_att;
+          }
+        })
+
+        var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+        var close_pack_code = `\t\t\t</packagedElement>\n`;
+
+        setReport(id, createReport(text_name, statements_operations, statements_attributes, '', text_aggregation));
+       
+        var code = `${pack_code}${code_op_ass}${code_aggregation}${close_pack_code}`;
+        return code;
+      }
+      else{
+        window.alert('A block with this name already exists');
+        let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
+        if(block.type == existingBlockType){
+          removeLastTypedBlock(block.type);
+        }
+        else{
+          removeLastTypedBlock(existingBlockType);
+        }
+      }
+    }
+    else{
+      return '';
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
   }
 };
 
@@ -1157,102 +1314,16 @@ generator['custom_digital_component'] = function(block) {
 // ------------------------------------------------------------- STRUMENTI ------------------------------------------------------------- //
 
 generator['irrigation_tool'] = function(block) {
-  if(!blockAlreadyInWs('irrigation tool')){
-    var id = generateID('irrigation tool'); 
-    var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
-    var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
-
-    const operations = statements_operations.split(".");
-    var code_op_ass = new String();
-
-    operations.forEach((operation) => {
-      if(operation != ''){
-        const op = operation.split(";");
-        let op_name = op[0].trim();
-        var id_op = generateID(op_name);
-
-        const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
-
-        let op_associations = op[1];
-        const ass_names = op_associations.split(',');
-        var code_associations = new String();
-
-        ass_names.forEach((name) => {
-          if(name.charCodeAt(0) != 46 && name != ''){  
-            if(ass_agg_AlreadyInWs(name.toLowerCase())){
-              var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-              var id_first_end = generateRandID();
-              var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-              var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-              var id_second_end = generateRandID();
-              var id_other_class = generateID(name);
-              var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-              var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-              var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-              var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-              var close_member_code = `\t\t\t\t</ownedMember>\n`;
-              var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-              code_associations = code_associations + name_ass_code;
-            }
-          }  
-        })
-        code_op_ass = code_op_ass + code_op + code_associations;
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('irrigation tool')){
+      while(block.isCollapsed()){
+        block.setOnChange(block.setCollapsed(false));
       }
-    })
-
-    const attributes = statements_attributes.split(',');
-    var code_attributes = new String();
-    attributes.forEach((attribute) => {
-      if(attribute != ''){
-        var id_attr = generateID(attribute);
-        var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
-        code_attributes = code_attributes + code_att;
-      }
-    })
-
-    var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Irrigation tool" xmi:type="uml:Class">\n${code_attributes}`;
-    var close_pack_code = `\t\t\t</packagedElement>\n`;
-
-    var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
-    const gen_names = statements_generalizations.split(";"); //nomi delle sottoclassi separati da ';'
-    var code_generalizations = new String();
-
-    //per ogni generalizzazione inserita creo la sottoclasse corrispondente legata all'id della super classe
-    gen_names.forEach((name) => {
-      if(name != ''){
-        var id_spec = generateID(name); //id della sotto classe
-        var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-        var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
-        code_generalizations = code_generalizations + pack_gen;
-      }
-    })
-
-    setReport(id, createReport('irrigation tool', statements_operations, statements_attributes, statements_generalizations, ''));
-   
-    var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('irrigation tool');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-generator['custom_tool'] = function(block) {
-  var text_name = block.getFieldValue('NAME');
-  if(text_name.charCodeAt(0) != 46 && text_name != ''){
-    if(!blockAlreadyInWs(text_name.toLowerCase())){
-      var id = generateID(text_name.toLowerCase()); 
+      var id = generateID('irrigation tool'); 
       var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
       var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
 
-      const operations = statements_operations.split(".");
+      const operations = statements_operations.split(":");
       var code_op_ass = new String();
 
       operations.forEach((operation) => {
@@ -1269,7 +1340,7 @@ generator['custom_tool'] = function(block) {
 
           ass_names.forEach((name) => {
             if(name.charCodeAt(0) != 46 && name != ''){  
-              if(ass_agg_AlreadyInWs(name.toLowerCase())){
+              if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                 var id_first_end = generateRandID();
                 var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
@@ -1300,7 +1371,7 @@ generator['custom_tool'] = function(block) {
         }
       })
 
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Irrigation tool" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
 
       var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
@@ -1317,14 +1388,14 @@ generator['custom_tool'] = function(block) {
         }
       })
 
-      setReport(id, createReport(text_name, statements_operations, statements_attributes, statements_generalizations, ''));
+      setReport(id, createReport('irrigation tool', statements_operations, statements_attributes, statements_generalizations, ''));
      
       var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
       return code;
     }
     else{
       window.alert('A block with this name already exists');
-      let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
+      let existingBlockType = getAlreadyInWsBlockType('irrigation tool');
       if(block.type == existingBlockType){
         removeLastTypedBlock(block.type);
       }
@@ -1332,6 +1403,110 @@ generator['custom_tool'] = function(block) {
         removeLastTypedBlock(existingBlockType);
       }
     }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+generator['custom_tool'] = function(block) {
+  var text_name = block.getFieldValue('NAME');
+  if(block.getParent() !== null){
+    if(text_name.charCodeAt(0) != 46 && text_name != ''){
+      if(!blockAlreadyInWs(text_name.toLowerCase())){
+        var id = generateID(text_name.toLowerCase()); 
+        var statements_attributes = javascriptGenerator.statementToCode(block, 'ATTRIBUTES');
+        var statements_operations = javascriptGenerator.statementToCode(block, 'OPERATIONS');
+
+        const operations = statements_operations.split(":");
+        var code_op_ass = new String();
+
+        operations.forEach((operation) => {
+          if(operation != ''){
+            const op = operation.split(";");
+            let op_name = op[0].trim();
+            var id_op = generateID(op_name);
+
+            const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+
+            let op_associations = op[1];
+            const ass_names = op_associations.split(',');
+            var code_associations = new String();
+
+            ass_names.forEach((name) => {
+              if(name.charCodeAt(0) != 46 && name != ''){  
+                if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
+                  var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
+                  var id_first_end = generateRandID();
+                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                  var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                  var id_second_end = generateRandID();
+                  var id_other_class = generateID(name);
+                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                  var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                  var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                  var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                  var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                  var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
+                  code_associations = code_associations + name_ass_code;
+                }
+              }  
+            })
+            code_op_ass = code_op_ass + code_op + code_associations;
+          }
+        })
+
+        const attributes = statements_attributes.split(',');
+        var code_attributes = new String();
+        attributes.forEach((attribute) => {
+          if(attribute != ''){
+            var id_attr = generateID(attribute);
+            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+            code_attributes = code_attributes + code_att;
+          }
+        })
+
+        var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+        var close_pack_code = `\t\t\t</packagedElement>\n`;
+
+        var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
+        const gen_names = statements_generalizations.split(";"); //nomi delle sottoclassi separati da ';'
+        var code_generalizations = new String();
+
+        //per ogni generalizzazione inserita creo la sottoclasse corrispondente legata all'id della super classe
+        gen_names.forEach((name) => {
+          if(name != ''){
+            var id_spec = generateID(name); //id della sotto classe
+            var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
+            var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
+            code_generalizations = code_generalizations + pack_gen;
+          }
+        })
+
+        setReport(id, createReport(text_name, statements_operations, statements_attributes, statements_generalizations, ''));
+       
+        var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
+        return code;
+      }
+      else{
+        window.alert('A block with this name already exists');
+        let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
+        if(block.type == existingBlockType){
+          removeLastTypedBlock(block.type);
+        }
+        else{
+          removeLastTypedBlock(existingBlockType);
+        }
+      }
+    }
+    else{
+      return '';
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
   }
 };
 
@@ -1341,106 +1516,14 @@ generator['custom_tool'] = function(block) {
 
 // la generalizzazione restituisce solo il nome
 generator['dam'] = function(block) {
-  if(!blockAlreadyInWs('dam')){
-    var code = `Dam;`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('dam');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-// la generalizzazione restituisce solo il nome
-generator['river'] = function(block) {
-  if(!blockAlreadyInWs('river')){
-  var code = `River;`;
-  return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('river');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-// la generalizzazione restituisce solo il nome
-generator['well'] = function(block) {
-  if(!blockAlreadyInWs('well')){
-    var code = `Well;`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('well');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-// la generalizzazione restituisce solo il nome
-generator['dripper'] = function(block) {
-  if(!blockAlreadyInWs('dripper')){
-    var code = `Dripper;`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('dripper');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-// la generalizzazione restituisce solo il nome
-generator['sprinkler'] = function(block) {
-  if(!blockAlreadyInWs('sprinkler')){
-    var code = `Sprinkler;`;
-    return code;
-  }
-  else{
-    window.alert('A block with this name already exists');
-    let existingBlockType = getAlreadyInWsBlockType('sprinkler');
-    if(block.type == existingBlockType){
-      removeLastTypedBlock(block.type);
-    }
-    else{
-      removeLastTypedBlock(existingBlockType);
-    }
-  }
-};
-
-
-// la generalizzazione restituisce solo il nome
-generator['custom_generalization'] = function(block) {
-  var text_name = block.getFieldValue('NAME');  
-  if(text_name.charCodeAt(0) != 46 && text_name != ''){
-    if(!blockAlreadyInWs(text_name.toLowerCase())){
-      var code = `${text_name};`;
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('dam')){
+      var code = `Dam;`;
       return code;
     }
     else{
       window.alert('A block with this name already exists');
-      let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
+      let existingBlockType = getAlreadyInWsBlockType('dam');
       if(block.type == existingBlockType){
         removeLastTypedBlock(block.type);
       }
@@ -1448,6 +1531,137 @@ generator['custom_generalization'] = function(block) {
         removeLastTypedBlock(existingBlockType);
       }
     }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+// la generalizzazione restituisce solo il nome
+generator['river'] = function(block) {
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('river')){
+    var code = `River;`;
+    return code;
+    }
+    else{
+      window.alert('A block with this name already exists');
+      let existingBlockType = getAlreadyInWsBlockType('river');
+      if(block.type == existingBlockType){
+        removeLastTypedBlock(block.type);
+      }
+      else{
+        removeLastTypedBlock(existingBlockType);
+      }
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+// la generalizzazione restituisce solo il nome
+generator['well'] = function(block) {
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('well')){
+      var code = `Well;`;
+      return code;
+    }
+    else{
+      window.alert('A block with this name already exists');
+      let existingBlockType = getAlreadyInWsBlockType('well');
+      if(block.type == existingBlockType){
+        removeLastTypedBlock(block.type);
+      }
+      else{
+        removeLastTypedBlock(existingBlockType);
+      }
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+// la generalizzazione restituisce solo il nome
+generator['dripper'] = function(block) {
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('dripper')){
+      var code = `Dripper;`;
+      return code;
+    }
+    else{
+      window.alert('A block with this name already exists');
+      let existingBlockType = getAlreadyInWsBlockType('dripper');
+      if(block.type == existingBlockType){
+        removeLastTypedBlock(block.type);
+      }
+      else{
+        removeLastTypedBlock(existingBlockType);
+      }
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+// la generalizzazione restituisce solo il nome
+generator['sprinkler'] = function(block) {
+  if(block.getParent() !== null){
+    if(!blockAlreadyInWs('sprinkler')){
+      var code = `Sprinkler;`;
+      return code;
+    }
+    else{
+      window.alert('A block with this name already exists');
+      let existingBlockType = getAlreadyInWsBlockType('sprinkler');
+      if(block.type == existingBlockType){
+        removeLastTypedBlock(block.type);
+      }
+      else{
+        removeLastTypedBlock(existingBlockType);
+      }
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
+  }
+};
+
+
+// la generalizzazione restituisce solo il nome
+generator['custom_generalization'] = function(block) {
+  var text_name = block.getFieldValue('NAME');  
+  if(block.getParent() !== null){
+    if(text_name.charCodeAt(0) != 46 && text_name != ''){
+      if(!blockAlreadyInWs(text_name.toLowerCase())){
+        var code = `${text_name};`;
+        return code;
+      }
+      else{
+        window.alert('A block with this name already exists');
+        let existingBlockType = getAlreadyInWsBlockType(text_name.toLowerCase());
+        if(block.type == existingBlockType){
+          removeLastTypedBlock(block.type);
+        }
+        else{
+          removeLastTypedBlock(existingBlockType);
+        }
+      }
+    }
+    else{
+      return '';
+    }
+  }
+  else{
+    window.alert('Insert the block in the space provided');
+    block.dispose(true);
   }
 };
 

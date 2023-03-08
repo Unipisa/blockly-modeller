@@ -42,19 +42,25 @@ export const toolbox = {
           'type': 'custom_actor',
         },
         {
+          'kind': 'label',
+          'text': '  PRESET BLOCKS:',
+        },
+        {
           'kind': 'block',
           'type': 'default_actor',
+          'collapsed': 'true',
         },
       ],
     },
     {
       'kind': 'category',
-      'name': 'Operations',
+      'name': 'Activities',
       'colour': "#90B763",
       'contents': [
         {
           'kind': 'block',
           'type': 'custom_operation',
+          //'enabled': false,
         },
         {
           'kind': 'block',
@@ -83,16 +89,18 @@ export const toolbox = {
             {
               'kind': 'block',
               'type': 'water_resource',
+              'collapsed': 'true',
             },
             {
               'kind': 'block',
               'type': 'field_resource',
+              'collapsed': 'true',
             },
           ],
         },
         {
           'kind': 'category',
-          'name': 'Tool',
+          'name': 'Tools',
           'colour': "#dbab27",
           'contents': [
             {
@@ -106,12 +114,13 @@ export const toolbox = {
             {
               'kind': 'block',
               'type': 'irrigation_tool',
+              'collapsed': 'true',
             },
           ],
         },
         {
           'kind': 'category',
-          'name': 'Digital tool ',
+          'name': 'Digital tools',
           'colour': "#64b0a9",
           'contents': [
             {
@@ -129,18 +138,22 @@ export const toolbox = {
             {
               'kind': 'block',
               'type': 'dss_infrastructure',
+              'collapsed': 'true',
             },
             {
               'kind': 'block',
               'type': 'wsn',
+              'collapsed': 'true',
             },
             {
               'kind': 'block',
               'type': 'internet_gateway',
+              'collapsed': 'true',
             },
             {
               'kind': 'block',
               'type': 'dss_software',
+              'collapsed': 'true',
             },
           ],
         },
@@ -148,7 +161,7 @@ export const toolbox = {
     },
     {
       'kind': 'category',
-      'name': 'Advanced settings',
+      'name': 'Advanced',
       'colour': "#D5698E",
       'contents': [
         {
@@ -184,7 +197,7 @@ export const toolbox = {
         },
         {
           'kind': 'category',
-          'name': 'Generalizations',
+          'name': 'Specialisations',
           'colour': "#D5698E",
           'contents': [
             {

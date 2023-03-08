@@ -7,39 +7,34 @@
    <body>
     <div id="pageContainer">
       <div id="blocklyDiv">
-        <input id="customTitle" type='text' placeholder='Your diagram...' style="font-family: Helvetica"/>
-        <!-- h3 style="font-family: Helvetica", id="codeTitle">Schema Blockly per modello UML</h3 -->
+        <input id="customTitle" type='text' placeholder='Insert title...' style="font-family: Helvetica"/>
       </div>
       <div id="outputPane">
-        <h3 style="font-family: Helvetica", id="codeTitle">Xmi code for UML model</h3>
+        <h3 style="font-family: Helvetica", id="codeTitle">UML model (XMI)</h3>
         <pre id="generatedCode"><code id="xmiCode"></code></pre>
-        <h3 style="font-family: Helvetica", id="reportTitle">Text report</h3>
+        <h3 style="font-family: Helvetica", id="reportTitle">Report</h3>
         <div id="schemeReport">
-          <div id="txtReport">
-            <!-- script type="text/javascript">
-              var headTxtReport = document.getElementById("headTxtReport");
-              headTxtReport.innerText = document.getElementById("customTitle").value;
-            </script -->
-          </div>
+          <div id="txtReport"></div>
+          <textarea id="comment" rows="2" cols="46" placeholder='Add comment to report (optional)...'></textarea>
         </div>
         <div id="buttonArea">
-          <!--
-          <button id="copyButton" class="button-13" onclick="copyCode('xmiCode')">Copy code</button>
-          <script type="application/javascript">
-            function copyCode(code) {
-              navigator.clipboard.writeText(document.getElementById(code).innerText);
-              alert("Codice copiato");
-            }
-          </script>
-          -->
           <button id="downloadButton" class="button-13" onclick="downloadFile()">Download .xmi file</button>
           <script>
             const downloadFile = () => {
               const link = document.createElement("a");
               const content = document.getElementById("xmiCode").innerText;
+              const title = document.getElementById("customTitle");
+
+              // get date
+              var today = new Date();
+              var dd = String(today.getDate()).padStart(2, '0');
+              var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
+              var yyyy = today.getFullYear();
+              today = dd + '-' + mm + '-' + yyyy;
+              
               const file = new Blob([content], { type: 'text/xml' });
               link.href = URL.createObjectURL(file);
-              link.download = "diagram_UML.xmi";
+              link.download = `${today}_diagramUML_${title.value}.xmi`;
               link.click();
               URL.revokeObjectURL(link.href);
             };
@@ -48,10 +43,24 @@
           <script>
             const downloadReport = () => {
               const link = document.createElement("a");
+              const comment = document.getElementById("comment");
+              var textComment = new String();
+              if(comment.value != ''){
+                textComment = '\nNOTES: ' + comment.value;
+              }
               const content = document.getElementById("txtReport").innerText;
-              const file = new Blob([content], { type: 'text/xml' });
+              const title = document.getElementById("customTitle");
+              
+              // get date
+              var today = new Date();
+              var dd = String(today.getDate()).padStart(2, '0');
+              var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
+              var yyyy = today.getFullYear();
+              today = dd + '-' + mm + '-' + yyyy;
+
+              const file = new Blob([content, textComment], { type: 'text/xml' });
               link.href = URL.createObjectURL(file);
-              link.download = "diagram_REPORT.txt";
+              link.download = `${today}_diagramREPORT_${title.value}.txt`;
               link.click();
               URL.revokeObjectURL(link.href);
             };

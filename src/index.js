@@ -15,6 +15,8 @@ import './index.css';
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
 Object.assign(javascriptGenerator, generator);
+Blockly.ContextMenuRegistry.registry.unregister('blockComment');
+Blockly.ContextMenuRegistry.registry.unregister('blockDisable');
 
 // Set up UI elements and inject Blockly
 const codeDiv = document.getElementById('generatedCode').firstChild;
@@ -46,7 +48,7 @@ const ws = Blockly.inject(blocklyDiv, {toolbox,
           pinch: true}
 });
 
-var xmlText = '<xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"><block type="info" id="TBgAn^~ir@P9*e=ib?;@" x="120" y="50"></block></xml>';
+var xmlText = '<xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"><block type="info" id="TBgAn^~ir@P9*e=ib?;@" x="350" y="50"></block></xml>';
 Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xmlText), ws);
 
 function generateID(nomeClasse) {
@@ -57,6 +59,13 @@ function generateID(nomeClasse) {
     id = id + charCode;
   }
   return id;
+}
+
+export function enableBlocks(){
+  window.alert('eccomi');
+  let blocks = ws.getBlocksByType('custom_operation', true);
+  window.alert(blocks);
+  blocks[0].setEnabled(true);
 }
 
 export function removeLastTypedBlock(type){
@@ -120,10 +129,16 @@ export function setReport(id, text){
   showReport();
 }
 
-
+const diagramName = document.getElementById('customTitle');
 export function generateReport() {
   let i = 0;
-  var concatTextReport = new String('Main diagram items \n');
+  var concatTextReport = new String();
+  if(diagramName.value != ''){
+    concatTextReport = diagramName.value.toUpperCase() + ' - Diagram entities \n'; 
+  }
+  else{
+    concatTextReport = 'Diagram entities \n'
+  }
   const iterator = textReport.values();
   while(i < textReport.size){
     concatTextReport = concatTextReport + iterator.next().value + '\n'; 
@@ -201,4 +216,3 @@ ws.addChangeListener((e) => {
     showReport();
   }
 });
-

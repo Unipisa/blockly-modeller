@@ -10,11 +10,19 @@ const myBlocks = [
   // ------------------------------------------------------------- SCHEMA ------------------------------------------------------------- // 
   {
   "type": "info",
-  "message0": "BUILT YOUR SCHEME! %1 • Who are the actors involved? %2 Actors blocks: %3 %4 • Which are the natural resources? %5 Resources blocks: %6 %7 • Which tools are avabile? %8 Tools blocks: %9 %10 • Which are the digital tools? %11 Digital tools blocks: %12 %13",
+  "message0": "• Who are the actors involved? %1 Insert actors: %2 %3 • Which are the resources? %4 Resources blocks: %5 %6",
   "args0": [
     {
+      "type": "input_dummy"
+    },
+    {
       "type": "input_dummy",
       "align": "CENTRE"
+    },
+    {
+      "type": "input_statement",
+      "name": "ACTORS",
+      "check": "actor",
     },
     {
       "type": "input_dummy"
@@ -25,41 +33,10 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ACTORS"
+      "name": "RESOURCES_UNIT",
+      "check": "resource",
     },
-    {
-      "type": "input_dummy"
-    },
-    {
-      "type": "input_dummy",
-      "align": "CENTRE"
-    },
-    {
-      "type": "input_statement",
-      "name": "NATURAL_RESOURCES"
-    },
-    {
-      "type": "input_dummy"
-    },
-    {
-      "type": "input_dummy",
-      "align": "CENTRE"
-    },
-    {
-      "type": "input_statement",
-      "name": "TOOL"
-    },
-    {
-      "type": "input_dummy"
-    },
-    {
-      "type": "input_dummy",
-      "align": "CENTRE"
-    },
-    {
-      "type": "input_statement",
-      "name": "DIGITAL_TOOL"
-    }
+    
   ],
   "colour": '#a68c83',
   "tooltip": "",
@@ -69,7 +46,7 @@ const myBlocks = [
   // ------------------------------------------------------------- ATTORI ------------------------------------------------------------- // 
   {
   "type": "custom_actor",
-  "message0": "Custom ACTOR with role: %1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the actor's attributes? %7 %8",
+  "message0": "Custom ACTOR: %1 %2 What are the activities carried out by the actor? %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the actor's attributes? %7 %8",
   "args0": [
     {
       "type": "field_input",
@@ -84,7 +61,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -99,18 +77,19 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "actor",
+  "nextStatement": "actor",
   "colour": '#D87D2D',
   "tooltip": "",
   "helpUrl": ""
   },
   {
   "type": "default_actor",
-  "message0": "%1 %2 DOES %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the actor's attributes? %7 %8",
+  "message0": "%1 %2 What are the activities carried out by the actor? %3 %4 -------------------------------------------------- %5 Advanced settings: %6 What are the actor's attributes? %7 %8",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -125,7 +104,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -141,11 +121,12 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "actor",
+  "nextStatement": "actor",
   "colour": '#D87D2D',
   "tooltip": "",
   "helpUrl": ""
@@ -162,8 +143,8 @@ const myBlocks = [
       "text": "username"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "attribute",
+  "nextStatement": "attribute",
   "colour": '#D5698E',
   "tooltip": "",
   "helpUrl": ""
@@ -178,8 +159,8 @@ const myBlocks = [
       "text": "password"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "attribute",
+  "nextStatement": "attribute",
   "colour": "#D5698E",
   "tooltip": "",
   "helpUrl": ""
@@ -194,8 +175,8 @@ const myBlocks = [
       "text": "..............."
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "attribute",
+  "nextStatement": "attribute",
   "colour": "#D5698E",
   "tooltip": "",
   "helpUrl": ""
@@ -210,8 +191,8 @@ const myBlocks = [
       "text": "id"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "attribute",
+  "nextStatement": "attribute",
   "colour": "#D5698E",
   "tooltip": "",
   "helpUrl": ""
@@ -226,8 +207,8 @@ const myBlocks = [
       "text": "coords"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "attribute",
+  "nextStatement": "attribute",
   "colour": "#D5698E",
   "tooltip": "",
   "helpUrl": ""
@@ -242,8 +223,8 @@ const myBlocks = [
       "text": "area"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "attribute",
+  "nextStatement": "attribute",
   "colour": "#D5698E",
   "tooltip": "",
   "helpUrl": ""
@@ -252,7 +233,7 @@ const myBlocks = [
   // ------------------------------------------------------------- OPERAZIONI ------------------------------------------------------------- // 
   {
   "type": "custom_operation",
-  "message0": "Custom ACTION: %1 %2 • Because to %3 %4 • Interacting with %5  (comma separated list of items) %6",
+  "message0": "Custom ACTIVITY: %1 %2 • Motivation to %3 %4 • Interacting with actors %5  (comma separated list of items) %6",
   "args0": [
     {
       "type": "field_input",
@@ -279,8 +260,8 @@ const myBlocks = [
       "text": "..............."
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "operation",
+  "nextStatement": "operation",
   "colour": "#90B763",
   "tooltip": "",
   "helpUrl": ""
@@ -295,8 +276,8 @@ const myBlocks = [
       "text": "login"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "operation",
+  "nextStatement": "operation",
   "colour": "#90B763",
   "tooltip": "",
   "helpUrl": ""
@@ -321,7 +302,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -336,11 +318,12 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#7C61AC',
   "tooltip": "",
   "helpUrl": ""
@@ -362,7 +345,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -377,7 +361,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     },
     {
       "type": "input_dummy"
@@ -387,11 +372,12 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "GENERALIZATIONS"
+      "name": "GENERALIZATIONS",
+      "check": "generalization",
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#7C61AC',
   "tooltip": "",
   "helpUrl": ""
@@ -413,7 +399,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -428,7 +415,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     },
     {
       "type": "input_dummy"
@@ -438,11 +426,12 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "GENERALIZATIONS"
+      "name": "GENERALIZATIONS",
+      "check": "generalization",
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#7C61AC',
   "tooltip": "",
   "helpUrl": ""
@@ -469,7 +458,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -484,7 +474,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     },
     {
       "type": "input_dummy"
@@ -494,11 +485,12 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "GENERALIZATIONS"
+      "name": "GENERALIZATIONS",
+      "check": "generalization",
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#dbab27',
   "tooltip": "",
   "helpUrl": ""
@@ -520,7 +512,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -535,7 +528,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     },
     {
       "type": "input_dummy"
@@ -545,11 +539,12 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "GENERALIZATIONS"
+      "name": "GENERALIZATIONS",
+      "check": "generalization",
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#dbab27',
   "tooltip": "",
   "helpUrl": ""
@@ -576,7 +571,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -591,11 +587,12 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     },
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#64b0a9',
   "tooltip": "",
   "helpUrl": ""
@@ -617,7 +614,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -632,11 +630,12 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     },
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#64b0a9',
   "tooltip": "",
   "helpUrl": ""
@@ -658,7 +657,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -673,7 +673,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     },
     {
       "type": "input_dummy"
@@ -684,8 +685,8 @@ const myBlocks = [
       "text": "..............."
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#64b0a9',
   "tooltip": "",
   "helpUrl": ""
@@ -707,7 +708,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -722,7 +724,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     },
     {
       "type": "input_dummy"
@@ -733,8 +736,8 @@ const myBlocks = [
       "text": "..............."
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#64b0a9',
   "tooltip": "",
   "helpUrl": ""
@@ -756,7 +759,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -771,7 +775,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     },
     {
       "type": "input_dummy"
@@ -782,8 +787,8 @@ const myBlocks = [
       "text": "..............."
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#64b0a9',
   "tooltip": "",
   "helpUrl": ""
@@ -805,7 +810,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "OPERATIONS"
+      "name": "OPERATIONS",
+      "check": "operation",
     },
     {
       "type": "input_dummy",
@@ -820,7 +826,8 @@ const myBlocks = [
     },
     {
       "type": "input_statement",
-      "name": "ATTRIBUTES"
+      "name": "ATTRIBUTES",
+      "check": "attribute",
     },
     {
       "type": "input_dummy"
@@ -831,8 +838,8 @@ const myBlocks = [
       "text": "..............."
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "resource",
+  "nextStatement": "resource",
   "colour": '#64b0a9',
   "tooltip": "",
   "helpUrl": ""
@@ -851,8 +858,8 @@ const myBlocks = [
       "text": "..............."
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "generalization",
+  "nextStatement": "generalization",
   "colour": '#D5698E',
   "tooltip": "",
   "helpUrl": ""
@@ -867,8 +874,8 @@ const myBlocks = [
       "text": "Dam"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "generalization",
+  "nextStatement": "generalization",
   "colour": '#D5698E',
   "tooltip": "",
   "helpUrl": ""
@@ -883,8 +890,8 @@ const myBlocks = [
       "text": "River"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "generalization",
+  "nextStatement": "generalization",
   "colour": '#D5698E',
   "tooltip": "",
   "helpUrl": ""
@@ -899,8 +906,8 @@ const myBlocks = [
       "text": "Well"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "generalization",
+  "nextStatement": "generalization",
   "colour": '#D5698E',
   "tooltip": "",
   "helpUrl": ""
@@ -915,8 +922,8 @@ const myBlocks = [
       "text": "Dripper"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "generalization",
+  "nextStatement": "generalization",
   "colour": '#D5698E',
   "tooltip": "",
   "helpUrl": ""
@@ -931,8 +938,8 @@ const myBlocks = [
       "text": "Sprinkler"
     }
   ],
-  "previousStatement": null,
-  "nextStatement": null,
+  "previousStatement": "generalization",
+  "nextStatement": "generalization",
   "colour": '#D5698E',
   "tooltip": "",
   "helpUrl": ""
