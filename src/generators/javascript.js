@@ -10,7 +10,6 @@ import {ass_agg_AlreadyInWs} from'../index.js';
 import {removeLastTypedBlock} from'../index.js';
 import {getAlreadyInWsBlockType} from'../index.js';
 import {setReport} from'../index.js';
-import {enableBlocks} from'../index.js';
 
 
 export const generator = Object.create(null);
@@ -63,7 +62,7 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
   //se ci sono generalizzazioni
   if(allGeneralizations != ''){
     const generalizations = allGeneralizations.split(";");
-    allGenReport = ' which comes in the form of';
+    allGenReport = ' is generalisation of';
     generalizations.forEach((generalization) => {
       if(generalization != ''){
         if(generalizations.length > 2 && generalizations.indexOf(generalization) == (generalizations.length - 3)){
@@ -90,11 +89,14 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
   if(allOperations != ''){
     const operations = allOperations.split(":");
 
+    if(allGeneralizations != ''){
+      allOpReport = ' and';
+    }
     if(operations.length > 2){ 
-      allOpReport = ' does the actions of: \n';
+      allOpReport = allOpReport + ' does the actions of: \n';
     }
     else{
-      allOpReport = ' does the action of: \n';
+      allOpReport = allOpReport + ' does the action of: \n';
     }
 
     operations.forEach((operation) => {
@@ -108,8 +110,13 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
 
         var opReport = '\t- ' + op_name;
 
+        if(motivation[0].charCodeAt(0) != 46 && motivation != ''){
+          opReport = opReport + ' because ' + motivation;
+        }
+
+
         if(ass_names[0].charCodeAt(0) != 46 && ass_names != ''){
-          opReport = opReport + ' interacting with ';
+          opReport = opReport + ', interacting with ';
 
           ass_names.forEach((name) => {
             if(name != '' && name != ' '){
@@ -117,11 +124,6 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
             }
           })
           opReport = opReport.substring(0, opReport.length - 1);
-        }
-
-
-        if(motivation[0].charCodeAt(0) != 46 && motivation != ''){
-          opReport = opReport + ' because to ' + motivation;
         }
 
         opReport = opReport + '\n';
@@ -214,7 +216,7 @@ generator['default_actor'] = function(block) {
       attributes.forEach((attribute) => {
         if(attribute != ''){
           var id_attr = generateID(attribute);
-          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
           code_attributes = code_attributes + code_att;
         }
       })
@@ -296,7 +298,7 @@ generator['custom_actor'] = function(block) {
         attributes.forEach((attribute) => {
           if(attribute != ''){
             var id_attr = generateID(attribute);
-            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
             code_attributes = code_attributes + code_att;
           }
         })
@@ -360,7 +362,7 @@ generator['custom_attribute'] = function(block) {
   var text_name = block.getFieldValue('NAME');
   if(block.getParent() !== null){
     if(text_name.charCodeAt(0) != 46 && text_name != ''){
-      var code =  `${text_name}`;
+      var code =  `${text_name},`;
       return code;
     }
     else{
@@ -499,7 +501,7 @@ generator['field_resource'] = function(block) {
       attributes.forEach((attribute) => {
         if(attribute != ''){
           var id_attr = generateID(attribute);
-          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
           code_attributes = code_attributes + code_att;
         }
       })
@@ -583,7 +585,7 @@ generator['water_resource'] = function(block) {
       attributes.forEach((attribute) => {
         if(attribute != ''){
           var id_attr = generateID(attribute);
-          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
           code_attributes = code_attributes + code_att;
         }
       })
@@ -679,7 +681,7 @@ generator['custom_resource'] = function(block) {
         attributes.forEach((attribute) => {
           if(attribute != ''){
             var id_attr = generateID(attribute);
-            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
             code_attributes = code_attributes + code_att;
           }
         })
@@ -784,7 +786,7 @@ generator['dss_infrastructure'] = function(block) {
       attributes.forEach((attribute) => {
         if(attribute != ''){
           var id_attr = generateID(attribute);
-          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
           code_attributes = code_attributes + code_att;
         }
       })
@@ -866,7 +868,7 @@ generator['custom_digital'] = function(block) {
         attributes.forEach((attribute) => {
           if(attribute != ''){
             var id_attr = generateID(attribute);
-            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
             code_attributes = code_attributes + code_att;
           }
         })
@@ -963,7 +965,7 @@ generator['wsn'] = function(block) {
         var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
         var close_member_code = `\t\t\t\t</ownedMember>\n`;
         code_aggregation = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-        window.alert('OK! Existing block correctly identified');
+        //window.alert('OK! Existing block correctly identified');
       }
 
       const attributes = statements_attributes.split(',');
@@ -971,7 +973,7 @@ generator['wsn'] = function(block) {
       attributes.forEach((attribute) => {
         if(attribute != ''){
           var id_attr = generateID(attribute);
-          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
           code_attributes = code_attributes + code_att;
         }
       })
@@ -1065,7 +1067,7 @@ generator['dss_software'] = function(block) {
         var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
         var close_member_code = `\t\t\t\t</ownedMember>\n`;
         code_aggregation = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-        window.alert('OK! Existing block correctly identified');
+        //window.alert('OK! Existing block correctly identified');
       }
 
       const attributes = statements_attributes.split(',');
@@ -1073,7 +1075,7 @@ generator['dss_software'] = function(block) {
       attributes.forEach((attribute) => {
         if(attribute != ''){
           var id_attr = generateID(attribute);
-          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
           code_attributes = code_attributes + code_att;
         }
       })
@@ -1166,7 +1168,7 @@ generator['internet_gateway'] = function(block) {
         var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
         var close_member_code = `\t\t\t\t</ownedMember>\n`;
         code_aggregation = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-        window.alert('OK! Existing block correctly identified');
+        //window.alert('OK! Existing block correctly identified');
       }
 
       const attributes = statements_attributes.split(',');
@@ -1174,7 +1176,7 @@ generator['internet_gateway'] = function(block) {
       attributes.forEach((attribute) => {
         if(attribute != ''){
           var id_attr = generateID(attribute);
-          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
           code_attributes = code_attributes + code_att;
         }
       })
@@ -1266,7 +1268,7 @@ generator['custom_digital_component'] = function(block) {
           var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
           var close_member_code = `\t\t\t\t</ownedMember>\n`;
           code_aggregation = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
-          window.alert('OK! Existing block correctly identified');
+          //window.alert('OK! Existing block correctly identified');
         }
 
         const attributes = statements_attributes.split(',');
@@ -1274,7 +1276,7 @@ generator['custom_digital_component'] = function(block) {
         attributes.forEach((attribute) => {
           if(attribute != ''){
             var id_attr = generateID(attribute);
-            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
             code_attributes = code_attributes + code_att;
           }
         })
@@ -1366,7 +1368,7 @@ generator['irrigation_tool'] = function(block) {
       attributes.forEach((attribute) => {
         if(attribute != ''){
           var id_attr = generateID(attribute);
-          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+          var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
           code_attributes = code_attributes + code_att;
         }
       })
@@ -1462,7 +1464,7 @@ generator['custom_tool'] = function(block) {
         attributes.forEach((attribute) => {
           if(attribute != ''){
             var id_attr = generateID(attribute);
-            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute}" xmi:type="uml:Property"/>\n`;
+            var code_att = `\t\t\t\t<ownedAttribute xmi:id="${id_attr}" name="${attribute.trim()}" xmi:type="uml:Property"/>\n`;
             code_attributes = code_attributes + code_att;
           }
         })

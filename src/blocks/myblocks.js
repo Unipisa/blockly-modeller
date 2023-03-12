@@ -232,7 +232,7 @@ const myBlocks = [
   // ------------------------------------------------------------- OPERAZIONI ------------------------------------------------------------- // 
   {
   "type": "custom_operation",
-  "message0": "Custom ACTIVITY: %1 %2 • Motivation to %3 %4 • Using resource or interacting %5  with actor %6",
+  "message0": "Custom ACTIVITY: %1 %2 • Motivation %3 %4 • Using resource or interacting %5  with actor %6",
   "args0": [
     {
       "type": "field_input",

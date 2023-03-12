@@ -61,12 +61,6 @@ function generateID(nomeClasse) {
   return id;
 }
 
-export function enableBlocks(){
-  window.alert('eccomi');
-  let blocks = ws.getBlocksByType('custom_operation', true);
-  window.alert(blocks);
-  blocks[0].setEnabled(true);
-}
 
 export function removeLastTypedBlock(type){
   let blocks = ws.getBlocksByType(type, true);
