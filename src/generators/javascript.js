@@ -110,12 +110,12 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
 
         var opReport = '\t- ' + op_name;
 
-        if(motivation[0].charCodeAt(0) != 46 && motivation != ''){
+        if(motivation[0].charCodeAt(0) != 46 && motivation != '' && motivation != ' .'){
           opReport = opReport + ' because ' + motivation;
         }
 
 
-        if(ass_names[0].charCodeAt(0) != 46 && ass_names != ''){
+        if(ass_names[0].charCodeAt(0) != 46 && ass_names != '' && ass_names != ' '){
           opReport = opReport + ', interacting with ';
 
           ass_names.forEach((name) => {
