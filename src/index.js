@@ -11,6 +11,7 @@ import {javascriptGenerator} from 'blockly/javascript';
 import {save, load} from './serialization';
 import {toolbox} from './toolbox';
 import './index.css';
+//import './renderers/custom';
 
 // Register the blocks and generator with Blockly
 Blockly.common.defineBlocks(blocks);
@@ -23,7 +24,9 @@ const codeDiv = document.getElementById('generatedCode').firstChild;
 const outputDiv = document.getElementById('output');
 const reportDiv = document.getElementById('txtReport');
 const blocklyDiv = document.getElementById('blocklyDiv');
-const ws = Blockly.inject(blocklyDiv, {toolbox, 
+const ws = Blockly.inject(blocklyDiv, {
+  //renderer: 'custom_renderer',
+  toolbox, 
         grid: {
           spacing: 20, 
           length: 3, 
@@ -66,6 +69,16 @@ export function removeLastTypedBlock(type){
   let blocks = ws.getBlocksByType(type, true);
   const index = (blocks.length) - 1;
   blocks[index].dispose(true);
+}
+
+export function getAllClassBlocksinWs(){
+  const className = ['none'];
+  let i = 0;
+  while(i < nameBlockInWS.length){
+    className.push(nameBlockInWS[i]);
+    i++;
+  }
+  return className;
 }
 
 export function blockAlreadyInWs(new_block_name){
@@ -172,6 +185,7 @@ ws.addChangeListener((e) => {
 });
 
 
+
 // Whenever the workspace changes meaningfully, run the code again.
 ws.addChangeListener((e) => {
   // Don't run the code when the workspace finishes loading; we're
@@ -184,18 +198,44 @@ ws.addChangeListener((e) => {
   runCode();
 });
 
+const nameBlockInWS = new Array();
 ws.addChangeListener((e) => {
   if(e.type == Blockly.Events.BLOCK_DELETE || e.type == Blockly.Events.BLOCK_CHANGE){
+
     let blocks = ws.getAllBlocks(true);
     let blocksIdInWs = []; 
     
-    //recupero gli id di tutti i blocchi presenti nel workspace
     let i = 0;
     while(i < blocks.length){
+      //recupero gli id di tutti i blocchi presenti nel workspace
       blocksIdInWs.push(generateID(String(blocks[i].getFieldValue('NAME'))));
+      
+      let blockClass = ['default_actor', 'custom_actor', 'field_resource', 'water_resource', 'custom_resource', 'irrigation_tool', 'custom_tool', 'dss_infrastructure', 'custom_digital', 'wsn', 'internet_gateway', 'dss_software', 'custom_digital_component']
+      //salvo i nomi dei blocchi presenti nel workspace per mostrarli nel selettore delle associazioni
+      if(blockClass.includes(blocks[i].type) && !nameBlockInWS.includes(blocks[i].getFieldValue('NAME'))){
+        nameBlockInWS.push(blocks[i].getFieldValue('NAME'));
+      }
       i++;
     }
-
+    
+    //elimino i nomi dei blocchi non più presenti nel workspace in modo che non vengano mostrarli nel selettore delle associazioni
+    nameBlockInWS.forEach((name) => {
+      let blocksNow = ws.getAllBlocks(true);
+      let nameBlocks = [];
+      let blockClass = ['default_actor', 'custom_actor', 'field_resource', 'water_resource', 'custom_resource', 'irrigation_tool', 'custom_tool', 'dss_infrastructure', 'custom_digital', 'wsn', 'internet_gateway', 'dss_software', 'custom_digital_component']
+      
+      let y = 0;
+      while(y < blocksNow.length){
+        //salvo i nomi
+        if(blockClass.includes(blocksNow[y].type)){
+          nameBlocks.push(blocks[y].getFieldValue('NAME'));
+        }
+        y++;
+      }
+      if(!nameBlocks.includes(name)){
+        nameBlockInWS.splice(nameBlockInWS.indexOf(name), 1);
+      }
+    })
     
     //elimino da textReport i report dei blocchi non più presenti nel ws
     let j = 0;

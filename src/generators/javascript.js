@@ -103,25 +103,16 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
       if(operation != ''){
         const segment = operation.split(";");
         var op_name = segment[0];
-        var string_ass_names = segment[1];
+        var ass_name = segment[1];
         var motivation = segment[2];
-
-        const ass_names = string_ass_names.split(",");
 
         var opReport = '\t- ' + op_name;
         if(motivation != '' && motivation[0].charCodeAt(0) != 46 && motivation != ' .'){
           opReport = opReport + ' because ' + motivation;
         }
-      
-        if(ass_names[0].charCodeAt(0) != 46 && ass_names != '' && ass_names != ' '){
-          opReport = opReport + ', interacting with ';
 
-          ass_names.forEach((name) => {
-            if(name != '' && name != ' '){
-                opReport = opReport + ' ' + name + ',';           
-            }
-          })
-          opReport = opReport.substring(0, opReport.length - 1);
+        if(ass_name != 'NONE'){
+          opReport = opReport + ', interacting with ' + ass_name.toLowerCase();   
         }
 
         opReport = opReport + '\n';

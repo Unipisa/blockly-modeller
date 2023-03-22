@@ -5,6 +5,9 @@
  */
 
 import * as Blockly from 'blockly/core';
+import {getAllClassBlocksinWs} from'../index.js';
+
+const temp = 'Provaaaaa';
 
 const myBlocks = [
   // ------------------------------------------------------------- SCHEMA ------------------------------------------------------------- // 
@@ -237,12 +240,19 @@ const myBlocks = [
     {
       "type": "input_dummy"
     },
+    /*
     {
       "type": "field_input",
       "name": "ASSOCIATIONS",
       "text": "..............."
+    },
+    */
+    {
+      "type": "input_dummy",
+      "name": "ASSOCIATIONS",
     }
   ],
+  "extensions": ["dynamic_menu_extension"],
   "previousStatement": "operation",
   "nextStatement": "operation",
   "colour": "#90B763",
@@ -905,6 +915,20 @@ const myBlocks = [
   },
 ];
 
+
+Blockly.Extensions.register('dynamic_menu_extension',
+  function() {
+    this.getInput('ASSOCIATIONS')
+      .appendField(new Blockly.FieldDropdown(
+        function() {
+          var options = [];
+          var classNames = getAllClassBlocksinWs();
+          classNames.forEach((name) => {
+            options.push([name, name.toUpperCase()]);
+          })
+          return options;
+        }), 'ASSOCIATIONS');
+  });
 
 
 // Create the block definitions for the JSON-only blocks.
