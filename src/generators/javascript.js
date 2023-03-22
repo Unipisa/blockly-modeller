@@ -109,12 +109,10 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
         const ass_names = string_ass_names.split(",");
 
         var opReport = '\t- ' + op_name;
-
-        if(motivation[0].charCodeAt(0) != 46 && motivation != '' && motivation != ' .'){
+        if(motivation != '' && motivation[0].charCodeAt(0) != 46 && motivation != ' .'){
           opReport = opReport + ' because ' + motivation;
         }
-
-
+      
         if(ass_names[0].charCodeAt(0) != 46 && ass_names != '' && ass_names != ' '){
           opReport = opReport + ', interacting with ';
 

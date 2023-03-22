@@ -7,7 +7,6 @@
 export const toolbox = {
   'kind': 'categoryToolbox',
   'contents': [
-    
     {
       'kind': 'category',
       'name': 'USER GUIDE',
@@ -19,7 +18,7 @@ export const toolbox = {
         },
         {
           'kind': 'label',
-          'text': '1. .................................................',
+          'text': '1. Items marked with * are required fields',
         },
         {
           'kind': 'label',
@@ -173,6 +172,10 @@ export const toolbox = {
               'kind': 'block',
               'type': 'custom_attribute',
             },
+             {
+              'kind': 'label',
+              'text': '  PRESET BLOCKS:',
+            },
             {
               'kind': 'block',
               'type': 'username',
@@ -203,6 +206,10 @@ export const toolbox = {
             {
               'kind': 'block',
               'type': 'custom_generalization',
+            },
+             {
+              'kind': 'label',
+              'text': '  PRESET BLOCKS:',
             },
             {
               'kind': 'block',

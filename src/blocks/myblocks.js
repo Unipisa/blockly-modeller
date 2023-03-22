@@ -46,7 +46,7 @@ const myBlocks = [
   // ------------------------------------------------------------- ATTORI ------------------------------------------------------------- // 
   {
   "type": "custom_actor",
-  "message0": "Custom ACTOR: %1 %2 What are the activities carried out by the actor? %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8",
+  "message0": "Custom ACTOR: %1* %2 What are the activities carried out by the actor? %3 %4 Attributes: %5 %6",
   "args0": [
     {
       "type": "field_input",
@@ -65,14 +65,6 @@ const myBlocks = [
       "check": "operation",
     },
     {
-      "type": "input_dummy",
-      "align": "CENTRE"
-    },
-    {
-      "type": "input_dummy",
-      "align": "CENTRE"
-    },
-    {
       "type": "input_dummy"
     },
     {
@@ -89,7 +81,7 @@ const myBlocks = [
   },
   {
   "type": "default_actor",
-  "message0": "%1 %2 What are the activities carried out by the actor? %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8",
+  "message0": "%1 %2 What are the activities carried out by the actor? %3 %4 Attributes: %5 %6",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -106,14 +98,6 @@ const myBlocks = [
       "type": "input_statement",
       "name": "OPERATIONS",
       "check": "operation",
-    },
-    {
-      "type": "input_dummy",
-      "align": "CENTRE"
-    },
-    {
-      "type": "input_dummy",
-      "align": "CENTRE"
     },
     {
       "type": "input_dummy",
@@ -166,7 +150,7 @@ const myBlocks = [
   },
   {
   "type": "custom_attribute",
-  "message0": "Custom attribute: %1",
+  "message0": "Custom attribute: %1*",
   "args0": [
     {
       "type": "field_input",
@@ -232,7 +216,7 @@ const myBlocks = [
   // ------------------------------------------------------------- OPERAZIONI ------------------------------------------------------------- // 
   {
   "type": "custom_operation",
-  "message0": "Custom ACTIVITY: %1 %2 • Motivation %3 %4 • Using resource or interacting %5  with actor %6",
+  "message0": "Custom ACTIVITY: %1* %2 • Motivation %3 %4 • Using resource or interacting %5  with actor %6",
   "args0": [
     {
       "type": "field_input",
@@ -286,7 +270,7 @@ const myBlocks = [
   {
   "type": "field_resource",
   "lastDummyAlign0": "CENTRE",
-  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8",
+  "message0": "%1 %2 Activities: %3 %4 %5 Advanced settings: %6 Attributes: %7 %8",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -329,7 +313,7 @@ const myBlocks = [
   },
   {
   "type": "water_resource",
-  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
+  "message0": "%1 %2 Activities: %3 %4 %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -380,7 +364,7 @@ const myBlocks = [
   },
   {
   "type": "custom_resource",
-  "message0": "Custom RESOURCE: %1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
+  "message0": "Custom RESOURCE: %1* %2 Activities: %3 %4 %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
   "args0": [
     {
       "type": "field_input",
@@ -436,7 +420,7 @@ const myBlocks = [
 
   {
   "type": "irrigation_tool",
-  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
+  "message0": "%1 %2 Activities: %3 %4 %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -487,7 +471,7 @@ const myBlocks = [
   },
   {
   "type": "custom_tool",
-  "message0": "Custom TOOL: %1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
+  "message0": "Custom TOOL: %1* %2 Activities: %3 %4 %5 Advanced settings: %6 Attributes: %7 %8 Specialisation: %9 %10",
   "args0": [
     {
       "type": "field_input",
@@ -543,7 +527,7 @@ const myBlocks = [
 
   {
   "type": "dss_infrastructure",
-  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8",
+  "message0": "%1 %2 Activities: %3 %4 %5 Advaced settings: %6 Attributes: %7 %8",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -586,7 +570,7 @@ const myBlocks = [
   },
   {
   "type": "custom_digital",
-  "message0": "Custom DIGITAL TOOL: %1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8",
+  "message0": "Custom DIGITAL TOOL: %1* %2 Activities: %3 %4 %5 Advaced settings: %6 Attributes: %7 %8",
   "args0": [
     {
       "type": "field_input",
@@ -629,7 +613,7 @@ const myBlocks = [
   },
   {
   "type": "wsn",
-  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
+  "message0": "%1 %2 Activities: %3 %4 %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -677,7 +661,7 @@ const myBlocks = [
   },
   {
   "type": "internet_gateway",
-  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
+  "message0": "%1 %2 Activities: %3 %4 %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -725,7 +709,7 @@ const myBlocks = [
   },
   {
   "type": "dss_software",
-  "message0": "%1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
+  "message0": "%1 %2 Activities: %3 %4 %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
   "args0": [
     {
       "type": "field_label_serializable",
@@ -773,7 +757,7 @@ const myBlocks = [
   },
   {
   "type": "custom_digital_component",
-  "message0": "Custom DIGITAL COMPONENT: %1 %2 Activities: %3 %4 -------------------------------------------------- %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
+  "message0": "Custom DIGITAL COMPONENT: %1* %2 Activities: %3 %4 %5 Advaced settings: %6 Attributes: %7 %8 Aggregation: %9",
   "args0": [
     {
       "type": "field_input",
@@ -825,7 +809,7 @@ const myBlocks = [
   // ------------------------------------------------------------- GENERALIZZAZIONI ------------------------------------------------------------- // 
   {
   "type": "custom_generalization",
-  "message0": "Custom item: %1",
+  "message0": "Custom specialisation: %1*",
   "args0": [
     {
       "type": "field_input",
