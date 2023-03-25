@@ -240,13 +240,6 @@ const myBlocks = [
     {
       "type": "input_dummy"
     },
-    /*
-    {
-      "type": "field_input",
-      "name": "ASSOCIATIONS",
-      "text": "..............."
-    },
-    */
     {
       "type": "input_dummy",
       "name": "ASSOCIATIONS",

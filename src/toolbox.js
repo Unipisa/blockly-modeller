@@ -158,82 +158,76 @@ export const toolbox = {
         },
       ],
     },
+    
     {
       'kind': 'category',
-      'name': 'Advanced',
+      'name': 'Attributes',
       'colour': "#D5698E",
       'contents': [
         {
-          'kind': 'category',
-          'name': 'Attributes',
-          'colour': "#D5698E",
-          'contents': [
-            {
-              'kind': 'block',
-              'type': 'custom_attribute',
-            },
-             {
-              'kind': 'label',
-              'text': '  PRESET BLOCKS:',
-            },
-            {
-              'kind': 'block',
-              'type': 'username',
-            },
-            {
-              'kind': 'block',
-              'type': 'password',
-            },
-            {
-              'kind': 'block',
-              'type': 'coords',
-            },
-            {
-              'kind': 'block',
-              'type': 'area',
-            },
-            {
-              'kind': 'block',
-              'type': 'id',
-            },
-          ],
+          'kind': 'block',
+          'type': 'custom_attribute',
+        },
+         {
+          'kind': 'label',
+          'text': '  PRESET BLOCKS:',
         },
         {
-          'kind': 'category',
-          'name': 'Specialisations',
-          'colour': "#D5698E",
-          'contents': [
-            {
-              'kind': 'block',
-              'type': 'custom_generalization',
-            },
-             {
-              'kind': 'label',
-              'text': '  PRESET BLOCKS:',
-            },
-            {
-              'kind': 'block',
-              'type': 'dam',
-            },
-            {
-              'kind': 'block',
-              'type': 'river',
-            },
-            {
-              'kind': 'block',
-              'type': 'well',
-            },
-            {
-              'kind': 'block',
-              'type': 'dripper',
-            },
-            {
-              'kind': 'block',
-              'type': 'sprinkler',
-            },
-          ],
-        },                           
+          'kind': 'block',
+          'type': 'username',
+        },
+        {
+          'kind': 'block',
+          'type': 'password',
+        },
+        {
+          'kind': 'block',
+          'type': 'coords',
+        },
+        {
+          'kind': 'block',
+          'type': 'area',
+        },
+        {
+          'kind': 'block',
+          'type': 'id',
+        },
       ],
-    },     
+    },
+    {
+      'kind': 'category',
+      'name': 'Specialisations',
+      'colour': "#D5698E",
+      'contents': [
+        {
+          'kind': 'block',
+          'type': 'custom_generalization',
+        },
+         {
+          'kind': 'label',
+          'text': '  PRESET BLOCKS:',
+        },
+        {
+          'kind': 'block',
+          'type': 'dam',
+        },
+        {
+          'kind': 'block',
+          'type': 'river',
+        },
+        {
+          'kind': 'block',
+          'type': 'well',
+        },
+        {
+          'kind': 'block',
+          'type': 'dripper',
+        },
+        {
+          'kind': 'block',
+          'type': 'sprinkler',
+        },
+      ],
+    },                           
   ],
 };
