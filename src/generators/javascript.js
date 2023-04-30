@@ -107,11 +107,11 @@ function createReport(blockName, allOperations, allAttributes, allGeneralization
         var motivation = segment[2];
 
         var opReport = '\t- ' + op_name;
-        if(motivation != '' && motivation[0].charCodeAt(0) != 46 && motivation != ' .'){
+        if(motivation != '' && motivation[0].charCodeAt(0) != 46 && motivation != ' '){
           opReport = opReport + ' because ' + motivation;
         }
 
-        if(ass_name != 'NONE'){
+        if(ass_name != 'NONE' && ass_name != ' '){
           opReport = opReport + ', interacting with ' + ass_name.toLowerCase();   
         }
 
@@ -403,7 +403,7 @@ generator['area'] = function(block) {
 
 generator['login'] = function(block) {
   if(block.getParent() !== null){
-    var code = `login; ; .`;
+    var code = `login; ; :`;
     return code;
   }
   else{
