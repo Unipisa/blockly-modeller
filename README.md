@@ -1,6 +1,6 @@
 # modeLLer
 
-ModeLLer is a prototype of a web tool accessible to end-users for modelling systems. 
+ModeLLer is a prototype of a web tool for modelling systems. 
 
 The tool enables users with no expertise in formal notations to generate UML class diagrams by interacting with a block-based visual editor. The interface is divided into three main areas: a toolbox panel for the exploration and selection of blocks; a workspace where blocks can be added to and interlocked with other blocks to form the structure of the system; and an export area with export data and buttons.
 
