@@ -10,3 +10,4 @@ All the items dropped on the workspace are simultaneously translated into UML en
 
 Try the demo: <https://unipisa.github.io/blockly-UML-modeller/>
 
+<img width="1392" alt="simple_scheme_modeller (2)" src="https://github.com/Unipisa/blockly-UML-modeller/assets/76447624/2005c85c-fbd1-4018-96b7-5d38c7f917d2">
