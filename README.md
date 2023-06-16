@@ -17,8 +17,5 @@ Try the demo: <https://unipisa.github.io/blockly-UML-modeller/>
 
 <h3>Video demo</h3
 
-<video controls>
-  <source src="https://github.com/Unipisa/blockly-UML-modeller/assets/76447624/fbc104ef-7100-4d1d-91f7-856071e24a4d
-" type="video/mp4">
-Your browser does not support the video tag.
-</video>
+<a href="https://github.com/Unipisa/blockly-UML-modeller/assets/76447624/fbc104ef-7100-4d1d-91f7-856071e24a4d>https://github.com/Unipisa/blockly-UML-modeller/assets/76447624/fbc104ef-7100-4d1d-91f7-856071e24a4d</a>
+
