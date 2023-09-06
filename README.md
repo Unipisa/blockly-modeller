@@ -19,3 +19,7 @@ Try the demo: <https://unipisa.github.io/blockly-UML-modeller/>
 
 https://github.com/Unipisa/blockly-UML-modeller/assets/76447624/fbc104ef-7100-4d1d-91f7-856071e24a4d
 
+<h3>RE23 Evaluate</h3>
+
+Questions for audience
+https://docs.google.com/forms/d/e/1FAIpQLSeBU6Z7wWCJFD4bnn5Wte9p4IJheG25uWtwwmFryniUhXj57g/viewform
