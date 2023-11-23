@@ -1,3 +1,3 @@
 # modeLLer
 
-Branch for PlanUML integration 
+Branch for PlantUML integration 
