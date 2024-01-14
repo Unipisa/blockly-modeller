@@ -23,6 +23,7 @@
     "webpack-dev-server": "^4.11.1"
   },
   "dependencies": {
-    "blockly": "^9.2.1"
+    "blockly": "^9.2.1",
+    "plantuml": "^0.0.2"
   }
 }
