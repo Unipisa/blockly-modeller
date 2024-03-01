@@ -171,7 +171,7 @@ generator['default_actor'] = function(block) {
           let op_name = op[0].trim();
           var id_op = generateID(op_name);
 
-          const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}" name="${op_name}" xmi:type="uml:Operation"/>\n`;
+          const code_op = `\t\t\t\t<ownedOperation xmi:id="${id_op}_actor" name="${op_name}" xmi:type="uml:Operation"/>\n`;
 
           let op_associations = op[1];
           const ass_names = op_associations.split(',');
@@ -210,7 +210,7 @@ generator['default_actor'] = function(block) {
         }
       })
 
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}_defaultactor" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
       
       setReport(id, createReport(text_name, statements_operations, statements_attributes, '', ''));
@@ -292,7 +292,7 @@ generator['custom_actor'] = function(block) {
           }
         })
 
-        var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+        var pack_code = `\t\t\t<packagedElement xmi:id="${id}_actor" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
         var close_pack_code = `\t\t\t</packagedElement>\n`;
        
         setReport(id, createReport(text_name, statements_operations, statements_attributes, '', ''));
@@ -495,7 +495,7 @@ generator['field_resource'] = function(block) {
         }
       })
 
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Field" xmi:type="uml:Class">\n${code_attributes}`;
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}_fieldresource" name="Field" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
 
       setReport(id, createReport('field', statements_operations, statements_attributes, '', ''));
@@ -579,7 +579,7 @@ generator['water_resource'] = function(block) {
         }
       })
 
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Water" xmi:type="uml:Class">\n${code_attributes}`;
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}_water" name="Water" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
 
       var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
@@ -591,7 +591,7 @@ generator['water_resource'] = function(block) {
         if(name != ''){
           var id_spec = generateID(name); //id della sotto classe
           var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-          var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
+          var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}_waterspec" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
           code_generalizations = code_generalizations + pack_gen;
         }
       })
@@ -675,7 +675,7 @@ generator['custom_resource'] = function(block) {
           }
         })
 
-        var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+        var pack_code = `\t\t\t<packagedElement xmi:id="${id}_customresource" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
         var close_pack_code = `\t\t\t</packagedElement>\n`;
 
         var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
@@ -687,7 +687,7 @@ generator['custom_resource'] = function(block) {
           if(name != ''){
             var id_spec = generateID(name); //id della sotto classe
             var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-            var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
+            var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}_customresourcespec" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
             code_generalizations = code_generalizations + pack_gen;
           }
         })
@@ -780,7 +780,7 @@ generator['dss_infrastructure'] = function(block) {
         }
       })
 
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="DSS infrastructure" xmi:type="uml:Class">\n${code_attributes}`;
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}_dssinfrastructure" name="DSS infrastructure" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
       
       setReport(id, createReport('dss infrastructure', statements_operations, statements_attributes, '', ''));
@@ -862,7 +862,7 @@ generator['custom_digital'] = function(block) {
           }
         })
 
-        var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+        var pack_code = `\t\t\t<packagedElement xmi:id="${id}_customdigital" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
         var close_pack_code = `\t\t\t</packagedElement>\n`;
         
         setReport(id, createReport(text_name, statements_operations, statements_attributes, '', ''));
@@ -967,7 +967,7 @@ generator['wsn'] = function(block) {
         }
       })
 
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="WSN" xmi:type="uml:Class">\n${code_attributes}`;
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}_wsn" name="WSN" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
 
       setReport(id, createReport('wsn', statements_operations, statements_attributes, '', text_aggregation));
@@ -1069,7 +1069,7 @@ generator['dss_software'] = function(block) {
         }
       })
 
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="DSS software" xmi:type="uml:Class">\n${code_attributes}`;
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}_DSSsoftware" name="DSS software" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
 
       setReport(id, createReport('dss software', statements_operations, statements_attributes, '', text_aggregation));
@@ -1170,7 +1170,7 @@ generator['internet_gateway'] = function(block) {
         }
       })
 
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Internet gateway" xmi:type="uml:Class">\n${code_attributes}`;
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}_internetgateway" name="Internet gateway" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
 
       setReport(id, createReport('internet gateway', statements_operations, statements_attributes, '', text_aggregation));
@@ -1270,7 +1270,7 @@ generator['custom_digital_component'] = function(block) {
           }
         })
 
-        var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+        var pack_code = `\t\t\t<packagedElement xmi:id="${id}_customdigitalcomponent" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
         var close_pack_code = `\t\t\t</packagedElement>\n`;
 
         setReport(id, createReport(text_name, statements_operations, statements_attributes, '', text_aggregation));
@@ -1362,7 +1362,7 @@ generator['irrigation_tool'] = function(block) {
         }
       })
 
-      var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="Irrigation tool" xmi:type="uml:Class">\n${code_attributes}`;
+      var pack_code = `\t\t\t<packagedElement xmi:id="${id}_irrigationtool" name="Irrigation tool" xmi:type="uml:Class">\n${code_attributes}`;
       var close_pack_code = `\t\t\t</packagedElement>\n`;
 
       var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
@@ -1374,7 +1374,7 @@ generator['irrigation_tool'] = function(block) {
         if(name != ''){
           var id_spec = generateID(name); //id della sotto classe
           var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-          var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
+          var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}_irrigationtoolspec" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
           code_generalizations = code_generalizations + pack_gen;
         }
       })
@@ -1458,7 +1458,7 @@ generator['custom_tool'] = function(block) {
           }
         })
 
-        var pack_code = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
+        var pack_code = `\t\t\t<packagedElement xmi:id="${id}_customtool" name="${text_name}" xmi:type="uml:Class">\n${code_attributes}`;
         var close_pack_code = `\t\t\t</packagedElement>\n`;
 
         var statements_generalizations = javascriptGenerator.statementToCode(block, 'GENERALIZATIONS');
@@ -1470,7 +1470,7 @@ generator['custom_tool'] = function(block) {
           if(name != ''){
             var id_spec = generateID(name); //id della sotto classe
             var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-            var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
+            var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}_customtoolspec" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
             code_generalizations = code_generalizations + pack_gen;
           }
         })

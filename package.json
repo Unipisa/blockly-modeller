@@ -24,6 +24,12 @@
   },
   "dependencies": {
     "blockly": "^9.2.1",
-    "plantuml": "^0.0.2"
+    "fs": "^0.0.1-security",
+    "plantuml": "^0.0.2",
+    "plantuml-encoder": "^1.4.0"
+  }, 
+  "browser": {
+    "fs": false,
+    "fs/promises": false
   }
 }
