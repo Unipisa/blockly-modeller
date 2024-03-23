@@ -193,81 +193,50 @@ function getDataForUml(string) {
     if (element.ownedElements != null) {
       element.ownedElements.forEach(e => {
 
-        const myArray = e._id.split("_");
+        str_apertura += "class " + e.name + "\n";
 
-        // creazione package esterno
-        str_apertura += "package " +  myArray[0]+"_"+myArray[1] + " { \n";
-
-        str_apertura += "object " + e.name + " {\n id = " + myArray[0] + " \n } \n";
-
-        // controllo operation : activity
-        // tutto ciò che è commentato all'interno di questo blocco è una prova
-        // var elementsArray = []; 
         if (e.operations != null) {
-          str_apertura += "package activities_"+myArray[0]+" { \n";
-          e.operations.forEach(oper => {
-            str_apertura += "object " + oper.name+"_"+oper._id + " {\n id = " + oper._id + " \n name=" + oper.name + "\n } \n";
-            str_apertura += oper.name+"_"+oper._id + " --> " + e.name + "\n";
-            // elementsArray.push(oper._id);
-          });
-         /* if (e.ownedElements != null) {
-            e.ownedElements.forEach(own => {
-              var x=own.end2.type.$ref;
-              var y=elementsArray.find((operazione) => operazione == own.end1.type.$ref);
-              if (y != null){
-                var temp = e.operations.find(prova => prova._id === y);
-                str_apertura += temp.name+"_"+ y + " --> " + x + "_actor" + "\n";
+          e.operations.forEach(function callback(oper, index) {
+            str_apertura += "class " + oper.name + "\n";
+            str_apertura += e.name + " <-- " + oper.name + "\n";
+
+            if (e.ownedElements != null) {
+
+              let nameActor = "";
+              for (let i = 0; i < e.ownedElements.length; i++) {
+                if (index == i) {
+                  const element = e.ownedElements[i];
+                  nameActor = element.end2.name;
+
+                  str_apertura += nameActor + " <-- " + oper.name + "\n";
+                }
               }
-            }); 
-          } */
-          str_apertura += "} \n";
+            }
+
+          });
         }
 
+        /*
+        if (e.operations != null) {
+          e.operations.forEach(oper => {
+            str_apertura += "class " +  oper.name + "\n";
+            str_apertura += e.name + " <-- " +  oper.name  + "\n";
+          });
+        }
+        */
+
+        /*
         if (e.attributes != null) {
-          str_apertura += "package attributes_"+myArray[0]+" { \n";
           e.attributes.forEach(attr => {
-            str_apertura += "object " + attr.name+"_"+myArray[0] + " {\n id=" + attr._id + "\n name=" + attr.name + "\n  } \n";
+            str_apertura += attr.name+"_"+myArray[0] + "\n";
             str_apertura += attr.name+"_"+myArray[0] + " --> " + e.name + "\n";
           });
-          str_apertura += "} \n";
         }
-        
-       var str_apertura2 = "";
-        if (myArray[1] == "customresourcespec") {
-          e.ownedElements.forEach(attr => {
-           // str_apertura2 = "object " + e.name + " {\n id=" + myArray[0] + "\n } \n";
-            str_apertura2 += e.name + " --> " + attr.target.$ref+"_customresource" + "\n";
-          });
-        }
-
-        if (myArray[1] == "waterspec") {
-          e.ownedElements.forEach(attr => {
-            //str_apertura2 = "object " + e.name + " {\n id=" + myArray[0] + "\n } \n";
-            str_apertura2 += e.name + " --> " + attr.target.$ref+"_waterresource" + "\n";
-          });
-        }
-
-        if (myArray[1] == "irrigationtoolspec") {
-          e.ownedElements.forEach(attr => {
-           // str_apertura2 = "object " + e.name + " {\n id=" + myArray[0] + "\n } \n";
-            str_apertura2 += e.name + " --> " + attr.target.$ref+"_irrigationtool" + "\n";
-          });
-        }
-
-        if (myArray[1] == "customtoolspec") {
-          e.ownedElements.forEach(attr => {
-           // str_apertura2 = "object " + e.name + " {\n id=" + myArray[0] + "\n } \n";
-            str_apertura2 += e.name + " --> " + attr.target.$ref+"_customtool" + "\n";
-          });
-        }
-        str_apertura += str_apertura2;
-
-        str_apertura += "} \n";
-
+        */
       });
 
     } else {
-      str_apertura += "object actor {\n name= " + element.name + "\n } \n";
+      str_apertura += element.name + "\n";
     }
 
   });
