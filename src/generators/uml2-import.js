@@ -412,7 +412,7 @@ reader.elements['uml:Enumeration'] = function (node) {
 }
 
 reader.elements['uml:Generalization'] = function (node) {
-  var json = reader.elements['uml:DirectedRelationship'](node)
+  var json = node;
   json['_type'] = 'UMLGeneralization'
   json['target'] = reader.readRef(node, 'general')
   return json

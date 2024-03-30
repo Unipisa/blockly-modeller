@@ -182,11 +182,11 @@ generator['default_actor'] = function(block) {
               if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                 var id_first_end = generateRandID();
-                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                 var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                 var id_second_end = generateRandID();
                 var id_other_class = generateID(name);
-                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                 var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                 var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                 var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -264,11 +264,11 @@ generator['custom_actor'] = function(block) {
                 if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                   var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                   var id_first_end = generateRandID();
-                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                   var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                   var id_second_end = generateRandID();
                   var id_other_class = generateID(name);
-                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                   var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                   var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                   var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -467,11 +467,11 @@ generator['field_resource'] = function(block) {
               if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                 var id_first_end = generateRandID();
-                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                 var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                 var id_second_end = generateRandID();
                 var id_other_class = generateID(name);
-                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                 var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                 var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                 var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -551,11 +551,11 @@ generator['water_resource'] = function(block) {
               if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                 var id_first_end = generateRandID();
-                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                 var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                 var id_second_end = generateRandID();
                 var id_other_class = generateID(name);
-                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                 var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                 var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                 var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -591,7 +591,7 @@ generator['water_resource'] = function(block) {
         if(name != ''){
           var id_spec = generateID(name); //id della sotto classe
           var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-          var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}_waterspec" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
+          var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
           code_generalizations = code_generalizations + pack_gen;
         }
       })
@@ -686,15 +686,16 @@ generator['custom_resource'] = function(block) {
         gen_names.forEach((name) => {
           if(name != ''){
             var id_spec = generateID(name); //id della sotto classe
-            var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-            var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}_customresourcespec" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
-            code_generalizations = code_generalizations + pack_gen;
+            var gen = `\t\t\t\t<ownedAttribute xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Property"/>\n`;
+            code_generalizations = code_generalizations + gen;
           }
         })
 
+        var pack_gen = `\t\t\t<packagedElement xmi:id="${id}" name="${text_name}" xmi:type="uml:Generalization">\n${code_generalizations}\t\t\t</packagedElement>\n`;
+
         setReport(id, createReport(text_name, statements_operations, statements_attributes, statements_generalizations, ''));
 
-        var code = `${pack_code}${code_op_ass}${close_pack_code}${code_generalizations}`;
+        var code = `${pack_code}${code_op_ass}${close_pack_code}${pack_gen}`;
         return code;
       }
       else{
@@ -752,11 +753,11 @@ generator['dss_infrastructure'] = function(block) {
               if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                 var id_first_end = generateRandID();
-                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                 var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                 var id_second_end = generateRandID();
                 var id_other_class = generateID(name);
-                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                 var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                 var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                 var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -834,11 +835,11 @@ generator['custom_digital'] = function(block) {
                 if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                   var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                   var id_first_end = generateRandID();
-                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                   var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                   var id_second_end = generateRandID();
                   var id_other_class = generateID(name);
-                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                   var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                   var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                   var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -920,16 +921,16 @@ generator['wsn'] = function(block) {
             if(name.charCodeAt(0) != 46 && name != ''){ 
               if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
-                var id_first_end = generateRandID();
-                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
-                var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
-                var id_second_end = generateRandID();
-                var id_other_class = generateID(name);
-                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
-                var close_end = `\t\t\t\t\t</ownedEnd>\n`;
-                var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
-                var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
-                var close_member_code = `\t\t\t\t</ownedMember>\n`;
+                  var id_first_end = generateRandID();
+                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
+                  var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
+                  var id_second_end = generateRandID();
+                  var id_other_class = generateID(name);
+                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
+                  var close_end = `\t\t\t\t\t</ownedEnd>\n`;
+                  var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
+                  var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
+                  var close_member_code = `\t\t\t\t</ownedMember>\n`;
                 var name_ass_code = `${member_code}${first_end_code}${ext_code}${close_end}${second_end_code}${ext_code}${close_end}${first_member_end_code}${second_member_end_code}${close_member_code}`;
                 code_associations = code_associations + name_ass_code;
               }
@@ -1023,11 +1024,11 @@ generator['dss_software'] = function(block) {
               if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                 var id_first_end = generateRandID();
-                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                 var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                 var id_second_end = generateRandID();
                 var id_other_class = generateID(name);
-                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                 var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                 var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                 var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -1124,11 +1125,11 @@ generator['internet_gateway'] = function(block) {
               if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                 var id_first_end = generateRandID();
-                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                 var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                 var id_second_end = generateRandID();
                 var id_other_class = generateID(name);
-                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                 var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                 var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                 var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -1224,11 +1225,11 @@ generator['custom_digital_component'] = function(block) {
                 if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                   var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                   var id_first_end = generateRandID();
-                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                   var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                   var id_second_end = generateRandID();
                   var id_other_class = generateID(name);
-                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                   var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                   var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                   var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -1334,11 +1335,11 @@ generator['irrigation_tool'] = function(block) {
               if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                 var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                 var id_first_end = generateRandID();
-                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                 var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                 var id_second_end = generateRandID();
                 var id_other_class = generateID(name);
-                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                 var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                 var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                 var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -1374,7 +1375,7 @@ generator['irrigation_tool'] = function(block) {
         if(name != ''){
           var id_spec = generateID(name); //id della sotto classe
           var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-          var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}_irrigationtoolspec" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
+          var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
           code_generalizations = code_generalizations + pack_gen;
         }
       })
@@ -1430,11 +1431,11 @@ generator['custom_tool'] = function(block) {
                 if(ass_agg_AlreadyInWs(name.trim().toLowerCase())){
                   var member_code = `\t\t\t\t<ownedMember xmi:id="${generateRandID()}" xmi:type="uml:Association">\n`;
                   var id_first_end = generateRandID();
-                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}">\n`;
+                  var first_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_first_end}" xmi:type="uml:Property" type="${id}" name="${text_name}">\n`;
                   var ext_code = `\t\t\t\t\t\t<xmi:Extension extender="StarUML">\n\t\t\t\t\t\t\t<stereotype value=""/>\n\t\t\t\t\t\t</xmi:Extension>\n`;
                   var id_second_end = generateRandID();
                   var id_other_class = generateID(name);
-                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}">\n`;
+                  var second_end_code = `\t\t\t\t\t<ownedEnd xmi:id="${id_second_end}" xmi:type="uml:Property" type="${id_other_class}" name="${name.toLowerCase()}">\n`;
                   var close_end = `\t\t\t\t\t</ownedEnd>\n`;
                   var first_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_first_end}"/>\n`;
                   var second_member_end_code = `\t\t\t\t\t<memberEnd xmi:idref="${id_second_end}"/>\n`;
@@ -1470,7 +1471,7 @@ generator['custom_tool'] = function(block) {
           if(name != ''){
             var id_spec = generateID(name); //id della sotto classe
             var gen = `\t\t\t\t<generalization xmi:id="${generateRandID()}" xmi:type="uml:Generalization" specific="${id_spec}" general="${id}"/>\n`;
-            var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}_customtoolspec" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
+            var pack_gen = `\t\t\t<packagedElement xmi:id="${id_spec}" name="${name.trim()}" xmi:type="uml:Class">\n${gen}\t\t\t</packagedElement>\n`;
             code_generalizations = code_generalizations + pack_gen;
           }
         })
@@ -1655,3 +1656,5 @@ generator['custom_generalization'] = function(block) {
     block.dispose(true);
   }
 };
+
+

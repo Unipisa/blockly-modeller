@@ -20,7 +20,7 @@ Blockly.ContextMenuRegistry.registry.unregister('blockComment');
 Blockly.ContextMenuRegistry.registry.unregister('blockDisable');
 
 // Import delle librerie per lettura e scrittura UML
-require('./generators/uml2-import'); 
+require('./generators/uml2-import');
 require('./generators/uml2-export');
 
 // Set up UI elements and inject Blockly
@@ -172,12 +172,17 @@ export function showReport() {
 const runCode = () => {
   debugger
   const code = javascriptGenerator.workspaceToCode(ws);
-  codeDiv.innerText = code;
-  outputDiv.innerHTML = '';
+  var str_apertura = getDataForUml(code);
 
-  var data = getDataForUml(code);
-
-
+  var plantumlEncoder = require('plantuml-encoder')
+  var encoded = plantumlEncoder.encode(str_apertura);
+  var url = 'http://www.plantuml.com/plantuml/img/' + encoded
+  var d = document.getElementById('downloadUML');
+  d.href = url;
+  document.getElementById("generatedCode").src = url;
+  //codeDiv.innerText = code;
+  
+  outputDiv.src = '';
 
   //eval(code);
 }
@@ -186,73 +191,73 @@ function getDataForUml(string) {
 
   var data = reader.formatXMItoObjectJS(string);
   var x = remove_empty(data.ownedElements[0].ownedElements);
-
-  var str_apertura = "@startuml \n";
+  var str_apertura = "";
 
   x.forEach(element => {
+  
+  str_apertura = "@startuml \n";
+
     if (element.ownedElements != null) {
       element.ownedElements.forEach(e => {
 
-        str_apertura += "class " + e.name + "\n";
+        if (e._type == "UMLGeneralization") {
+          for(let element of e.children){
+            str_apertura += element.parentElement.attributes[1].nodeValue + " <|-- " + element.attributes.name.nodeValue + "\n";
+          }
+        }else{
+          if (e.ownedElements != null) {
 
-        if (e.operations != null) {
-          e.operations.forEach(function callback(oper, index) {
-            str_apertura += "class " + oper.name + "\n";
-            str_apertura += e.name + " <-- " + oper.name + "\n";
-
-            if (e.ownedElements != null) {
-
+            e.operations.forEach(function callback(oper, index) {
               let nameActor = "";
               for (let i = 0; i < e.ownedElements.length; i++) {
                 if (index == i) {
+                  str_apertura += "class " + e.name + " { \n } \n";
                   const element = e.ownedElements[i];
                   nameActor = element.end2.name;
-
-                  str_apertura += nameActor + " <-- " + oper.name + "\n";
+  
+                  str_apertura += nameActor + " <-- " + e.name + " :" + oper.name + "\n";
+                } else {
+                  str_apertura += "class " + e.name + " { \n";
+                  str_apertura += "" + oper.name + "() \n";
+                  str_apertura += " } \n";
                 }
               }
+            });
+  
+          } else {
+            str_apertura += "class " + e.name + " { \n";
+  
+            if (e.operations != null) {
+              e.operations.forEach(function callback(oper, index) {
+                str_apertura += "" + oper.name + "() \n";
+                //str_apertura += e.name + " <-- " + oper.name + "\n";
+              });
             }
-
-          });
+  
+            str_apertura += " } \n";
+          }
+  
+  
+          if (e.attributes != null) {
+            e.attributes.forEach(attr => {
+              str_apertura += e.name + " <|-- " + attr.name + "\n";
+            });
+          }
         }
 
-        /*
-        if (e.operations != null) {
-          e.operations.forEach(oper => {
-            str_apertura += "class " +  oper.name + "\n";
-            str_apertura += e.name + " <-- " +  oper.name  + "\n";
-          });
-        }
-        */
 
-        /*
-        if (e.attributes != null) {
-          e.attributes.forEach(attr => {
-            str_apertura += attr.name+"_"+myArray[0] + "\n";
-            str_apertura += attr.name+"_"+myArray[0] + " --> " + e.name + "\n";
-          });
-        }
-        */
+
       });
 
     } else {
       str_apertura += element.name + "\n";
     }
 
+   
   });
+
   str_apertura += "@enduml";
-
-  var plantumlEncoder = require('plantuml-encoder')
-
-  var encoded = plantumlEncoder.encode(str_apertura);
-  //console.log(encoded) // SrJGjLDmibBmICt9oGS0
-
-  var url = 'http://www.plantuml.com/plantuml/img/' + encoded
-
-  var d = document.getElementById('downloadUML');
-  d.href = url;
-
-  return url;
+  return str_apertura;
 
 }
 
