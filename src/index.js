@@ -174,14 +174,16 @@ const runCode = () => {
   const code = javascriptGenerator.workspaceToCode(ws);
   var str_apertura = getDataForUml(code);
 
-  var plantumlEncoder = require('plantuml-encoder')
-  var encoded = plantumlEncoder.encode(str_apertura);
-  var url = 'http://www.plantuml.com/plantuml/img/' + encoded
-  var d = document.getElementById('downloadUML');
-  d.href = url;
-  document.getElementById("generatedCode").src = url;
-  //codeDiv.innerText = code;
-  
+  if (!str_apertura.includes("BlocklyModel")) {
+    var plantumlEncoder = require('plantuml-encoder')
+    var encoded = plantumlEncoder.encode(str_apertura);
+    var url = 'http://www.plantuml.com/plantuml/img/' + encoded
+    var d = document.getElementById('downloadUML');
+    d.href = url;
+    document.getElementById("generatedCode").src = url;
+    //codeDiv.innerText = code;
+  }
+
   outputDiv.src = '';
 
   //eval(code);
@@ -194,66 +196,150 @@ function getDataForUml(string) {
   var str_apertura = "";
 
   x.forEach(element => {
-  
-  str_apertura = "@startuml \n";
+
+    str_apertura = "@startuml \n";
 
     if (element.ownedElements != null) {
       element.ownedElements.forEach(e => {
 
-        if (e._type == "UMLGeneralization") {
-          for(let element of e.children){
-            str_apertura += element.parentElement.attributes[1].nodeValue + " <|-- " + element.attributes.name.nodeValue + "\n";
-          }
-        }else{
-          if (e.ownedElements != null) {
+        // SE PRESENTI collegamenti INTERAZIONI - menu a tendina
+        if (e.ownedElements != null) {
 
-            e.operations.forEach(function callback(oper, index) {
-              let nameActor = "";
-              for (let i = 0; i < e.ownedElements.length; i++) {
-                if (index == i) {
-                  str_apertura += "class " + e.name + " { \n } \n";
-                  const element = e.ownedElements[i];
-                  nameActor = element.end2.name;
-  
-                  str_apertura += nameActor + " <-- " + e.name + " :" + oper.name + "\n";
-                } else {
-                  str_apertura += "class " + e.name + " { \n";
-                  str_apertura += "" + oper.name + "() \n";
-                  str_apertura += " } \n";
-                }
-              }
-            });
-  
-          } else {
-            str_apertura += "class " + e.name + " { \n";
-  
-            if (e.operations != null) {
-              e.operations.forEach(function callback(oper, index) {
-                str_apertura += "" + oper.name + "() \n";
-                //str_apertura += e.name + " <-- " + oper.name + "\n";
-              });
+          let elementGeneral = [];
+          let elementColl = [];
+
+          e.ownedElements.forEach(function callback(generalization, index) {
+            if (generalization.type != null && generalization.type.$ref == "generalization") {
+              elementGeneral.push(generalization);
+            } else {
+              elementColl.push(generalization);
             }
-  
-            str_apertura += " } \n";
+          });
+
+
+
+          if (elementGeneral != null) {
+            elementGeneral.forEach(function callback(element, index) {
+              str_apertura += e.name.replace(" ", '_') + " <|-- " + element.name.replace(" ", '_') + "\n";
+            });
+
           }
+
+          if (e.operations != null) {
+
+
+            let nameActor = "";
+            let namePadre = "";
+            if (elementColl.length > 0) {
+
+              str_apertura += "class " + e.name.replace(" ", '_') + " {  \n";
+              if (e.attributes != null) {
+                e.attributes.forEach(attr => {
+                  str_apertura += attr.name.replace(" ", '_') + "\n";
+                });
+              }
+
+              e.operations.forEach(function callback(oper, index) {
+
+                let filArray = elementColl.filter((element) => element.name.replace(" ", '_') == oper.name.replace(" ", '_'));
+                if (filArray.length == 0) {
+                  str_apertura += "" + oper.name.replace(" ", '_') + "() \n";
+                }
+              });
+
+              str_apertura += "  \n } \n";
+
+              e.operations.forEach(function callback(oper, index) {
+
+                let filArray = elementColl.filter((element) => element.name.replace(" ", '_') == oper.name.replace(" ", '_'));
+                if (filArray.length > 0) {
+
+                  nameActor = filArray[0].end2.name.replace(" ", '_');
+                  namePadre = filArray[0].end1.name.replace(" ", '_');
+                  str_apertura += nameActor + " <-- " + namePadre + " :" + oper.name.replace(" ", '_') + "\n";
+                }
+              });
+
+
+              let filArray = elementColl.filter((element) => element.name.replace(" ", '_') == "aggregation_" + e.name.replace(" ", '_'));
+              if (filArray.length > 0) {
+                let nameActor = "";
+                let namePadre = "";
   
-  
+                nameActor = filArray[0].end2.name.replace(" ", '_');
+                namePadre = filArray[0].end1.name.replace(" ", '_');
+                str_apertura += nameActor + " o-- " + namePadre + "\n";
+              }
+
+
+            } else {
+              str_apertura += "class " + e.name.replace(" ", '_') + " {  \n";
+              e.operations.forEach(function callback(oper, index) {
+                str_apertura += "" + oper.name.replace(" ", '_') + "() \n";
+
+                if (e.attributes != null) {
+                  e.attributes.forEach(attr => {
+                    str_apertura += attr.name.replace(" ", '_') + "\n";
+                  });
+                }
+
+              });
+              str_apertura += "  \n } \n";
+            }
+
+          } else {
+
+            if (e.attributes != null) {
+              str_apertura += "class " + e.name.replace(" ", '_') + " {  \n";
+              e.attributes.forEach(attr => {
+                str_apertura += attr.name.replace(" ", '_') + "\n";
+              });
+              str_apertura += "  \n } \n";
+            }
+
+            if (elementColl.length > 0) {
+              let nameActor = "";
+              let namePadre = "";
+
+              let filArray = elementColl.filter((element) => element.name.replace(" ", '_') == "aggregation_" + e.name.replace(" ", '_'));
+              if (filArray.length > 0) {
+
+                nameActor = filArray[0].end2.name.replace(" ", '_');
+                namePadre = filArray[0].end1.name.replace(" ", '_');
+                str_apertura += nameActor + " o-- " + namePadre + "\n";
+              }
+            }
+
+          }
+
+
+
+        } else {
+          str_apertura += "class " + e.name.replace(" ", '_') + " { \n";
+
           if (e.attributes != null) {
             e.attributes.forEach(attr => {
-              str_apertura += e.name + " <|-- " + attr.name + "\n";
+              str_apertura += attr.name.replace(" ", '_') + "\n";
             });
           }
-        }
 
+          if (e.operations != null) {
+            e.operations.forEach(function callback(oper, index) {
+              str_apertura += "" + oper.name.replace(" ", '_') + "() \n";
+            });
+          }
+
+          str_apertura += " } \n";
+        }
 
 
       });
 
     } else {
-      str_apertura += element.name + "\n";
+      str_apertura += element.name.replace(" ", '_') + "\n";
     }
 
-   
+
   });
 
   str_apertura += "@enduml";
