@@ -180,6 +180,8 @@ const runCode = () => {
     var url = 'http://www.plantuml.com/plantuml/img/' + encoded
     var d = document.getElementById('downloadUML');
     d.href = url;
+    document.getElementById("xmiData").value = code;
+    document.getElementById("plantUML").value = str_apertura;
     document.getElementById("generatedCode").src = url;
     //codeDiv.innerText = code;
   }

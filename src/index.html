@@ -20,11 +20,13 @@
         <textarea id="comment" rows="2" cols="46" placeholder='Add comment to report (optional)...'></textarea>
       </div>
       <div id="buttonArea">
-        <button id="downloadButton" class="button-13" onclick="downloadFile()">Download .xmi file</button>
+        <input type="hidden" id="xmiData" value="" />
+        <input type="hidden" id="plantUML" value="" />
+        <button id="downloadButton" class="button-13" onclick="downloadFile()"> .xmi file</button>
         <script>
           const downloadFile = () => {
             const link = document.createElement("a");
-            const content = document.getElementById("xmiCode").innerText;
+            const content = document.getElementById("xmiData").value;
             const title = document.getElementById("customTitle");
 
             // get date
@@ -41,7 +43,7 @@
             URL.revokeObjectURL(link.href);
           };
         </script>
-        <button id="downloadButton" class="button-13" onclick="downloadReport()">Download report</button>
+        <button id="downloadButton" class="button-13" onclick="downloadReport()">Report file</button>
         <script>
           const downloadReport = () => {
             const link = document.createElement("a");
@@ -67,9 +69,35 @@
             URL.revokeObjectURL(link.href);
           };
         </script>
-         <a href="#" id="downloadUML" target="_blank" download="download" class="button-13">View Diagram</button>
+        <button id="downloadPlantUML" class="button-13" onclick="downloadPlantUML()">PlantUML file</button>
+        <script>
+          const downloadPlantUML = () => {
+            const link = document.createElement("a");
+            const comment = document.getElementById("comment");
+            var textComment = new String();
+            if (comment.value != '') {
+              textComment = '\nNOTES: ' + comment.value;
+            }
+            const content = document.getElementById("plantUML").value;
+            const title = document.getElementById("customTitle");
+
+            // get date
+            var today = new Date();
+            var dd = String(today.getDate()).padStart(2, '0');
+            var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
+            var yyyy = today.getFullYear();
+            today = dd + '-' + mm + '-' + yyyy;
+
+            const file = new Blob([content, textComment], { type: 'text/xml' });
+            link.href = URL.createObjectURL(file);
+            link.download = `${today}_diagramPlantUML_${title.value}.txt`;
+            link.click();
+            URL.revokeObjectURL(link.href);
+          };
+        </script>
+        <a href="#" id="downloadUML" target="_blank" download="download" class="button-13">View Diagram</button>
+
       </div>
-     
       <div id="output"></div>
     </div>
   </div>
