@@ -917,7 +917,7 @@ Blockly.Extensions.register('dynamic_menu_extension',
           var options = [];
           var classNames = getAllClassBlocksinWs();
           classNames.forEach((name) => {
-            options.push([name, name.toUpperCase()]);
+            options.push([name, name]);
           })
           return options;
         }), 'ASSOCIATIONS');
