@@ -1,0 +1,38 @@
+{
+  "name": "modeLLer",
+  "version": "1.0.0",
+  "description": "Tool for modelling UML diagram",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack serve --open"
+  },
+  "keywords": [
+    "blockly"
+  ],
+  "author": "Elisa Anichini",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "css-loader": "^6.7.1",
+    "html-webpack-plugin": "^5.5.0",
+    "style-loader": "^3.3.1",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-server": "^4.11.1"
+  },
+  "dependencies": {
+    "backbone": "^1.6.0",
+    "blockly": "^9.2.1",
+    "d3-collection": "^1.0.7",
+    "d3-dispatch": "^3.0.1",
+    "d3-quadtree": "^3.0.1",
+    "d3-timer": "^3.0.1",
+    "fs": "^0.0.1-security",
+    "jquery": "^3.7.1",
+    "jszip": "^3.10.1",
+    "plantuml-encoder": "^1.4.0",
+    "underscore": "^1.13.6"
+  }
+}
