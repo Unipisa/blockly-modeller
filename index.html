@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+ <html>
+   <head>
+    <script src="https://unpkg.com/bpmn-js@15.2.2/dist/bpmn-modeler.development.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+   
+    <!-- TODO: caricare in locale -->
+    <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/lib/lodash.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/lib/backbone-min.js"></script>
+   <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/lib/joint.min.js"></script> 
+   
+   <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-collection.v1.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-dispatch.v1.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-quadtree.v1.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-timer.v1.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-force.v1.min.js"></script>
+  <!--TODO: cancellare -->
+    <!-- <script src="https://unpkg.com/bpmn-auto-layout@0.4.0/dist/index.cjs"></script>-->
+    <!-- <script src="https://cdn.skypack.dev/pin/bpmn-auto-layout@v0.4.0-3orwUDG6EF87MDf2egmc/mode=imports,min/optimized/bpmn-auto-layout.js"></script> -->
+     
+ 
+
+    
+    <meta charset="utf-8" />
+     <title>Blockly ModeLLer</title>
+   </head>
+   <body>
+    <div id="pageContainer">
+      <div id="blocklyDiv">
+        <div id="ieWs">
+          <input type="file" id="fileInput" style="display: none;">
+          <img src="data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNTEyIDUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im01MTIgMTQ5LjgwNHYzMzAuMTk2YzAgMTcuNjczLTE0LjMyNyAzMi0zMiAzMmgtNDQ4Yy0xNy42NzMgMC0zMi0xNC4zMjctMzItMzJ2LTMzMC4xOTZjMC0xNy42NzMgMTQuMzI3LTMyIDMyLTMyaDk5YzE3LjY3MyAwIDMyIDE0LjMyNyAzMiAzMnMtMTQuMzI3IDMyLTMyIDMyaC02N3YyNjYuMTk2aDM4NHYtMjY2LjE5NmgtNjdjLTE3LjY3MyAwLTMyLTE0LjMyNy0zMi0zMnMxNC4zMjctMzIgMzItMzJoOTljMTcuNjczIDAgMzIgMTQuMzI3IDMyIDMyem0tMjk3Ljg2MS0zMC42ODkgOS44NjEtOS44NjF2MTg5LjM3NGMwIDE3LjY3MyAxNC4zMjcgMzIgMzIgMzJzMzItMTQuMzI3IDMyLTMydi0xODkuMzc0bDkuODYxIDkuODYxYzYuMjQ4IDYuMjQ5IDE0LjQzOCA5LjM3MyAyMi42MjcgOS4zNzNzMTYuMzc5LTMuMTI0IDIyLjYyOC05LjM3M2MxMi40OTYtMTIuNDk2IDEyLjQ5Ni0zMi43NTggMC00NS4yNTVsLTY0LjQ4OC02NC40ODdjLTEyLjQ5OC0xMi40OTgtMzIuNzU4LTEyLjQ5OC00NS4yNTYgMGwtNjQuNDg4IDY0LjQ4N2MtMTIuNDk2IDEyLjQ5Ny0xMi40OTYgMzIuNzU5IDAgNDUuMjU1IDEyLjQ5OCAxMi40OTggMzIuNzU5IDEyLjQ5OCA0NS4yNTUgMHoiLz48L3N2Zz4=
+          " width="25" height="25" id="importWs" alt="upload-link" title="upload from local" />
+          <img src="data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNTEyIDUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im01MTIgNDgwYzAgMTcuNjczLTE0LjMyNyAzMi0zMiAzMmgtNDQ4Yy0xNy42NzMgMC0zMi0xNC4zMjctMzItMzJzMTQuMzI3LTMyIDMyLTMyaDQ0OGMxNy42NzMgMCAzMiAxNC4zMjcgMzIgMzJ6bS0yNzguNjI3LTEwMS4zNzJjNi4yNDkgNi4yNDkgMTQuNDM3IDkuMzczIDIyLjYyNyA5LjM3MyA4LjE4OCAwIDE2LjM4LTMuMTI1IDIyLjYyNy05LjM3M2wxMTMuMzc4LTExMy4zNzdjMTIuNDk3LTEyLjQ5NyAxMi40OTctMzIuNzU4IDAtNDUuMjU1cy0zMi43NTgtMTIuNDk3LTQ1LjI1NSAwbC01OC43NSA1OC43NXYtMjQ2Ljc0NmMwLTE3LjY3My0xNC4zMjctMzItMzItMzJzLTMyIDE0LjMyNy0zMiAzMnYyNDYuNzQ2bC01OC43NS01OC43NWMtMTIuNDk3LTEyLjQ5Ny0zMi43NTgtMTIuNDk3LTQ1LjI1NSAwcy0xMi40OTcgMzIuNzU4IDAgNDUuMjU1eiIvPjwvc3ZnPg==" width="25" height="25" id="exportWs"  alt="download-link" title="download workspace" />
+        </div>
+        <input id="customTitle" type='text' placeholder='Insert title...' style="font-family: Helvetica"/>
+
+      </div>
+      <div id="dragbar" class="dragbar"></div>
+      <div id="outputPane">
+        <div id="outputStr" class="outputBox">
+            <h3 style="font-family: Helvetica", id="codeTitle">Structure diagram (UML)</h3>
+            <img id="generatedCode" style="max-width: 378px;padding-left: 2px;max-height: 240px;padding-right: 17px;" />
+            <div id="outputClass" class="outputBox"></div>          
+            <!--<pre id="generatedCode"><code id="xmiCode"></code></pre>-->
+          <div class="btndwnld">
+            <a id="downloadButton" class="button-13" onclick="downloadFile()"><img src="data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNTEyIDUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im01MTIgNDgwYzAgMTcuNjczLTE0LjMyNyAzMi0zMiAzMmgtNDQ4Yy0xNy42NzMgMC0zMi0xNC4zMjctMzItMzJzMTQuMzI3LTMyIDMyLTMyaDQ0OGMxNy42NzMgMCAzMiAxNC4zMjcgMzIgMzJ6bS0yNzguNjI3LTEwMS4zNzJjNi4yNDkgNi4yNDkgMTQuNDM3IDkuMzczIDIyLjYyNyA5LjM3MyA4LjE4OCAwIDE2LjM4LTMuMTI1IDIyLjYyNy05LjM3M2wxMTMuMzc4LTExMy4zNzdjMTIuNDk3LTEyLjQ5NyAxMi40OTctMzIuNzU4IDAtNDUuMjU1cy0zMi43NTgtMTIuNDk3LTQ1LjI1NSAwbC01OC43NSA1OC43NXYtMjQ2Ljc0NmMwLTE3LjY3My0xNC4zMjctMzItMzItMzJzLTMyIDE0LjMyNy0zMiAzMnYyNDYuNzQ2bC01OC43NS01OC43NWMtMTIuNDk3LTEyLjQ5Ny0zMi43NTgtMTIuNDk3LTQ1LjI1NSAwcy0xMi40OTcgMzIuNzU4IDAgNDUuMjU1eiIvPjwvc3ZnPg==" width="12" height="12"  alt="download-xmi" title="download XMI source" /> XMI </a>
+            <a id="downloadPlantUML" class="button-13" onclick="downloadPlantUML()"><img src="data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNTEyIDUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im01MTIgNDgwYzAgMTcuNjczLTE0LjMyNyAzMi0zMiAzMmgtNDQ4Yy0xNy42NzMgMC0zMi0xNC4zMjctMzItMzJzMTQuMzI3LTMyIDMyLTMyaDQ0OGMxNy42NzMgMCAzMiAxNC4zMjcgMzIgMzJ6bS0yNzguNjI3LTEwMS4zNzJjNi4yNDkgNi4yNDkgMTQuNDM3IDkuMzczIDIyLjYyNyA5LjM3MyA4LjE4OCAwIDE2LjM4LTMuMTI1IDIyLjYyNy05LjM3M2wxMTMuMzc4LTExMy4zNzdjMTIuNDk3LTEyLjQ5NyAxMi40OTctMzIuNzU4IDAtNDUuMjU1cy0zMi43NTgtMTIuNDk3LTQ1LjI1NSAwbC01OC43NSA1OC43NXYtMjQ2Ljc0NmMwLTE3LjY3My0xNC4zMjctMzItMzItMzJzLTMyIDE0LjMyNy0zMiAzMnYyNDYuNzQ2bC01OC43NS01OC43NWMtMTIuNDk3LTEyLjQ5Ny0zMi43NTgtMTIuNDk3LTQ1LjI1NSAwcy0xMi40OTcgMzIuNzU4IDAgNDUuMjU1eiIvPjwvc3ZnPg==" width="12" height="12"  alt="download-plantuml" title="download PlantUML source" /> PlantUML</a>        
+            <a id="downloadUML" class="button-13" data-target="ciao" onclick="downloadUMLDiagram()"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE2LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgd2lkdGg9IjU4cHgiIGhlaWdodD0iNThweCIgdmlld0JveD0iMCAwIDU4IDU4IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1OCA1ODsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPHBhdGggZD0iTTUyLjUsN2gtNDdDMi40NjcsNywwLDkuNDY3LDAsMTIuNXYzM0MwLDQ4LjUzMiwyLjQ2Nyw1MSw1LjUsNTFoNDdjMy4wMzIsMCw1LjUtMi40NjgsNS41LTUuNXYtMzMNCgkJQzU4LDkuNDY3LDU1LjUzMiw3LDUyLjUsN3ogTTU1LDMxLjUwNGwtMy41NDktMy41NDljLTEuMDM4LTEuMDM5LTIuNDItMS42MS0zLjg4OS0xLjYxYy0xLjQ3LDAtMi44NTIsMC41NzItMy44OSwxLjYxTDM0LjUsMzcuMTI4DQoJCWwtMy42MTEtMy42MWMtMS4wMzgtMS4wMzktMi40MTktMS42MTEtMy44ODktMS42MTFzLTIuODUxLDAuNTcyLTMuODg5LDEuNjExbC0zLjc4MSwzLjc4Yy0wLjk3NSwwLjk3NC0yLjU2MSwwLjk3Ni0zLjUzNSwwLjAwMQ0KCQlsLTAuNDY5LTAuNDdjLTIuMTQ0LTIuMTQ2LTUuNjMzLTIuMTQ2LTcuNzc4LDBMMyw0MS4zNzlWMTIuNUMzLDExLjEyMiw0LjEyMiwxMCw1LjUsMTBoNDdjMS4zNzksMCwyLjUsMS4xMjIsMi41LDIuNVYzMS41MDR6DQoJCSBNNTUsNDUuNWMwLDEuMzc5LTEuMTIxLDIuNS0yLjUsMi41aC03LjEyN2wtOC43NTEtOC43NTFsOS4xNzMtOS4xNzNjMC45NzUtMC45NzUsMi41NjEtMC45NzUsMy41MzUsMGw1LjY3LDUuNjdWNDUuNXogTTI3Ljg3MSw0OA0KCQlsNi42My02LjYzbDYuNjMsNi42M0gyNy44NzF6IE0zLjAxMSw0NS42MDlsNi42NTgtNi42NThjMC45NzYtMC45NzUsMi41NjItMC45NzUsMy41MzUtMC4wMDFsMC40NjksMC40Nw0KCQljMi4xNDQsMi4xNDUsNS42MzMsMi4xNDUsNy43NzgsMGwzLjc4MS0zLjc4MWMwLjk0My0wLjk0NSwyLjU5MS0wLjk0NSwzLjUzNiwwbDMuNjExLDMuNjExTDIzLjYyOSw0OEg1LjUNCgkJQzQuMTU5LDQ4LDMuMDcsNDYuOTM4LDMuMDExLDQ1LjYwOXogTTEzLjQzOCwxMi4xMjRjLTMuNjg4LDAtNi42ODgsMy02LjY4OCw2LjY4OHMzLDYuNjg4LDYuNjg4LDYuNjg4czYuNjg4LTMsNi42ODgtNi42ODgNCgkJUzE3LjEyNiwxMi4xMjQsMTMuNDM4LDEyLjEyNHogTTEzLjQzOCwyMi41Yy0yLjAzNCwwLTMuNjg4LTEuNjU0LTMuNjg4LTMuNjg4czEuNjU0LTMuNjg4LDMuNjg4LTMuNjg4czMuNjg4LDEuNjU0LDMuNjg4LDMuNjg4DQoJCVMxNS40NzIsMjIuNSwxMy40MzgsMjIuNXoiLz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K" width="20" height="20"  alt="download-plantumlimage" title="download image" /></a>
+            <input type="hidden" id="xmiData" value="" />
+            <input type="hidden" id="plantUML" value="" />
+            <input type="hidden" id="plantUMLimage" value="" />
+          </div>
+        </div>
+        <div id="dragbar2" class="dragbarH dragbar"></div> 
+        <div id="outputProc" class="outputBox">
+          <h3 style="font-family: Helvetica", id="processTitle">Process diagram (BPMN)</h3>
+          <!-- <a href="#" id="download" onclick="doStuff()">svg</a> --> 
+          <!--<div id="image" width="30%"></div> -->
+          <!--<div id="processModel" style="width: 100%;height: 100px;visibility: hidden;"></div>-->
+          <div class="btndwnld">
+            <a id="downloadButtonBPMN" class="button-13"  onclick=""><img src="data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNTEyIDUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im01MTIgNDgwYzAgMTcuNjczLTE0LjMyNyAzMi0zMiAzMmgtNDQ4Yy0xNy42NzMgMC0zMi0xNC4zMjctMzItMzJzMTQuMzI3LTMyIDMyLTMyaDQ0OGMxNy42NzMgMCAzMiAxNC4zMjcgMzIgMzJ6bS0yNzguNjI3LTEwMS4zNzJjNi4yNDkgNi4yNDkgMTQuNDM3IDkuMzczIDIyLjYyNyA5LjM3MyA4LjE4OCAwIDE2LjM4LTMuMTI1IDIyLjYyNy05LjM3M2wxMTMuMzc4LTExMy4zNzdjMTIuNDk3LTEyLjQ5NyAxMi40OTctMzIuNzU4IDAtNDUuMjU1cy0zMi43NTgtMTIuNDk3LTQ1LjI1NSAwbC01OC43NSA1OC43NXYtMjQ2Ljc0NmMwLTE3LjY3My0xNC4zMjctMzItMzItMzJzLTMyIDE0LjMyNy0zMiAzMnYyNDYuNzQ2bC01OC43NS01OC43NWMtMTIuNDk3LTEyLjQ5Ny0zMi43NTgtMTIuNDk3LTQ1LjI1NSAwcy0xMi40OTcgMzIuNzU4IDAgNDUuMjU1eiIvPjwvc3ZnPg==" width="12" height="12"  alt="download-bpmn" title="download BPMN source" /> BPMN</a>
+            <a id="downloadButton2" class="button-13" onclick=""><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE2LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgd2lkdGg9IjU4cHgiIGhlaWdodD0iNThweCIgdmlld0JveD0iMCAwIDU4IDU4IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1OCA1ODsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPHBhdGggZD0iTTUyLjUsN2gtNDdDMi40NjcsNywwLDkuNDY3LDAsMTIuNXYzM0MwLDQ4LjUzMiwyLjQ2Nyw1MSw1LjUsNTFoNDdjMy4wMzIsMCw1LjUtMi40NjgsNS41LTUuNXYtMzMNCgkJQzU4LDkuNDY3LDU1LjUzMiw3LDUyLjUsN3ogTTU1LDMxLjUwNGwtMy41NDktMy41NDljLTEuMDM4LTEuMDM5LTIuNDItMS42MS0zLjg4OS0xLjYxYy0xLjQ3LDAtMi44NTIsMC41NzItMy44OSwxLjYxTDM0LjUsMzcuMTI4DQoJCWwtMy42MTEtMy42MWMtMS4wMzgtMS4wMzktMi40MTktMS42MTEtMy44ODktMS42MTFzLTIuODUxLDAuNTcyLTMuODg5LDEuNjExbC0zLjc4MSwzLjc4Yy0wLjk3NSwwLjk3NC0yLjU2MSwwLjk3Ni0zLjUzNSwwLjAwMQ0KCQlsLTAuNDY5LTAuNDdjLTIuMTQ0LTIuMTQ2LTUuNjMzLTIuMTQ2LTcuNzc4LDBMMyw0MS4zNzlWMTIuNUMzLDExLjEyMiw0LjEyMiwxMCw1LjUsMTBoNDdjMS4zNzksMCwyLjUsMS4xMjIsMi41LDIuNVYzMS41MDR6DQoJCSBNNTUsNDUuNWMwLDEuMzc5LTEuMTIxLDIuNS0yLjUsMi41aC03LjEyN2wtOC43NTEtOC43NTFsOS4xNzMtOS4xNzNjMC45NzUtMC45NzUsMi41NjEtMC45NzUsMy41MzUsMGw1LjY3LDUuNjdWNDUuNXogTTI3Ljg3MSw0OA0KCQlsNi42My02LjYzbDYuNjMsNi42M0gyNy44NzF6IE0zLjAxMSw0NS42MDlsNi42NTgtNi42NThjMC45NzYtMC45NzUsMi41NjItMC45NzUsMy41MzUtMC4wMDFsMC40NjksMC40Nw0KCQljMi4xNDQsMi4xNDUsNS42MzMsMi4xNDUsNy43NzgsMGwzLjc4MS0zLjc4MWMwLjk0My0wLjk0NSwyLjU5MS0wLjk0NSwzLjUzNiwwbDMuNjExLDMuNjExTDIzLjYyOSw0OEg1LjUNCgkJQzQuMTU5LDQ4LDMuMDcsNDYuOTM4LDMuMDExLDQ1LjYwOXogTTEzLjQzOCwxMi4xMjRjLTMuNjg4LDAtNi42ODgsMy02LjY4OCw2LjY4OHMzLDYuNjg4LDYuNjg4LDYuNjg4czYuNjg4LTMsNi42ODgtNi42ODgNCgkJUzE3LjEyNiwxMi4xMjQsMTMuNDM4LDEyLjEyNHogTTEzLjQzOCwyMi41Yy0yLjAzNCwwLTMuNjg4LTEuNjU0LTMuNjg4LTMuNjg4czEuNjU0LTMuNjg4LDMuNjg4LTMuNjg4czMuNjg4LDEuNjU0LDMuNjg4LDMuNjg4DQoJCVMxNS40NzIsMjIuNSwxMy40MzgsMjIuNXoiLz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K" width="20" height="20"  alt="download-plantumlimage" title="download image" /></a>
+          </div>
+          <!--<div id="output"></div>-->
+        </div>
+        <div id="dragbar3" class="dragbarH"></div>
+        <div id="outputGoal" class="outputBox">
+          <h3 style="font-family: Helvetica", id="goalTitle">Goal diagram (iStar)</h3>
+          <div id="menu-plugin" class="menu-body hidden">
+          <div id="appToolbar"></div> <!-- this div is DEPRECATED. Instead, add elements directly to #menu-plugin -->
+          </div>
+          <div id="tool">
+            <div id="workspace">
+              <div id="sidepanel"></div>
+              <div id="out">
+                <div class="cell-selection" style="display: none;"></div>
+                <div id="resize-handle" style="display: none;"></div>
+                <div id="diagram" style=""></div>
+              </div>
+            </div>
+          </div>
+          <div class="btndwnld">
+            <a id="downloadButtoniStar" class="button-13"><img src="data:image/svg+xml;base64,PHN2ZyBpZD0iTGF5ZXJfMSIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgNTEyIDUxMiIgaGVpZ2h0PSI1MTIiIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiB3aWR0aD0iNTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Im01MTIgNDgwYzAgMTcuNjczLTE0LjMyNyAzMi0zMiAzMmgtNDQ4Yy0xNy42NzMgMC0zMi0xNC4zMjctMzItMzJzMTQuMzI3LTMyIDMyLTMyaDQ0OGMxNy42NzMgMCAzMiAxNC4zMjcgMzIgMzJ6bS0yNzguNjI3LTEwMS4zNzJjNi4yNDkgNi4yNDkgMTQuNDM3IDkuMzczIDIyLjYyNyA5LjM3MyA4LjE4OCAwIDE2LjM4LTMuMTI1IDIyLjYyNy05LjM3M2wxMTMuMzc4LTExMy4zNzdjMTIuNDk3LTEyLjQ5NyAxMi40OTctMzIuNzU4IDAtNDUuMjU1cy0zMi43NTgtMTIuNDk3LTQ1LjI1NSAwbC01OC43NSA1OC43NXYtMjQ2Ljc0NmMwLTE3LjY3My0xNC4zMjctMzItMzItMzJzLTMyIDE0LjMyNy0zMiAzMnYyNDYuNzQ2bC01OC43NS01OC43NWMtMTIuNDk3LTEyLjQ5Ny0zMi43NTgtMTIuNDk3LTQ1LjI1NSAwcy0xMi40OTcgMzIuNzU4IDAgNDUuMjU1eiIvPjwvc3ZnPg==" width="12" height="12"  alt="download-bpmn" title="download iStar source" /> iStar</a>
+            <a id="downloadButtoniStarImage" class="button-13"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE2LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgd2lkdGg9IjU4cHgiIGhlaWdodD0iNThweCIgdmlld0JveD0iMCAwIDU4IDU4IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1OCA1ODsiIHhtbDpzcGFjZT0icHJlc2VydmUiPg0KPGc+DQoJPHBhdGggZD0iTTUyLjUsN2gtNDdDMi40NjcsNywwLDkuNDY3LDAsMTIuNXYzM0MwLDQ4LjUzMiwyLjQ2Nyw1MSw1LjUsNTFoNDdjMy4wMzIsMCw1LjUtMi40NjgsNS41LTUuNXYtMzMNCgkJQzU4LDkuNDY3LDU1LjUzMiw3LDUyLjUsN3ogTTU1LDMxLjUwNGwtMy41NDktMy41NDljLTEuMDM4LTEuMDM5LTIuNDItMS42MS0zLjg4OS0xLjYxYy0xLjQ3LDAtMi44NTIsMC41NzItMy44OSwxLjYxTDM0LjUsMzcuMTI4DQoJCWwtMy42MTEtMy42MWMtMS4wMzgtMS4wMzktMi40MTktMS42MTEtMy44ODktMS42MTFzLTIuODUxLDAuNTcyLTMuODg5LDEuNjExbC0zLjc4MSwzLjc4Yy0wLjk3NSwwLjk3NC0yLjU2MSwwLjk3Ni0zLjUzNSwwLjAwMQ0KCQlsLTAuNDY5LTAuNDdjLTIuMTQ0LTIuMTQ2LTUuNjMzLTIuMTQ2LTcuNzc4LDBMMyw0MS4zNzlWMTIuNUMzLDExLjEyMiw0LjEyMiwxMCw1LjUsMTBoNDdjMS4zNzksMCwyLjUsMS4xMjIsMi41LDIuNVYzMS41MDR6DQoJCSBNNTUsNDUuNWMwLDEuMzc5LTEuMTIxLDIuNS0yLjUsMi41aC03LjEyN2wtOC43NTEtOC43NTFsOS4xNzMtOS4xNzNjMC45NzUtMC45NzUsMi41NjEtMC45NzUsMy41MzUsMGw1LjY3LDUuNjdWNDUuNXogTTI3Ljg3MSw0OA0KCQlsNi42My02LjYzbDYuNjMsNi42M0gyNy44NzF6IE0zLjAxMSw0NS42MDlsNi42NTgtNi42NThjMC45NzYtMC45NzUsMi41NjItMC45NzUsMy41MzUtMC4wMDFsMC40NjksMC40Nw0KCQljMi4xNDQsMi4xNDUsNS42MzMsMi4xNDUsNy43NzgsMGwzLjc4MS0zLjc4MWMwLjk0My0wLjk0NSwyLjU5MS0wLjk0NSwzLjUzNiwwbDMuNjExLDMuNjExTDIzLjYyOSw0OEg1LjUNCgkJQzQuMTU5LDQ4LDMuMDcsNDYuOTM4LDMuMDExLDQ1LjYwOXogTTEzLjQzOCwxMi4xMjRjLTMuNjg4LDAtNi42ODgsMy02LjY4OCw2LjY4OHMzLDYuNjg4LDYuNjg4LDYuNjg4czYuNjg4LTMsNi42ODgtNi42ODgNCgkJUzE3LjEyNiwxMi4xMjQsMTMuNDM4LDEyLjEyNHogTTEzLjQzOCwyMi41Yy0yLjAzNCwwLTMuNjg4LTEuNjU0LTMuNjg4LTMuNjg4czEuNjU0LTMuNjg4LDMuNjg4LTMuNjg4czMuNjg4LDEuNjU0LDMuNjg4LDMuNjg4DQoJCVMxNS40NzIsMjIuNSwxMy40MzgsMjIuNXoiLz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K" width="20" height="20"  alt="download-istarimage" title="download image" /></a>
+          </div>
+        </div>
+        <div id="dragbar4" class="dragbarH"></div>
+
+        <div id="outputReport" class="outputBox">
+          <h3 style="font-family: Helvetica", id="reportTitle">Report</h3>
+          <div id="schemeReport">
+          <div id="txtReport"></div>
+            <textarea id="comment" rows="2" cols="46" placeholder='Add comment to report (optional)...'></textarea>
+          </div>
+          <div class="btndwnld">
+            <a id="downloadButton" class="button-13" onclick="downloadReport()"><img src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/Pg0KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE4LjAuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPg0KPCFET0NUWVBFIHN2ZyBQVUJMSUMgIi0vL1czQy8vRFREIFNWRyAxLjEvL0VOIiAiaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkIj4NCjxzdmcgdmVyc2lvbj0iMS4xIiBpZD0iQ2FwYV8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4PSIwcHgiIHk9IjBweCINCgkgdmlld0JveD0iMCAwIDM5Mi42MiAzOTIuNjIiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDM5Mi42MiAzOTIuNjI7IiB4bWw6c3BhY2U9InByZXNlcnZlIj4NCjxnPg0KCTxwYXRoIGQ9Ik0zMTAuNzI0LDAuOTI5SDgxLjg5NkMzNi43MzgsMC45MjksMCwzNy42NjcsMCw4Mi44MjV2MjI2Ljk3YzAsNDUuMTU3LDM2LjczOCw4MS44OTYsODEuODk2LDgxLjg5NmgyMjguODI4DQoJCWM0NS4xNTgsMCw4MS44OTYtMzYuNzM4LDgxLjg5Ni04MS44OTZWODIuODI1QzM5Mi42MiwzNy42NjcsMzU1Ljg4MSwwLjkyOSwzMTAuNzI0LDAuOTI5eiBNMzYyLjYyLDMwOS43OTUNCgkJYzAsMjguNjE1LTIzLjI4LDUxLjg5Ni01MS44OTYsNTEuODk2SDgxLjg5NkM1My4yOCwzNjEuNjksMzAsMzM4LjQxLDMwLDMwOS43OTVWODIuODI1YzAtMjguNjE2LDIzLjI4LTUxLjg5Niw1MS44OTYtNTEuODk2DQoJCWgyMjguODI4YzI4LjYxNiwwLDUxLjg5NiwyMy4yOCw1MS44OTYsNTEuODk2VjMwOS43OTV6Ii8+DQoJPHBhdGggZD0iTTMwMC40MDYsMTA3LjMxN0g5Mi4yMTNjLTUuNTIzLDAtMTAsNC40NzctMTAsMTBzNC40NzcsMTAsMTAsMTBoMjA4LjE5MmM1LjUyMywwLDEwLTQuNDc3LDEwLTEwDQoJCVMzMDUuOTI5LDEwNy4zMTcsMzAwLjQwNiwxMDcuMzE3eiIvPg0KCTxwYXRoIGQ9Ik05Mi4yMTMsMTY2LjI3OGgxNDEuMjIyYzUuNTIzLDAsMTAtNC40NzcsMTAtMTBzLTQuNDc3LTEwLTEwLTEwSDkyLjIxM2MtNS41MjMsMC0xMCw0LjQ3Ny0xMCwxMA0KCQlTODYuNjksMTY2LjI3OCw5Mi4yMTMsMTY2LjI3OHoiLz4NCgk8cGF0aCBkPSJNMzAwLjQwNiwxODcuMzgxSDkyLjIxM2MtNS41MjMsMC0xMCw0LjQ3Ny0xMCwxMHM0LjQ3NywxMCwxMCwxMGgyMDguMTkyYzUuNTIzLDAsMTAtNC40NzcsMTAtMTANCgkJUzMwNS45MjksMTg3LjM4MSwzMDAuNDA2LDE4Ny4zODF6Ii8+DQoJPHBhdGggZD0iTTkyLjIxMywyNDYuMzQyaDE0MS4yMjJjNS41MjMsMCwxMC00LjQ3NywxMC0xMHMtNC40NzctMTAtMTAtMTBIOTIuMjEzYy01LjUyMywwLTEwLDQuNDc3LTEwLDEwDQoJCVM4Ni42OSwyNDYuMzQyLDkyLjIxMywyNDYuMzQyeiIvPg0KCTxwYXRoIGQ9Ik0zMDAuNDA2LDI2NS4zMDNIOTIuMjEzYy01LjUyMywwLTEwLDQuNDc3LTEwLDEwczQuNDc3LDEwLDEwLDEwaDIwOC4xOTJjNS41MjMsMCwxMC00LjQ3NywxMC0xMA0KCQlTMzA1LjkyOSwyNjUuMzAzLDMwMC40MDYsMjY1LjMwM3oiLz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjxnPg0KPC9nPg0KPGc+DQo8L2c+DQo8Zz4NCjwvZz4NCjwvc3ZnPg0K" width="auto" height="20"  alt="download-report" title="download report" /> </a>
+          </div>  
+        </div>   
+
+
+      </div> 
+
+    </div>
+
+
+          <script>
+            //const xml = '<?xml version="1.0" encoding="UTF-8"?> <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="sid-38422fae-e03e-43a3-bef4-bd33b32041b2" targetNamespace="http://bpmn.io/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="15.1.3"> <process id="Process_1" isExecutable="false"> <startEvent id="StartEvent_1y45yut"> <outgoing>Flow_0nyaqxh</outgoing> </startEvent> <intermediateThrowEvent id="Event_19yih6j"> <incoming>Flow_0nyaqxh</incoming> </intermediateThrowEvent> <sequenceFlow id="Flow_0nyaqxh" sourceRef="StartEvent_1y45yut" targetRef="Event_19yih6j" /> </process> <bpmndi:BPMNDiagram id="BpmnDiagram_1"> <bpmndi:BPMNPlane id="BpmnPlane_1" bpmnElement="Process_1"> <bpmndi:BPMNShape id="StartEvent_1y45yut_di" bpmnElement="StartEvent_1y45yut"> <omgdc:Bounds x="152" y="102" width="36" height="36" /> <bpmndi:BPMNLabel> <omgdc:Bounds x="134" y="145" width="73" height="14" /> </bpmndi:BPMNLabel> </bpmndi:BPMNShape> <bpmndi:BPMNShape id="Event_19yih6j_di" bpmnElement="Event_19yih6j"> <omgdc:Bounds x="402" y="102" width="36" height="36" /> </bpmndi:BPMNShape> <bpmndi:BPMNEdge id="Flow_0nyaqxh_di" bpmnElement="Flow_0nyaqxh"> <omgdi:waypoint x="188" y="120" /> <omgdi:waypoint x="402" y="120" /> </bpmndi:BPMNEdge> </bpmndi:BPMNPlane> </bpmndi:BPMNDiagram> </definitions>';
+            //var bpmnJS = new BpmnJS({
+            //  container: '#processModel'
+            //});
+            //bpmnJS.importXML(xml);
+
+            //console.log('success!');
+            //bpmnJS.get('processModel').zoom('fit-viewport');
+            //bpmnJS.get('processModel').zoom(1.0, task);
+
+
+            /*async function doStuff() {
+  var myblurb;
+  myblurb = await bpmnJS.saveSVG();
+  console.log(myblurb.svg);
+  document.getElementById('image').innerHTML = myblurb.svg;
+
+  }*/
+
+  //da riattivare
+  //doStuff();
+          </script>
+                  <script>
+                    const downloadFile = () => {
+                      const link = document.createElement("a");
+                      const content = document.getElementById("xmiData").value;
+                      const title = document.getElementById("customTitle");
+          
+                      // get date
+                      var today = new Date();
+                      var dd = String(today.getDate()).padStart(2, '0');
+                      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
+                      var yyyy = today.getFullYear();
+                      today = dd + '-' + mm + '-' + yyyy;
+          
+                      const file = new Blob([content], { type: 'text/xml' });
+                      link.href = URL.createObjectURL(file);
+                      link.download = `${today}_diagramUML_${title.value}.xmi`;
+                      link.click();
+                      URL.revokeObjectURL(link.href);
+                    };
+                  </script>
+                   <script>
+                    const downloadPlantUML = () => {
+                      const link = document.createElement("a");
+                      const comment = document.getElementById("comment");
+                      var textComment = new String();
+                      if (comment.value != '') {
+                        textComment = '\nNOTES: ' + comment.value;
+                      }
+                      const content = document.getElementById("plantUMLimage").value;
+                      const title = document.getElementById("customTitle");
+          
+                      // get date
+                      var today = new Date();
+                      var dd = String(today.getDate()).padStart(2, '0');
+                      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
+                      var yyyy = today.getFullYear();
+                      today = dd + '-' + mm + '-' + yyyy;
+          
+                      const file = new Blob([content, textComment], { type: 'text/xml' });
+                      link.href = URL.createObjectURL(file);
+                      link.download = `${today}_diagramPlantUML_${title.value}.txt`;
+                      link.click();
+                      URL.revokeObjectURL(link.href);
+                    };
+                  </script>
+                   <script>
+                    async function downloadUMLDiagram() {
+                      const link = document.createElement("a");
+                      const comment = document.getElementById("comment");
+                      var textComment = new String();
+                      if (comment.value != '') {
+                        textComment = '\nNOTES: ' + comment.value;
+                      }
+                      const content = document.getElementById("plantUML").value;
+                      const title = document.getElementById("customTitle");
+          
+                      // get date
+                      var today = new Date();
+                      var dd = String(today.getDate()).padStart(2, '0');
+                      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
+                      var yyyy = today.getFullYear();
+                      today = dd + '-' + mm + '-' + yyyy;
+                      
+                      url = document.getElementById("downloadUML").getAttribute('data-target');
+                      console.log(url);
+                      try {
+                      // Send a GET request to the URL
+                      const response = await fetch(url);
+
+                      // Check if the request was successful (status code 200)
+                      if (response.ok) {
+                      // Get the binary data of the image
+                      const imageData = await response.blob();
+
+// Create a URL representing the data
+const imageUrl = URL.createObjectURL(imageData);
+
+// Create an <a> element to trigger the download
+const link = document.createElement('a');
+link.href = imageUrl;
+link.download = 'image.png';
+
+// Trigger the download
+link.click();
+                      } else {
+                      console.log("Failed to download the image. Status code:", response.status);
+                      }
+                      } catch (error) {
+                      console.error("Error:", error);
+                      }
+                      /* const file = new Blob([content, textComment], { type: 'text/xml' });
+                      link.href = URL.createObjectURL(file);
+                      link.download = `${today}_diagramPlantUML_${title.value}.txt`;
+                      link.click();
+                      URL.revokeObjectURL(link.href); */
+                    };
+                  </script>                  
+          <script>
+
+/* eliminare 
+            const downloadXmi = () => {
+              const link = document.createElement("a");
+              const content = document.getElementById("xmiCode").innerText;
+              const title = document.getElementById("customTitle");
+
+              // get date
+              var today = new Date();
+              var dd = String(today.getDate()).padStart(2, '0');
+              var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
+              var yyyy = today.getFullYear();
+              today = dd + '-' + mm + '-' + yyyy;
+              
+              const file = new Blob([content], { type: 'text/xml' });
+              link.href = URL.createObjectURL(file);
+              link.download = `${today}_diagramUML_${title.value}.xmi`;
+              link.click();
+              URL.revokeObjectURL(link.href);
+            };
+fine eliminare */
+
+          </script>
+          <script>
+            const downloadReport = () => {
+              const link = document.createElement("a");
+              const comment = document.getElementById("comment");
+              var textComment = new String();
+              if(comment.value != ''){
+                textComment = '\nNOTES: ' + comment.value;
+              }
+              const content = document.getElementById("txtReport").innerText;
+              const title = document.getElementById("customTitle");
+              
+              // get date
+              var today = new Date();
+              var dd = String(today.getDate()).padStart(2, '0');
+              var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
+              var yyyy = today.getFullYear();
+              today = dd + '-' + mm + '-' + yyyy;
+
+              const file = new Blob([content, textComment], { type: 'text/xml' });
+              link.href = URL.createObjectURL(file);
+              link.download = `${today}_diagramREPORT_${title.value}.txt`;
+              link.click();
+              URL.revokeObjectURL(link.href);
+            };
+  
+          </script> 
+
+<button id="downloadButton" class="button-13" onclick="downloadReport()">Report file</button>
+<script>
+  /* eliminare
+  const downloadReport = () => {
+    const link = document.createElement("a");
+    const comment = document.getElementById("comment");
+    var textComment = new String();
+    if (comment.value != '') {
+      textComment = '\nNOTES: ' + comment.value;
+    }
+    const content = document.getElementById("txtReport").innerText;
+    const title = document.getElementById("customTitle");
+
+    // get date
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
+    var yyyy = today.getFullYear();
+    today = dd + '-' + mm + '-' + yyyy;
+
+    const file = new Blob([content, textComment], { type: 'text/xml' });
+    link.href = URL.createObjectURL(file);
+    link.download = `${today}_diagramREPORT_${title.value}.txt`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  };
+  */
+</script>
+
+
+         
+         <script>
+          /* TODO: cancellare? spostata o disabilitata
+
+          $( document ).ready(function() {
+            $('#menu-button-svg').click(function () {
+    'use strict';
+    var svgData = istar.fileManager.saveSvg(istar.paper);
+    $('#output').attr('src',svgData);
+});
+
+});
+*/
+
+/* TODO: fare unica funzione drag con parametro. Usare bind per passare come parametro l'elemento cliccato */ 
+
+var left = document.getElementById('blocklyDiv');
+var right = document.getElementById('outputPane');
+var bar = document.getElementById('dragbar');
+var bar2 = document.getElementById('dragbar2');
+var bar3 = document.getElementById('dragbar3');
+var bar4 = document.getElementById('dragbar4');
+
+//var box1 = document.getElementsByClassName('outputBox')[0];
+//var bar = document.getElementsByClassName('dragbar');
+var boxTop = document.getElementById('outputStr');
+var boxTop2 = document.getElementById('outputProc');
+var boxTop3 = document.getElementById('outputGoal');
+
+console.log(bar);
+
+
+const drag = (e) => {
+  document.selection ? document.selection.empty() : window.getSelection().removeAllRanges();
+  left.style.width = (e.pageX - bar.offsetWidth / 2) + 'px';
+  document.getElementsByClassName('blocklySvg')[0].style.width = left.style.width;
+
+}
+
+const drag2 = (e) => {
+  document.selection ? document.selection.empty() : window.getSelection().removeAllRanges();
+  boxTop.style.height = (e.pageY - boxTop.offsetTop) + 'px';
+  //document.getElementsByClassName('blocklySvg')[0].style.width = left.style.width;
+
+}
+
+const drag3 = (e) => {
+  document.selection ? document.selection.empty() : window.getSelection().removeAllRanges();
+  boxTop2.style.height = (e.pageY - boxTop2.offsetTop) + 'px';
+  //document.getElementsByClassName('blocklySvg')[0].style.width = left.style.width;
+
+}
+
+const drag4 = (e) => {
+  document.selection ? document.selection.empty() : window.getSelection().removeAllRanges();
+  boxTop3.style.height = (e.pageY - boxTop3.offsetTop) + 'px';
+  //document.getElementsByClassName('blocklySvg')[0].style.width = left.style.width;
+
+}
+
+bar.addEventListener('mousedown', () => {
+  document.addEventListener('mousemove', drag);
+});
+
+bar2.addEventListener('mousedown', () => {
+  document.addEventListener('mousemove', drag2);
+});
+
+bar3.addEventListener('mousedown', () => {
+  document.addEventListener('mousemove', drag3);
+});
+
+bar4.addEventListener('mousedown', () => {
+  document.addEventListener('mousemove', drag4);
+});
+
+window.addEventListener('mouseup', () => {
+  document.removeEventListener('mousemove', drag);
+  document.removeEventListener('mousemove', drag2);
+  document.removeEventListener('mousemove', drag3);
+  document.removeEventListener('mousemove', drag4);
+
+});
+
+
+/*
+const drag = (e) => {
+  document.selection ? document.selection.empty() : window.getSelection().removeAllRanges();
+  left.style.width = (e.pageX - bar0.offsetWidth / 2) + 'px';
+  document.getElementsByClassName('blocklySvg')[0].style.width = left.style.width;
+  
+}
+
+const dragV = (e) => {
+  document.selection ? document.selection.empty() : window.getSelection().removeAllRanges();
+  box1.style.height = (e.pageY - bar.offsetWidth / 2) + 'px';
+  
+}
+
+Array.from(bar).forEach(element => {
+  element.addEventListener('mousedown', (e) => {
+    if(element.id=="dragbar"){
+      document.addEventListener('mousemove', drag(e));
+    }
+    else {
+      document.addEventListener('mousemove', drag());
+
+    }
+});
+})
+
+window.addEventListener('mouseup', () => {
+  document.removeEventListener('mousemove', drag);
+});
+*/
+          </script>
+
+
+
+<!-- dependencies TODO: cancellare  -->
+<!-- <script src="istar/app/istarcore/lib/jquery.min.js"></script> 
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/lib/lodash.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/lib/backbone-min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/lib/joint.min.js"></script>
+
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/lib/jscolor/jscolor.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/lib/bootstrap/bootstrap.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/lib/bootstrap3-editable/bootstrap-editable.min.js"></script>
+<script src=".https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/lib/bootbox/bootbox.min.js"></script>
+
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/istarFunctions.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/metamodelManager.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/fileManager.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/defaultShapes.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/undoManager.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/ui.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/models/addButton.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/views/addButton.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/views/addButtonDropdown.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/views/addButtonDropdownItem.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/controllers/addButton.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/views/propertiesTable.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/ui/istarmodels.js"></script>
+
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-collection.v1.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-dispatch.v1.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-quadtree.v1.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-timer.v1.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-force.v1.min.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/layout.js"></script>
+
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/language/shapes.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/language/metamodel.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/language/constraints.js"></script>
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/language/ui.metamodel.js"></script>
+
+<script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/app/ui/main.js"></script>
+-->
+
+
+  <!--  </div> -->
+  
+  
+   </body>
+ </html>

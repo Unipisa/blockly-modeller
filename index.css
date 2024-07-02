@@ -1,0 +1,273 @@
+body {
+    margin: 0px;
+    max-width: 100vw;
+}
+
+pre, code {
+    overflow: auto;
+}
+
+h3 {
+    font-weight: 500;
+    text-align: center;
+}
+/*
+#pageContainer {
+    display: flex;
+    width: 100%;
+    max-width: 100vw;
+    height: 100vh;
+}
+
+#blocklyDiv {
+    flex-basis: 100%;
+    height: 92%;
+    min-width: 600px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+*/
+
+.blocklyMainBackground {
+  stroke-width: 1;
+  stroke: #ffffff;
+}
+
+#outputPane {
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+    flex: 0 0 400px;
+    overflow: auto;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+#customTitle{
+    display: block;
+    font-size: 19px;
+    min-width: 300px;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+}
+
+#codeTitle {
+    margin-top:  0px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+
+#reportTitle {
+    margin-top:  10px;
+    margin-bottom: 10px;
+    margin-left: 5px;
+}
+
+#schemeReport {
+    height: 100%;
+    background-color: rgb(247, 240, 228);
+    margin: 0px;
+    border-radius: 15px;
+    border-top-style: solid;
+    border-left-style: solid;
+    border-bottom-style: solid;
+    border-right-style: solid;
+    border-width: 15px;
+    border-color: rgb(247, 240, 228);
+    overflow: auto;
+
+}
+
+#generatedCode {
+  height: 100%;
+  margin: 0px;
+}
+
+#ieWs {
+  float: right;
+}
+
+#importWs, #exportWs {
+  cursor: pointer;
+  margin-right:1em;
+}
+
+#comment{
+    margin-top:  10px;
+}
+
+#txtReport{
+    font-size: 13px;
+    font-family: Helvetica;
+}
+
+.blocklyToolboxDiv {
+  background-color: rgb(247, 240, 228);
+}
+
+.blocklyFlyoutBackground {
+  fill: rgb(247, 240, 228);
+  fill-opacity: .8;
+}
+
+.geras-renderer.classic-theme .blocklyFlyoutLabelText {
+  fill: black;
+  font-size: 17px;
+  white-space: pre;
+}
+
+.blocklyFlyoutLabelBackground {
+  opacity: 0;
+  fill: rgb(247, 240, 228);
+}
+
+.injectionDiv {
+  border-radius: 15px;
+}
+
+.blocklyToolboxContents {
+  margin-top: 10px;
+  margin-right: 8px;
+}
+
+.blocklySvg {
+  background-color: #fbf9f7;
+}
+
+/* the bpmn editor is hidden */
+.targetBpmn {
+  visibility: hidden;
+}
+
+/* TODO: eliminare
+#buttonArea {
+  display: flex;
+  justify-content: center;
+}
+*/
+
+#blockly-3 {
+  height: 25px;
+}
+
+.btndwnld {
+  position: absolute;
+  bottom: 0;
+  right:0;
+  display: flex;
+  justify-content: center; /* Aligns contents horizontally */
+  align-items: center;
+}
+
+.button-13 {
+  background-color: #fff;
+  border: 1px solid #d5d9d9;
+  border-radius: 2px;
+  box-sizing: border-box;
+  color: #0f1111;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Helvetica",sans-serif;
+  font-size: 13px;
+  padding: 8px 10px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  margin-left: 5px;
+  margin-right: 5px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  min-height: 40px;
+  display: flex;
+  justify-content: center; /* Aligns contents horizontally */
+  align-items: center;
+}
+
+.button-13 img {
+  margin: 0 0.3em;
+}
+
+.button-13:hover {
+  background-color: #f7fafa;
+}
+
+.button-13:focus {
+  border-color: #008296;
+  box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+  outline: 0;
+}
+
+.blocklyToolboxCategory{
+    margin-bottom:  5px;
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: #40403f;
+  opacity: 1; /* Firefox */
+}
+
+#image svg {
+  width: 100%;
+}
+
+/* dragbar */
+
+#pageContainer {
+  display: flex;
+  min-height: 100vh;
+}
+/*
+[class^="panel"] {
+  padding: 60px 24px;
+  background-color: whitesmoke;
+}
+*/
+
+#blocklyDiv {
+  width: 70%;
+  padding-top: 10px;
+  padding-left: 10px;
+}
+
+#outputPane {
+  flex: 1;
+  width: 30%;
+}
+
+#dragbar {
+  padding: 6px;
+  cursor: col-resize;
+  background-color: silver;
+}
+
+.dragbarH {
+  padding: 6px;
+  cursor: row-resize;
+  background-color: silver;
+}
+
+.blocklyTreeRow {
+  height: 36px;
+  border-left: 0!important;
+}
+
+.blocklyTreeRow img {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  padding: 6px;
+}
+
+.outputBox {
+  height:200px;
+  max-height:828px;
+  overflow: hidden;
+  position: relative;
+}
+
