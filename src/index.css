@@ -1,0 +1,291 @@
+body {
+  margin: 0;
+  max-width: 100vw;
+}
+
+pre, code {
+  overflow: auto;
+}
+
+h3 {
+  font-weight: 500;
+  text-align: center;
+}
+
+#pageContainer {
+  display: flex;
+  width: 100%;
+  /* max-width: 100vw; */
+  height: 100vh;
+}
+
+#blocklyDiv {
+  flex: 1;
+  height: 92%;
+  min-width: 600px;
+  margin: 10px;
+}
+
+.blocklyMainBackground {
+stroke-width: 1;
+stroke: #ffffff;
+}
+
+#outputPane {
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 400px;
+  width: 400px;
+  overflow: auto;
+  margin: 10px;
+}
+
+#customTitle {
+  display: block;
+  font-size: 16px;
+  text-align: center;
+  margin: 0;
+  width: 100%;
+  background-color: #ffffff;
+  padding:0.5em;
+  border: 0;
+  height: 2%;
+}
+
+#codeTitle, #reportTitle {
+  margin: 10px 5px;
+}
+
+.generatedCode, #schemeReport {
+  flex: 1;
+  background-color: rgb(247, 240, 228);
+  margin: 10px 0;
+  border-radius: 15px;
+  border: solid 15px rgb(247, 240, 228);
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 0.8rem;
+  line-height: 1.2;
+}
+
+#toXMI, #jsonobj, #txtReport {
+  background-color: rgb(247, 240, 228);
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+  white-space: pre-wrap;
+  font-family: 'Lucida Console', Monaco, monospace;
+  overflow-x: auto;
+  /* height: 100px; Adjust this as needed se voglio che non si ingrandiscano da soli ma scorrimento */
+} 
+
+#comment {
+  margin-top: 10px;
+  width: 100%; /* Ensure the comment textarea fits within the container */
+  box-sizing: border-box;
+}
+
+/* QUESTI COMANDI PER CUSTOMIZZARE IL MENU A TENDINA */
+.blocklyToolboxDiv {
+background-color: rgb(247, 240, 228);
+}
+
+.blocklyFlyoutBackground {
+fill: rgb(247, 240, 228);
+fill-opacity: .8;
+}
+
+.geras-renderer.classic-theme .blocklyFlyoutLabelText {
+fill: black;
+font-size: 17px;
+white-space: pre;
+}
+
+.blocklyFlyoutLabelBackground {
+opacity: 0;
+fill: rgb(247, 240, 228);
+}
+
+.injectionDiv {
+border-radius: 0;
+}
+
+.blocklyToolboxContents {
+margin-top: 10px;
+margin-right: 8px;
+}
+
+.blocklySvg {
+background-color: #fbf9f7;
+}
+
+#buttonArea {
+display: flex;
+justify-content: center;
+}
+
+.button-13 {
+background-color: #fff;
+border: 1px solid #d5d9d9;
+border-radius: 5px;
+box-shadow: rgba(187, 177, 156, 0.5) 0 2px 5px 0;
+box-sizing: border-box;
+color: #0f1111;
+cursor: pointer;
+display: inline-block;
+font-family: "Helvetica", sans-serif;
+font-size: 13px;
+line-height: 29px;
+padding: 0 10px 0 11px;
+/* position: relative; */
+text-align: center;
+text-decoration: none;
+user-select: none;
+margin: 5px;
+/* -webkit-user-select: none;
+touch-action: manipulation;
+vertical-align: middle;
+margin-left: 5px;
+margin-right: 5px;
+margin-top: 10px;
+margin-bottom: 10px; */
+vertical-align: middle;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 40px;
+}
+
+.button-13:hover {
+background-color: #f7fafa;
+}
+
+.button-13:focus {
+border-color: #008296;
+box-shadow: rgba(213, 217, 217, .5) 0 2px 5px 0;
+outline: 0;
+}
+
+.button-13 img {
+margin: 0 0.3em
+}
+
+.blocklyToolboxCategory{
+  margin-bottom:  5px;
+}
+
+::placeholder { 
+color: #40403f;
+opacity: 1; /* Firefox */
+}
+
+/* ALERT */
+.custom-alert {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.custom-alert.hidden {
+  display: none;
+}
+
+.custom-alert-content {
+  background: rgb(247, 240, 228);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+  font-family: Helvetica, sans-serif;
+}
+
+.custom-alert-content button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  background: #ffffff;
+  color: #0f1111;
+  border: 1px solid #d5d9d9;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-family: Helvetica, sans-serif;
+}
+
+.custom-alert-content button:hover {
+  background: #f7fafa;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* CHIARA ADDED TOOLBOX ICONS */
+
+.blocklyTreeRow {
+  height: 36px;
+  border-left: 0!important;
+}
+
+.blocklyTreeRow img {
+  width: 24px;
+  height: 24px;
+  vertical-align: middle;
+  padding: 6px;
+}
+
+.blocklyTreeLabel {
+color:#000
+}
+
+/* Resources textual label */
+#blockly-3 {
+  height: 25px;
+}
+
+/* CHIARA ADDED GOLDEN LAYOUT */
+
+.outputBox {
+  font-family: 'Gill sans';
+  color: #fff;
+}
+
+#ieWs {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 7px 10px;
+  z-index: 100;
+}
+
+#ieWs img {
+  margin: 7px;
+}
+
+.btndwnld {
+  position: absolute;
+  bottom:0;
+  right: 0;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btndwnld.blockly {
+  right: inherit;
+  left: 0;
+}
+

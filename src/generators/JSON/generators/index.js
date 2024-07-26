@@ -1,0 +1,35 @@
+import { custom_operation, login } from "./activities";
+import { custom_actor, default_actor } from "./actors";
+import { area, coords, custom_attribute, id, password, username } from "./attributes";
+import { info } from "./info";
+import { custom_resource, field_resource, water_resource } from "./resources";
+import { custom_generalization, dam, dripper, river, sprinkler, well } from "./specialisations";
+import { custom_tool, irrigation_tool } from "./tools";
+import { custom_digital, custom_digital_component } from "./digital";
+
+export const registerGenerators = (generator) => {
+  generator["info"] = info;
+  generator["default_actor"] = default_actor;
+  generator["custom_actor"] = custom_actor;
+  generator["custom_resource"] = custom_resource;
+  generator["water_resource"] = water_resource;
+  generator["field_resource"] = field_resource;
+  generator["custom_tool"] = custom_tool;
+  generator["irrigation_tool"] = irrigation_tool;
+  generator["login"] = login;
+  generator["custom_operation"] = custom_operation;
+  generator["custom_attribute"] = custom_attribute;
+  generator["custom_digital"] = custom_digital;
+  generator["custom_digital_component"] = custom_digital_component;
+  generator["username"] = username;
+  generator["password"] = password;
+  generator["coords"] = coords;
+  generator["area"] = area;
+  generator["id"] = id;
+  generator["dam"] = dam;
+  generator["river"] = river;
+  generator["well"] = well;
+  generator["dripper"] = dripper;
+  generator["sprinkler"] = sprinkler;
+  generator["custom_generalization"] = custom_generalization;
+};

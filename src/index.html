@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Blockly ModeLLer</title>
+
+      <!-- Chiara added - golden layout and jQuery -->
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+      <script type="text/javascript" src="https://golden-layout.com/files/latest/js/goldenlayout.min.js"></script>
+
+
+      
+      <!-- CHIARA TODO: connect local files and move to runner / component / ISTAR  -->
+      <script src="https://unpkg.com/bpmn-js@15.2.2/dist/bpmn-modeler.development.js"></script>
+ 
+        
+        <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/lib/lodash.min.js"></script>
+ 
+      <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/lib/backbone-min.js"></script>
+
+ 
+      <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/istarcore/lib/joint.min.js"></script>
+
+         
+         
+      <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-collection.v1.min.js"></script>
+      <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-dispatch.v1.min.js"></script>
+      <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-quadtree.v1.min.js"></script>
+      <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-timer.v1.min.js"></script>
+      <script src="https://www.cin.ufpe.br/~jhcp/pistar/tool/app/layout/lib/d3-force.v1.min.js"></script>
+     
+      <!-- end Chiara TODO -->
+
+     
+      <link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" />
+  
+      <link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-dark-theme.css" />
+      <!-- end Chiara added -->
+
+  
+</head>
+<body>
+<!---
+
+  <div id="layoutContainer" style="width: 100%; height: 100vh;"></div>
+  <div id="pageContainer">
+    <div id="blocklyDiv">
+      <input id="customTitle" type="text" placeholder="Insert title..." style="font-family: Helvetica">
+    </div>
+    <div id="outputPane">
+      
+      <h3 style="font-family: Helvetica" id="codeTitle">JSON Object</h3>
+      <div class="generatedCode"><div id="jsonobj"></div></div>
+      
+      <h3 style="font-family: Helvetica" id="codeTitle">XMI</h3>
+      <div class="generatedCode"><div id="toXMI"></div></div>
+      
+      <h3 style="font-family: Helvetica" , id="codeTitle">UML Diagram</h3>
+      <div class="generatedCode"><div id="umlDiagram"></div></div>
+      
+      <h3 style="font-family: Helvetica" id="codeTitle">Report</h3>
+      <div id="schemeReport">
+        <div id="txtReport"></div>
+        <textarea id="comment" rows="2" cols="46" placeholder="Add comment to report (optional)..."></textarea> 
+      </div>
+      <div id="buttonArea">
+        <input type="hidden" id="plantUML" value="" />
+
+        <button id="downloadReportButton" class="button-13" onclick="downloadReport()">report</button>
+        <button id="downloadOggettiButton" class="button-13" onclick="downloadOggetti()">.json</button>
+        <button id="downloadUMLButton" class="button-13" onclick="generateUMLDiag()">.xmi</button>
+        <button id="downloadPlantUMLButton" class="button-13" onclick="downloadPlantUML()">Plant uml</button>
+        <a href="#" id="downloadUMLLink" target="_blank" download="download" class="button-13">View Diagram</a>
+      </div>
+      <div id="output"></div>
+    </div>
+  </div>
+
+-->
+  
+  <div id="custom-alert" class="custom-alert hidden">
+    <div class="custom-alert-content">
+      <span id="alert-message"></span>
+      <button onclick="closeCustomAlert()">OK</button>
+    </div>
+  </div>
+  
+
+  
+  <script>
+    const downloadReport = () => {
+      const link = document.createElement("a");
+      const comment = document.getElementById("comment").value;
+      const content = document.getElementById("txtReport").innerText;
+      const title = document.getElementById("customTitle").value.trim();
+      const date = new Date().toLocaleDateString('en-CA').replace(/-/g, '_');
+      const filename = `${date}_diagramREPORT_${title}.txt`;
+
+      const fullContent = `${content}\nNOTES: ${comment}`;
+      const file = new Blob([fullContent], { type: 'text/plain' });
+      link.href = URL.createObjectURL(file);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    };
+
+    const downloadOggetti = () => {
+      const oggetti = document.getElementById("jsonobj").innerText;
+      const title = document.getElementById("customTitle").value.trim();
+      const date = new Date().toLocaleDateString('it-IT').replace(/-/g, '_');
+      const filename = `${date}_Oggetti_${title}.json`;
+
+      const file = new Blob([oggetti], { type: 'application/json' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(file);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    };
+
+    const generateUMLDiag = () => {
+      const xmifile = document.getElementById("toXMI").innerText;
+      const title = document.getElementById("customTitle").value.trim();
+      const date = new Date().toLocaleDateString('it-IT').replace(/-/g, '_');
+      const filename = `${date}_xmi_${title}.xmi`;
+
+      const file = new Blob([xmifile], { type: 'text/xmi' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(file);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    };
+
+    const downloadPlantUML = () => {
+      const link = document.createElement("a");
+      const content = document.getElementById("plantUML").value;
+      const title = document.getElementById("customTitle").value.trim();
+      const date = new Date().toLocaleDateString('it-IT').replace(/-/g, '_');
+      
+      const filename = `${date}_PlantUML_${title}.txt`;
+
+      
+      const file = new Blob([content], { type: 'text/plain' });
+      link.href = URL.createObjectURL(file);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    };
+  </script>
+</body>
+</html>
+

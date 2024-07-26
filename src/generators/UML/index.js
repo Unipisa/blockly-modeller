@@ -1,0 +1,1 @@
+export { convertToUML } from './convertToUML.js';
