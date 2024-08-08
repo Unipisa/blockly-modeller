@@ -1,13 +1,21 @@
 import { generator } from "..";
-import { generateRandID } from "../../../utils/utils";
+import { showCustomAlert } from "../../../utils/alerts";
+import { defaultBlockAlreadyExists } from "../../../utils/blockUtils";
+
+
 
 export const default_actor = function (block) {
     if (block.getParent() !== null) {
-      // if (!block.idField) {
-      //   block.idField = generateRandID();
-      // }
-      // let ID = block.idField;
-      let name = block.getFieldValue("NAME");
+    let name = block.getFieldValue("NAME");
+      
+      // Controlla se esiste già un blocco con il nome "User"
+    if (defaultBlockAlreadyExists(name,block)) {
+      // Elimina il blocco corrente
+      block.dispose(true);
+      showCustomAlert(`Il blocco <i>${name}</i> è già stato inserito nel workspace! \nEliminazione del blocco in corso\n`
+    );
+      return null;
+    }
       var statements_operations = generator.statementToCode(block, "OPERATIONS");
       var statements_attributes = generator.statementToCode(block, "ATTRIBUTES");
       return {

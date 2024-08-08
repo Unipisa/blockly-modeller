@@ -11,18 +11,24 @@ export function convertToXMI(json) {
     let pack_data = `\t\t<packagedElement xmi:id="${pack_id}" name="BlocklyModel" visibility="public" xmi:type="uml:Model">\n`;
     const close = '</xmi:XMI>\n';
 
+    console.log('json');
+    
+    if(json.blocks[0].actors){
     // Aggiungi attori
     (json.blocks[0].actors || []).forEach(actor => {
         // const actorNameWithSuffix = actor.name ? actor.name + "_act" : "";
         pack_data += createXMIElement("Class", actor.name, actor.attributes, actor.activities);
     });
+    }
 
+    if(json.blocks[0].resources){    
     // Aggiungi risorse e componenti digitali
     (json.blocks[0].resources || []).forEach(resource => {
         // const resourceNameWithSuffix = resource.name ? resource.name + "_res" : "";
         const aggregations = resource.aggregation ? [resource.aggregation] : [];
         pack_data += createXMIElement("Class", resource.name, resource.attributes, resource.activities, resource.specialisations, aggregations);
     });
+    }
 
     // Chiudiamo il pacchetto e il modello
     pack_data += '\t\t</packagedElement>\n';

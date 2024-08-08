@@ -14,8 +14,6 @@ export const blockAlreadyInWs = (new_block_name, blockType, ws) => {
   ) {
     return false;
   }
-
-  const defaultNames = ['user', 'irrigation', 'field', 'water'];
   let blocks = ws.getAllBlocks(true);
   let counter = 0;
 
@@ -30,17 +28,21 @@ export const blockAlreadyInWs = (new_block_name, blockType, ws) => {
       }
     }
   }
-
-  console.log(`Counter for ${new_block_name}:`, counter);
-
-  // Controllo specifico per blocchi con nomi predefiniti
-  if (defaultNames.includes(new_block_name)) {
-    return counter > 0;
-  }
-
   return counter > 1; // Return true if there is more than one block with the same name
 };
 
+
+// Funzione TEMPORANEA vincolo sui doppi DEFAULT BLOCKS
+export const defaultBlockAlreadyExists = (name, currentBlock) => {
+  let blocks = ws.getAllBlocks(true); // Ottieni tutti i blocchi nel workspace
+  for (let i = 0; i < blocks.length; i++) {
+    const blockName = blocks[i].getFieldValue("NAME");
+    if (blocks[i] !== currentBlock && blockName && blockName.toLowerCase() === name.toLowerCase()) {
+      return true;
+    }
+  }
+  return false;
+};
 
 
 export const reset = (blockName, type, isDeleted = false, ws) => {

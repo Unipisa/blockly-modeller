@@ -7,6 +7,7 @@ import { COMPONENTS } from "../runner/components";
 import { onWorkspaceChange } from '../listeners/workspaceChangeListener.js';
 //import { registerExtensions } from './extension.js';
 import { addBlockDeleteChangeListener } from '../listeners/blockDeleteChangeListener.js';
+import { has } from "underscore";
 
 
 
@@ -119,7 +120,11 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
     
       ws.addChangeListener((event) => {
 
-        onWorkspaceChange(event, ws);
+        let wsHasChanged = onWorkspaceChange(event, ws); 
+
+       if(wsHasChanged){
+
+        console.log('hasChanged');
 
         // TODO aggiornare con i relativi sourcecode ed eventi corrispondenti
         var code = GENERATORS.JSON.generator.workspaceToCode(ws);
@@ -131,6 +136,7 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
         document.dispatchEvent(new CustomEvent('blocklyCodeGeneratedBPMN', { detail: code }));
         document.dispatchEvent(new CustomEvent('blocklyCodeGeneratedISTAR', { detail: code }));
         document.dispatchEvent(new CustomEvent('blocklyCodeGeneratedReport', { detail: reportText }));
+       }
 
      });
 
@@ -148,81 +154,38 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
 
 
 myLayout.registerComponent( 'UML', function( container, componentState ){
+
   container.getElement().html(  componentState.label  );
 
   document.addEventListener('blocklyCodeGeneratedUML', (event) => {
-    document.getElementById('codeOutputUML').innerText = COMPONENTS.UML.view(JSON.stringify(event.detail))  });
+    
+  // TODO sostituire con viewer plant
+    document.getElementById('codeOutputUML').innerText = COMPONENTS.UML.view(JSON.stringify(event.detail))  
+  
+  });
 
 });
 
 myLayout.registerComponent( 'BPMN', function( container, componentState ){
 
-
-container.getElement().html(componentState.label);
-
+  container.getElement().html(componentState.label);
 
   document.addEventListener('blocklyCodeGeneratedBPMN', (event) => {
-
-          //TODO: sostituire bpmnstatement con event.detail che deve contenere il json in formato XML - BPMN
-
-    var bpmnstatement = `<?xml version="1.0" encoding="UTF-8"?><definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="sid-38422fae-e03e-43a3-bef4-bd33b32041b2" targetNamespace="http://bpmn.io/bpmn" exporter="bpmn-js (https://demo.bpmn.io)" exporterVersion="15.1.3">
-    <collaboration id="Collaboration_00xbjuv">
-      <participant id="Participant_0om4akc" name="attore" processRef="Process_1ibjsha"/>
-    </collaboration>
-    <process id="Process_1ibjsha" isExecutable="false">
-      <startEvent id="StartEvent">
-        <outgoing>Flow_start</outgoing>
-      </startEvent>
-      <task id="Activity_11111210111497122105111110101" name="operazione">
-        <incoming>Flow_start</incoming>
-        <outgoing>Flow_11111210111497122105111110101</outgoing>
-      </task>
-      <sequenceFlow id="Flow_start" sourceRef="StartEvent" targetRef="Activity_11111210111497122105111110101"/>
-      <intermediateThrowEvent id="Event_1xxqcqf">
-        <incoming>Flow_11111210111497122105111110101</incoming>
-      </intermediateThrowEvent>
-      <sequenceFlow id="Flow_11111210111497122105111110101" sourceRef="Activity_11111210111497122105111110101" targetRef="Event_1xxqcqf"/>
-    </process>
-    <bpmndi:BPMNDiagram id="BPMNDiagram_Process_1ibjsha">
-      <bpmndi:BPMNPlane id="BPMNPlane_Process_1ibjsha" bpmnElement="Collaboration_00xbjuv">
-        <bpmndi:BPMNShape id="shape_e7gdoerspo" bpmnElement="Participant_0om4akc" isHorizontal="true"><omgdc:Bounds x="0" y="0" width="413" height="128"/><bpmndi:BPMNLabel/></bpmndi:BPMNShape><bpmndi:BPMNShape id="StartEvent_di" bpmnElement="StartEvent">
-          <omgdc:Bounds x="57" y="52" width="36" height="36"/>
-        </bpmndi:BPMNShape>
-        <bpmndi:BPMNShape id="Activity_11111210111497122105111110101_di" bpmnElement="Activity_11111210111497122105111110101">
-          <omgdc:Bounds x="175" y="30" width="100" height="80"/>
-        </bpmndi:BPMNShape>
-        <bpmndi:BPMNShape id="Event_1xxqcqf_di" bpmnElement="Event_1xxqcqf">
-          <omgdc:Bounds x="357" y="52" width="36" height="36"/>
-        </bpmndi:BPMNShape>
-        <bpmndi:BPMNEdge id="Flow_start_di" bpmnElement="Flow_start">
-          <omgdi:waypoint x="93" y="70"/>
-          <omgdi:waypoint x="175" y="70"/>
-        </bpmndi:BPMNEdge>
-        <bpmndi:BPMNEdge id="Flow_11111210111497122105111110101_di" bpmnElement="Flow_11111210111497122105111110101">
-          <omgdi:waypoint x="275" y="70"/>
-          <omgdi:waypoint x="357" y="70"/>
-        </bpmndi:BPMNEdge>
-      </bpmndi:BPMNPlane>
-    </bpmndi:BPMNDiagram>
-  </definitions>`;
-
-    COMPONENTS.BPMN.view(bpmnstatement);
-
-    //document.getElementById('codeOutputBPMN').innerText = COMPONENTS.BPMN.view(JSON.stringify(event.detail));
-
-
-  
+             
+    COMPONENTS.BPMN.view(VIEWS.displayBPMN(event.detail));
+ 
   });
 
 });
 
 
 myLayout.registerComponent( 'iStar', function( container, componentState ){
+
   container.getElement().html(  componentState.label  );
 
-    document.addEventListener('blocklyCodeGeneratedISTAR', (event) => {
+  document.addEventListener('blocklyCodeGeneratedISTAR', (event) => {
 
-      //TODO: sostituire istarstatement con event.detail che deve contenere il json in formato iStar
+  //TODO: sostituire istarstatement con event.detail che deve contenere il json in formato iStar
   
       var istarstatement = {
         "actors": [
@@ -290,19 +253,20 @@ myLayout.registerComponent( 'Report', function( container, componentState ){
 
 // Add an event listener for component creation and add download buttons and functions
 myLayout.on('componentCreated', function(component, ws) {
-  console.log('Component created:', component);
+  //console.log('Component created:', component);
 
   if (component.config.componentName === 'UML') {
-    COMPONENTS.UML.addButtonDownload('codeOutputUML', ws)
+    COMPONENTS.UML.addButtonDownload('codeOutputUML')
   }
   if (component.config.componentName === 'BPMN') {
-    COMPONENTS.BPMN.addButtonDownload('codeOutputBPMN', ws)
+    COMPONENTS.BPMN.addButtonDownload('codeOutputBPMN')
+
   }
   if (component.config.componentName === 'iStar') {
-    COMPONENTS.ISTAR.addButtonDownload('codeOutputiStar', ws)
+    COMPONENTS.ISTAR.addButtonDownload('codeOutputiStar')
   }
   if (component.config.componentName === 'Report') {
-    COMPONENTS.REPORT.addButtonDownload('codeOutputReport', ws)
+    COMPONENTS.REPORT.addButtonDownload('codeOutputReport')
   }
 });
 
@@ -312,7 +276,7 @@ myLayout.init();
 
 // Assume 'layout' is your GoldenLayout instance
 myLayout.on('stateChanged', function() {
-  console.log('Inspecting all items:', myLayout.root.getItemsByType('component'));
+  //console.log('Inspecting all items:', myLayout.root.getItemsByType('component'));
   Blockly.svgResize(ws);
 
 

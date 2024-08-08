@@ -15,8 +15,6 @@ export const workspaceToCode = function (workspace) {
       }
     }
   
-    console.log('blocksData:');
-    console.log(blocksData);
   
     return {
       type: "workspace",

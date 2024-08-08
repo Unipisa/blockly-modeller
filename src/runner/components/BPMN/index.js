@@ -1,129 +1,141 @@
-//TODO: completare con setBPMN, diagrammi multipli e autolayout
+//TODO: completare con downloadBPMN
+//TODO: cambiare collegamento a libreria e sistemare per github
 const autolayout = require('./lib/bpmn-auto-layout/dist/index.cjs')
 import {icons} from'../../../blocks/icons.js';
+import {BPMNparser} from './XMLBPMNparser.js';
+import { getAllActorsBlocksinWs } from "../../../listeners/index.js";
+import { getTodayDate } from '../../../utils/utils.js';
 
+var exportcodebpmn = [];
 
-export async function view(json) { 
+export async function view(json) {
 
-try {
-   const bpmnJS = new BpmnJS({
-  container: '#processModel'
-});
-  const {
-    warnings
-  } = await bpmnJS.importXML(json);
- //console.log('success!');
-  //bpmnJS.get('processModel_'+id).zoom('fit-viewport');
-  try {
+  
+  if(!json.length || json.length <= 0) return;
+
+  document.getElementById("processModel").innerHTML = '';
+
+  var bpmnJS = [];
+
+  json.forEach(async element => { 
+
+    const id = element.id;
+    const diagramXML = element.xmlString;
+
+    const nameBlockInWS = getAllActorsBlocksinWs();
+
+    if(nameBlockInWS.includes(id)) {    
+
+      const targetContainer = document.getElementById("processModel");
+      const targetDivBpmnContainer = document.createElement('div');
+      targetDivBpmnContainer.id = 'processModel_'+id;
+      targetDivBpmnContainer.classList.add("targetBpmn");
+      targetDivBpmnContainer.style.visibility = "hidden";
+
+      targetContainer.appendChild(targetDivBpmnContainer);
+  
+      bpmnJS[id] = new BpmnJS({
+        container: '#processModel_'+id
+      });
+
+      var newDiagram = await autolayout.layoutProcess(diagramXML);
+
+      var parsedDiagram = BPMNparser(newDiagram, diagramXML);
+
+      try {
+
+        const {
+          warnings
+        } = await bpmnJS[id].importXML(parsedDiagram);
+        //bpmnJS.get('processModel_'+id).zoom('fit-viewport');
+
+        //try {
     
-  //console.log('mettere in ' + id);
-  var myblurb;
-  //check if targetDivSvg already exists
-  const targetDivSvg = document.getElementById("attore");
-  if (targetDivSvg == null) {
-    // Element exists
-    const targetDivSvg = document.createElement('div');
-    targetDivSvg.id = "attore";
-    targetDivSvg.classList.add("targetSvg");
-  
-    // TODO
-    //const targetContainer = document.getElementById("codeOutputBPMN");
-  
-    //const firstChild = targetContainer.firstChild.nextSibling;
-  
-    // Insert the new div before the first child of processDiv
-    //targetContainer.insertBefore(targetDivSvg, firstChild.nextSibling);
-  
-  }
-  //console.log('messo in ' + targetDivSvg.id);
-  myblurb = await bpmnJS.saveSVG();
-  var svg = await myblurb.svg;
-  //console.log('update');
-  //targetDivSvg.innerHTML = svg;
-  
-    //console.log('Exported BPMN 2.0 diagram in SVG format', svg);
-  } catch (err) {
-  
-    console.error(err);
-  }
-  console.log('Imported BPMN 2.0 diagram', warnings);
-} catch (err) {
+          var titleElement = document.createElement('p');       
 
-  const {
-    warnings
-  } = err;
+          titleElement.textContent = "Process "+id;
+ 
+          var myblurb;
+          
+          const targetDivSvg = document.createElement('div');
+          targetDivSvg.id = id;
+          targetDivSvg.classList.add("targetSvg");
+          targetDivSvg.style.borderBottom = "1px solid #fff";
 
-  console.log('Failed to import BPMN 2.0 diagram', err, warnings);
+          myblurb =  await bpmnJS[id].saveSVG();
+          var svg =   myblurb.svg;
 
-  return err;
+          console.log(svg);
+          //var svg =  await myblurb.svg;
 
-}
+          
+          //const targetContainer = document.getElementById("processModel");
+          let targetDivSvgAlreadyInDOM = document.getElementById(id);
 
+          if (targetDivSvgAlreadyInDOM == undefined) {
+
+          targetDivSvg.innerHTML = ''; // Clear existing content if necessary
+          targetDivSvg.appendChild(titleElement); // Append the title element
+          targetDivSvg.innerHTML += svg;
+          targetContainer.prepend(targetDivSvg);
+          }
+
+        /*} catch (err) {
   
+          console.error(err);
+        }*/
 
-}
+      console.log('Imported BPMN 2.0 diagram', warnings);
 
-export function addButtonDownload(id, ws) { 
+      updateExportElement(id, parsedDiagram, svg);
+
+
+      } catch (err) {
+
+      const {
+        warnings
+      } = err;
+
+      console.log('Failed to import BPMN 2.0 diagram', err, warnings);
+
+      }
+
+
+
+    }
+
+    
+
+
+
+  });
+
+
+
+} 
+
+
+export function addButtonDownload(id) { 
   try {
     var targetDiv = document.getElementById(id);
-    console.log(targetDiv);
 
     if (targetDiv) {
+
         targetDiv.insertAdjacentHTML('afterbegin', `
             <div class="btndwnld">
-            <a id="downloadButtonBPMN" class="button-13"  onclick=""><img src="${icons.icon_savebpmn}" width="12" height="12"  alt="download-bpmn" title="download BPMN source" /> BPMN</a>
-            <a id="downloadButton2" class="button-13" onclick=""><img src="${icons.icon_savesvg}" width="20" height="20"  alt="download-plantumlimage" title="download image" /></a>
+            <a id="downloadButtonBPMNxml" class="button-13"><img src="${icons.icon_savebpmn}" width="12" height="12"  alt="download-bpmn" title="download BPMN source" /> BPMN</a>
+            <a id="downloadButtonBPMNsvg" class="button-13"><img src="${icons.icon_savesvg}" width="20" height="20"  alt="download-plantumlimage" title="download image" /></a>
           </div>
             `);
+
+            document.getElementById('downloadButtonBPMNxml').addEventListener('click', function() {
+              saveBPMN('xml');
+            });
+
+            document.getElementById('downloadButtonBPMNsvg').addEventListener('click', function() {
+              saveBPMN('svg');
+            });
     } 
-
-
-  //var downloadWsLink = document.getElementById('exportWs');
-    /*
-      downloadWsLink.addEventListener('click', function() {
-    
-        const link = document.createElement("a");
-    
-        var state = Blockly.serialization.workspaces.save(ws);
-    
-        var stateText = JSON.stringify(state);
-        const file = new Blob([stateText], { type: 'text/xml' });
-        link.href = URL.createObjectURL(file);
-        link.download = `workspace_state.json`;
-        link.click();
-        URL.revokeObjectURL(link.href);
-    });
-    
-
-var upladWsLink = document.getElementById('importWs');
-
-upladWsLink.addEventListener('click', function() {
-
-  document.getElementById('fileInput').click();
-
-});
-
-
-document.getElementById('fileInput').addEventListener('change', function(event) {
-
-
-var file = event.target.files[0];
-var reader = new FileReader();
-reader.onload = function(event) {
-  var jsonText = event.target.result;
-  var jsonImport = JSON.parse(jsonText);
-  console.log("jsonImport", jsonImport);
-  Blockly.serialization.workspaces.load(jsonImport, ws);
-};
-reader.readAsText(file);
-
-});
-
-
-
-*/
-
-
 
 
     
@@ -134,4 +146,110 @@ reader.readAsText(file);
     return error;
 
   }
+
 } 
+
+export async function saveBPMN(type){
+
+  let blobType;
+  let fileExt;
+  const title = document.getElementById("customTitle");
+  // get date
+  var today = getTodayDate();
+
+
+  if( type == "xml" ){
+    blobType = 'text/xml';
+    fileExt = 'bpmn';
+  }
+
+  if( type == "svg" ){
+    blobType = 'image/svg+xml';
+    fileExt = 'svg';
+  }
+
+
+  const link = document.createElement("a");
+
+  const JSZip = require("jszip");
+
+  const zip = new JSZip();
+  
+  exportcodebpmn.forEach(element => {
+
+    let blobContent;
+
+    if( type == "xml" ){
+      blobContent = element.code;
+    }
+  
+    if( type == "svg" ){
+      blobContent = element.svg;   
+    }
+  
+  
+  const file = new Blob([blobContent], { type: blobType });
+
+  zip.file(element.id+"_file."+fileExt, file);
+  
+});
+
+zip.generateAsync({type:"blob"})
+.then(function(content) {
+    link.href = URL.createObjectURL(content);
+link.download = `workspace_state.zip`;
+link.download = `${today}_diagram-BPMN-${type}_${title.value}.zip`;
+
+link.click();
+URL.revokeObjectURL(link.href);
+});
+
+
+}
+
+
+function updateExportElement(id,updatedXmlString,updatedSvgString){
+
+
+var bpmnexportitem = {}
+bpmnexportitem.id = id;
+bpmnexportitem.code = updatedXmlString;
+bpmnexportitem.svg = updatedSvgString;
+
+
+let foundIndex = exportcodebpmn.findIndex(obj => obj.id === id);
+
+if(foundIndex >= 0){
+  exportcodebpmn[foundIndex].code = updatedXmlString;
+  exportcodebpmn[foundIndex].svg = updatedSvgString;
+
+}
+else {
+  exportcodebpmn.push(bpmnexportitem);
+
+}
+
+refreshExportElement();
+
+}
+
+function refreshExportElement(){
+
+  const nameBlockInWS = getAllActorsBlocksinWs();
+
+  exportcodebpmn.forEach(element => {
+
+
+    console.log(element);
+    console.log(nameBlockInWS);
+console.log(nameBlockInWS.includes(element.id));
+
+    if(!nameBlockInWS.includes(element.id)) { 
+      
+      exportcodebpmn = exportcodebpmn.filter(innerelement => innerelement.id !== element.id);
+
+
+    }
+});
+
+}

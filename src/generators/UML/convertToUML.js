@@ -7,16 +7,16 @@ import { cleanXmi } from '../../runner/views/umlView.js';
 
 export function convertToUML(xmiString) {
   const data = reader.formatXMItoObjectJS(xmiString);
-
   let elements = data.ownedElements[0].ownedElements;
 
-  // Pulisci gli elementi rimuovendo quelli senza nome
+  // Pulisce gli elementi rimuovendo quelli senza nome
   elements = cleanXmi(elements);
   if (elements.length === 0) {
     return ""; // Ritorna stringa vuota se non ci sono elementi validi
   }
 
   let umlString = "@startuml\n";
+  
   elements.forEach(element => {
     if (element.ownedElements != null) {
       element.ownedElements.forEach(e => {
@@ -34,23 +34,26 @@ export function convertToUML(xmiString) {
               associations.push(subElement);
             }
           });
-
+          //Creazione delle generalizzazioni
           if (generalizations.length > 0) {
             umlString += createGeneralizations(e, generalizations);
           }
 
           let associationNames = associations.map(assoc => assoc.name.replace(" ", '_'));
           let aggregationNames = aggregations.map(agg => agg.name.replace(" ", '_'));
-          let excludedOperations = [...associationNames, ...aggregationNames];
+          let excludedOperations = [...associationNames, ...aggregationNames]; //spread operator (...) combina due array.
 
+          //Creazione delle Classi UML
           if (e.operations != null) {
             umlString += createUMLClass(e, excludedOperations);
           } else {
             umlString += createUMLClass(e);
           }
-
+          //Creazione delle Aggregazioni:
           umlString += createAggregations(e, aggregations);
+          //Creazione delle Associazioni:
           umlString += createAssociations(e, associations.filter(assoc => !assoc.name.startsWith('aggregation_')));
+        
         } else {
           umlString += createUMLClass(e);
         }

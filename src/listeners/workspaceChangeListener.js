@@ -3,6 +3,7 @@ import { ws } from "../runner/runner";
 import { blockAlreadyInWs, reset } from "../utils/blockUtils";
 import { showCustomAlert } from "../utils/alerts";
 
+var wsHasChanged = false;
 var hasChanged = false;
 var blockRename = null;
 
@@ -57,5 +58,26 @@ export function onWorkspaceChange(event, ws) {
       hasChanged = false;
       blockRename = null;
     }
-    console.log(hasChanged);
+    
+    //console.log("event.type");
+    //console.log(event.type);
+
+    switch (event.type) {
+      case Blockly.Events.BLOCK_CREATE:
+          wsHasChanged = true
+          break;
+      case Blockly.Events.BLOCK_DELETE:
+        wsHasChanged = true
+        break;
+      case Blockly.Events.BLOCK_MOVE:
+        wsHasChanged = true
+        break;
+      case 'change':
+        wsHasChanged = true
+        break;
+      default:
+      wsHasChanged = false
+
+    }
+    return wsHasChanged;
   }

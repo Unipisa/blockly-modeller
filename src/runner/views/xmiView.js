@@ -3,6 +3,8 @@ import { DOM_NODES } from "../../utils/domElements";
 
 
 export const displayXMI = (objectWS) => {
+  return;
+  //TODO
   const xmiWS = GENERATORS.XMI.convertToXMI(objectWS);
   const sanitizedXMI = xmiWS
     .replace(/[&]/g, "&amp;")

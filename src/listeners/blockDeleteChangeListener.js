@@ -73,3 +73,17 @@ export function addBlockDeleteChangeListener(ws) {
     }
   });
 }
+
+export function getAllActorsBlocksinWs() {
+  var className = [];
+  let blocksArray = Object.values(nameBlockInWS);
+  let i = 0;
+  while (i < blocksArray.length) {
+    const name = String(blocksArray[i].name).trim();
+    if (name !== '' && blocksArray[i].type == 'custom_actor') 
+    className.push(`${String(blocksArray[i].name)}`);
+    i++;
+  }
+
+  return className;
+}

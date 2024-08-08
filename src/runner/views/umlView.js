@@ -52,7 +52,6 @@ export const displayUML = (xmiWS) => {
     if (downloadUMLLink) {
       downloadUMLLink.href = "#";
     }
-    console.warn("Generated UML string is empty. Skipping diagram generation.");
   }
 
   DOM_NODES.outputDiv.src = ''; // Usando DOM_NODES per accedere a outputDiv

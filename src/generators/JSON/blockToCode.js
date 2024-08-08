@@ -12,8 +12,7 @@ export const blockToCode = function (block) {
       );
     }
     var code = func.call(this, block);
-    console.log('CODE:');
-    console.log(code);
+
     return code;
   };
   

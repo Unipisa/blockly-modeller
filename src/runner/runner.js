@@ -10,10 +10,11 @@ export const ws = setupBlocklyWorkspace(DOM_NODES.blocklyDiv);
 
 export const runCode = () => {
   const objectWS = VIEWS.displayJSON(ws);
-  const { sanitizedXMI, xmiWS } = VIEWS.displayXMI(objectWS);
+  //const { sanitizedXMI, xmiWS } = VIEWS.displayXMI(objectWS);
   VIEWS.displayReport(objectWS);
-  //const cleanedXmiWs = cleanXmi
-  VIEWS.displayUML(xmiWS);
+  //VIEWS.displayUML(xmiWS);
+  //console.log(VIEWS.displayBPMN(objectWS));
+  
+
   
 };
-
