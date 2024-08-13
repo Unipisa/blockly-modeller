@@ -101,11 +101,30 @@ const xmlOrigDoc = parserOrig.parseFromString(diagramXML, 'text/xml');
 
 // Find the messageFlow element
 
+/* This is not supported -- deleted namespace in generator 
+var namespaceResolver = function(prefix) {
+  if (prefix === "bpmn") {
+      return "http://www.omg.org/spec/BPMN/20100524/MODEL";
+  }
+  return null;
+};
+var xpath = "//bpmn:messageFlow";
+var messageElements = xmlOrigDoc.evaluate(xpath, xmlOrigDoc, namespaceResolver, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+
+console.log("Number of messageFlow elements found:", messageElements.snapshotLength);
+
+if (messageElements.snapshotLength > 0) {
+
+var messageElements = [];
+
+for (var i = 0; i < messageElements.snapshotLength; i++) {
+  messageElements.push(messageElements.snapshotItem(i));
+}*/
 
 var messageElements = xmlOrigDoc.querySelectorAll("messageFlow");
 
-
 if (messageElements !== null && messageElements !== undefined) {
+
 
   var arrayProcesses = [];
 
@@ -122,6 +141,7 @@ if (messageElements !== null && messageElements !== undefined) {
 
   var targetRefValue = messageElement.getAttribute('targetRef');
   var messageElId = messageElement.getAttribute('id');
+
 
 // Check if the value is not null or undefined
 if (targetRefValue !== null && targetRefValue !== undefined && targetRefValue !== "NONE") {
@@ -348,6 +368,8 @@ for (var key in arrayCentroids) {
 });
 
 }
+
+
 
 
 

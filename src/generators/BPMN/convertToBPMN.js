@@ -61,7 +61,9 @@ export function convertToBPMN(jsonData) {
                     const targetActor = validActors.find(a => cleanName(a.name) === targetName) || { name: actor.name };
                     const messageFlowId = `Flow_${generateRandID()}`;
                     messageFlows += `
-        <bpmn:messageFlow id="${messageFlowId}" name="${activity.name}" sourceRef="${activityId}" targetRef="${targetActor.name}" />`;
+        <messageFlow id="${messageFlowId}" name="${activity.name}" sourceRef="${activityId}" targetRef="${targetActor.name}" />`;
+
+        //<bpmn:messageFlow id="${messageFlowId}" name="${activity.name}" sourceRef="${activityId}" targetRef="${targetActor.name}" />`;
                 }
             });
         }
