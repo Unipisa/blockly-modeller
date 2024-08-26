@@ -69,7 +69,6 @@ for (var i = 0; i < bpmnShapes.length; i++) {
 }
 
 
-console.log(maxX);
 
 // Set attributes for the Bounds element
 boundsElement.setAttribute("x", "0");
@@ -133,7 +132,6 @@ if (messageElements !== null && messageElements !== undefined) {
     var messageElementSourceAttributeValue = messageElement.getAttribute("sourceRef");
 
 
-    console.log("messageElement: ", messageElement);
    
   var messageElementIdAttributeValue = messageElement.getAttribute("id");
 
@@ -160,13 +158,10 @@ if (targetRefValue !== null && targetRefValue !== undefined && targetRefValue !=
  
   var allParticipants = xmlDoc.querySelectorAll("process");
   var numParticipants = allParticipants.length;
-  console.log(allParticipants);
-  console.log("numParticipants: ", numParticipants);
 
   if (!arrayProcesses.includes(targetRefValue)) {
     arrayProcesses.push(targetRefValue);
 
-    console.log("crea participant per", targetRefValue);
   
   //var bpmnParticipantElement = xmlDoc.createElementNS("participant");
   var bpmnParticipantElement = xmlDoc.createElementNS("http://www.omg.org/spec/BPMN/20100524/MODEL", "bpmn:participant");
@@ -239,12 +234,9 @@ bpmnShapeParticipantElement.appendChild(labelParticipantElement);
   divParticipants.forEach(function(participant) {
 
 
-    console.log("participant:", participant);
 
     var partTargetId = participant.getAttribute('id');
 
-    console.log(partTargetId);
-    console.log(messageElementSourceAttributeValue);
 
     var currentProcTask = xmlDoc.querySelector(`[id="${messageElementSourceAttributeValue}"]`)
 
@@ -255,17 +247,12 @@ bpmnShapeParticipantElement.appendChild(labelParticipantElement);
 
     var processRef = xmlDoc.querySelector(`[processRef="${partTargetId}"]`)
     var partTargetRef = processRef.getAttribute('id');
-    console.log("processRef", processRef);
 
-    console.log("cerca", partTargetRef);
     var boundParticipant = xmlDoc.querySelector(`[bpmnElement="${partTargetRef}"]`)
-    console.log("trovato", boundParticipant);
 
     boundParticipant.firstElementChild.setAttribute("width", (maxX + widthmaxX + 20)/numParticipants ); // Add 20 for some padding
     boundParticipant.firstElementChild.setAttribute("x", ((maxX + widthmaxX + 20)/numParticipants) * count ); // Add 20 for some padding
 
-    console.log("width: ", (maxX + widthmaxX + 20)/numParticipants);
-    console.log("x: ", boundParticipant.firstElementChild.getAttribute("x"));
     var shapeId = boundParticipant.getAttribute('bpmnElement');
 
     //array with participants centroids
@@ -287,24 +274,16 @@ else {
 
 }
 
-//questo invece si esegue per tutti
-
-console.log("all positions:",arrayCentroids);
-
-//aggiornare tutte le posizioni 
-
-//seleziono tutti i messageflow
 
 var bpmnEdgeElement = xmlDoc.createElementNS("http://www.omg.org/spec/BPMN/20100524/DI", "bpmndi:BPMNEdge");
 var bpmnEdgeWaypoint1 = xmlDoc.createElementNS("http://www.omg.org/spec/DD/20100524/DI", "omgdi:waypoint");
 var bpmnEdgeWaypoint2 = xmlDoc.createElementNS("http://www.omg.org/spec/DD/20100524/DI", "omgdi:waypoint");
 
 
-console.log("crea waypoint per", targetRefValue, "source: ", messageElementSourceAttributeValue);
 
  var elementWithValue = xmlDoc.querySelector(`[bpmnElement="${messageElementSourceAttributeValue}"]`);
- console.log("cerco message flow: ", messageElementSourceAttributeValue);
 
+ 
  var targetShape = xmlDoc.querySelector(`[id="${ messageElementSourceAttributeValue}_di"]`);
 
  var targetShapeChildX = targetShape.parentElement.getAttribute('x');

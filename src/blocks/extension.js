@@ -8,8 +8,6 @@ export const registerExtensions = (Blockly) => {
           function() {
             var options = [];
             var classNames = getAllClassBlocksinWs();
-            console.log("classNames");
-            console.log(classNames);
             classNames.forEach((name) => {
               options.push([name, name.toUpperCase()]);
             })

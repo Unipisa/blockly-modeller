@@ -9,17 +9,29 @@ import './lib/app/istarcore/istarFunctions.js';
 
 //TODO: aggiungere qua le librerie caricate in index.html. Mettendole qua ci sono problemi di ordine di lettura 
 
+import {istar} from './lib/app/istarcore/istarFunctions.js';
+
 import {updateIstarModel} from './lib/app/istarcore/istarFunctions.js';
 
 import { getTodayDate } from '../../../utils/utils.js';
 
 
 
-export function view(json) { 
+export function view(json) {
+
 
 try {
     //TODO: eseguire update soltanto nel caso in cui il json sia stato inizializzato o aggiornato...
+    //if(!json.length || json.length <= 0) return;
+
+
+    istar.clearModel();
+
     updateIstarModel(json);
+    
+
+
+
 
 } catch (error) {
 
@@ -79,7 +91,7 @@ export function addButtonDownload(id) {
   
   
     if( type == "txt" ){
-      blobType = 'text/txt';
+      blobType = 'text/json';
       fileExt = 'txt';
     }
   
@@ -91,21 +103,25 @@ export function addButtonDownload(id) {
   
     const link = document.createElement("a");
   
+
   /*TODO CONTINUARE QUA
-    element.code;
+    element.code; */
 
       let blobContent;
+
   
-      if( type == "xml" ){
-        blobContent = element.code;
+      if( type == "txt" ){
+
+        blobContent = istar.fileManager.saveModel();
       }
     
       if( type == "svg" ){
-        blobContent = element.svg;   
+        blobContent = istar.fileManager.saveSvg(istar.paper);
+ 
       }
-*/
+  
 
-    const blobContent = "TODO";   
+
     
     const file = new Blob([blobContent], { type: blobType });
   
@@ -117,6 +133,5 @@ export function addButtonDownload(id) {
 
 
 }  
-  
   
   

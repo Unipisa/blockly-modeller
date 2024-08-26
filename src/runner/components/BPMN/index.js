@@ -65,9 +65,6 @@ export async function view(json) {
           myblurb =  await bpmnJS[id].saveSVG();
           var svg =   myblurb.svg;
 
-          console.log(svg);
-          //var svg =  await myblurb.svg;
-
           
           //const targetContainer = document.getElementById("processModel");
           let targetDivSvgAlreadyInDOM = document.getElementById(id);
@@ -85,7 +82,7 @@ export async function view(json) {
           console.error(err);
         }*/
 
-      console.log('Imported BPMN 2.0 diagram', warnings);
+      //console.log('Imported BPMN 2.0 diagram', warnings);
 
       updateExportElement(id, parsedDiagram, svg);
 
@@ -240,9 +237,6 @@ function refreshExportElement(){
   exportcodebpmn.forEach(element => {
 
 
-    console.log(element);
-    console.log(nameBlockInWS);
-console.log(nameBlockInWS.includes(element.id));
 
     if(!nameBlockInWS.includes(element.id)) { 
       

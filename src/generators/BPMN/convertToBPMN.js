@@ -119,14 +119,9 @@ export function convertToBPMN(jsonData) {
 
     });
 
-    console.log("typeof bpmnStatements");
-    console.log(typeof(bpmnStatements));
-    console.log(bpmnStatements);
-    console.log(bpmnStatements.length);
 
 
     return Array.isArray(bpmnStatements) ? bpmnStatements : [bpmnStatements];
 
 }
-
 

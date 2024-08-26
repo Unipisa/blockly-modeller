@@ -171,7 +171,7 @@ myLayout.registerComponent( 'BPMN', function( container, componentState ){
   container.getElement().html(componentState.label);
 
   document.addEventListener('blocklyCodeGeneratedBPMN', (event) => {
-             
+       
     COMPONENTS.BPMN.view(VIEWS.displayBPMN(event.detail));
  
   });
@@ -185,8 +185,8 @@ myLayout.registerComponent( 'iStar', function( container, componentState ){
 
   document.addEventListener('blocklyCodeGeneratedISTAR', (event) => {
 
-  //TODO: sostituire istarstatement con event.detail che deve contenere il json in formato iStar
-  
+  //TODO CANCELLARE: sostituito istarstatement con event.detail che deve contenere il json in formato iStar
+  /*
       var istarstatement = {
         "actors": [
             {
@@ -227,10 +227,14 @@ myLayout.registerComponent( 'iStar', function( container, componentState ){
             }
         }
     }
-      
-     //COMPONENTS.ISTAR.view(JSON.stringify(event.detail))
-     
-     COMPONENTS.ISTAR.view(istarstatement)
+
+    COMPONENTS.ISTAR.view(istarstatement)
+
+    */
+
+    COMPONENTS.ISTAR.view(VIEWS.displayISTAR(event.detail));
+    //COMPONENTS.ISTAR.view(event.detail);
+
 
 
     });

@@ -16,17 +16,20 @@ export const generateRandID = () => {
     }
   }
   
-    export const capitalizeFirstLetter = (string) =>  {
-      if (string != undefined) {
-          return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
-      }
-  }
+  export const capitalizeFirstLetter = (string) =>  {
+    if (string != undefined) {
+        return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+    }
+}
   
   
   // Funzione per rimuovere la disambiguazione dai nomi TARGET usata in convertBPMN
   export function cleanName(name) {
     return name.replace(/\s*\(.*?\)$/, '').toLowerCase();
   }
+
+
+
     
   
   // export const processAct = (input) => {
@@ -56,3 +59,5 @@ export const generateRandID = () => {
 
     return today;
     }
+
+

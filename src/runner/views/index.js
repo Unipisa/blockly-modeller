@@ -3,6 +3,8 @@ import { displayReport } from "./reportView";
 import { displayUML } from "./umlView";
 import { displayXMI } from "./xmiView";
 import { displayBPMN } from "./bpmnView";
+import { displayISTAR } from "./istarView";
+
 
 
 export const VIEWS = {
@@ -10,5 +12,7 @@ export const VIEWS = {
     displayXMI,
     displayUML,
     displayReport,
-    displayBPMN
+    displayBPMN,
+    displayISTAR
+
 }

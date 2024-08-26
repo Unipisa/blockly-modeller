@@ -1,10 +1,33 @@
 import { ws } from "../runner/runner.js";
 import { showCustomAlert } from "./alerts.js";
+import { getAllActorsBlocksinWs } from "../listeners/index.js";
 
 export const removeBlockType = (name) => {
   return name.replace(/\s*\(.*?\)\s*/g, "");
 };
 
+  export const foundTargetEl = (target) => {
+
+  const index = target.indexOf('(');
+  const result = target.substring(0, index-1).trim();
+  
+  const nameBlockInWS = getAllActorsBlocksinWs();
+  let foundValue = null;
+  let origValue = null;
+
+  
+  for (let value of nameBlockInWS) {
+      origValue = value;
+    if (value.toLowerCase() === result.toLowerCase()) {
+      foundValue = true;
+      break;
+    }
+  }
+  
+  return origValue;
+  
+
+}
 
 export const blockAlreadyInWs = (new_block_name, blockType, ws) => {
   if (
@@ -21,7 +44,7 @@ export const blockAlreadyInWs = (new_block_name, blockType, ws) => {
     const blockName = blocks[i].getFieldValue("NAME");
 
     if (blockName !== null && blockName !== "..............." && blockName !== "") {
-      console.log(`Comparing: ${new_block_name} with ${blockName.toLowerCase()}`);
+      //console.log(`Comparing: ${new_block_name} with ${blockName.toLowerCase()}`);
       if (new_block_name.localeCompare(blockName.toLowerCase()) === 0 &&
           !["custom_attribute", "custom_operation", "custom_generalization"].includes(blocks[i].type)) {
         counter++;

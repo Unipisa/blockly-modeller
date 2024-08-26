@@ -1014,7 +1014,9 @@ istar.fileManager = function() {
             $('svg').attr('width', '100%');
             $('svg').attr('height', '100%');
 
-            return "data:image/svg+xml," + encodeURIComponent(text);
+            // 27 august 2024 - Chiara edited: modified for ModeLLEr
+            //return "data:image/svg+xml," + encodeURIComponent(text);
+            return text;
         },
         savePng: function (paperId, callback, filename, resolutionFactor, transparent) {
             //create a canvas, which is used to convert the SVG to png

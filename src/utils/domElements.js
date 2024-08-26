@@ -1,18 +1,21 @@
 // Variabili per elementi DOM
 export const DOM_NODES = {
+    alertBox: document.getElementById("custom-alert"),
+    alertMessage: document.getElementById("alert-message"),
+    blocklyDiv: document.getElementById("blocklyDiv"),
+    bpmnDiv: document.getElementById("bpmnDiagram"),
     codeDiv: document.getElementById("jsonobj"),
-    xmiDiv: document.getElementById("toXMI"),
-    umlDiagramDiv: document.getElementById("umlDiagram"),
-    //reportDiv: document.getElementById("txtReport"),
-    reportDiv: document.getElementById("codeOutputReport"),
-    //blocklyDiv: document.getElementById("blocklyDiv"),
-    //blocklyDiv: document.getElementById("layoutContainer"),
     diagramName: document.getElementById("customTitle"),
-    outputDiv: document.getElementById("output"),
     downloadUMLLink: document.getElementById("downloadUMLLink"),
-    alertBox:document.getElementById("custom-alert"),
-    alertMessage:document.getElementById("alert-message"),
-    xmiData: document.getElementById("xmiData"),
+//istarDiv:.........................
+    outputDiv: document.getElementById("output"),
     plantUML: document.getElementById("plantUML"),
+    reportDiv: document.getElementById("txtReport"),
     textField: document.getElementById("textField"),
+    umlDiagramDiv: document.getElementById("umlDiagram"),
+    xmiData: document.getElementById("xmiData"),
+    xmiDiv: document.getElementById("toXMI")
+    
+
+
 }
