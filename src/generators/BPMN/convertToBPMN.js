@@ -57,7 +57,7 @@ export function convertToBPMN(jsonData) {
                 const activityId = `Activity_${generateID(activity.name)}`;
                 const targetName = cleanName(activity.target);
 
-                if (targetName) {
+                if (targetName && targetName != "none") {
                     const targetActor = validActors.find(a => cleanName(a.name) === targetName) || { name: actor.name };
                     const messageFlowId = `Flow_${generateRandID()}`;
                     messageFlows += `
