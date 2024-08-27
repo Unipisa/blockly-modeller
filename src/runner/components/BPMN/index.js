@@ -1,6 +1,7 @@
 //TODO: completare con downloadBPMN
 //TODO: cambiare collegamento a libreria e sistemare per github
-const autolayout = require('./lib/bpmn-auto-layout/dist/index.cjs')
+//const autolayout = require('./lib/bpmn-auto-layout/dist/index.cjs')
+import {layoutProcess} from './lib/bpmn-auto-layout/lib/index.js';
 import {icons} from'../../../blocks/icons.js';
 import {BPMNparser} from './XMLBPMNparser.js';
 import { getAllActorsBlocksinWs } from "../../../listeners/index.js";
@@ -38,7 +39,7 @@ export async function view(json) {
         container: '#processModel_'+id
       });
 
-      var newDiagram = await autolayout.layoutProcess(diagramXML);
+      var newDiagram = await layoutProcess(diagramXML);
 
       var parsedDiagram = BPMNparser(newDiagram, diagramXML);
 

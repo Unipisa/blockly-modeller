@@ -35,11 +35,11 @@ export function addButtonDownload(id) {
             `);
 
             document.getElementById('downloadButtonUMLplant').addEventListener('click', function() {
-              saveUML('plant');
+              saveUML('xmi');
             });
 
             document.getElementById('downloadButtonUMLxmi').addEventListener('click', function() {
-              saveUML('xmi');
+              saveUML('plant');
             });
 
             document.getElementById('downloadButtonUMLjpg').addEventListener('click', function() {
