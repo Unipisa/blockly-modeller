@@ -12,7 +12,7 @@ export const DOM_NODES = {
     plantUML: document.getElementById("plantUML"),
     reportDiv: document.getElementById("txtReport"),
     textField: document.getElementById("textField"),
-    umlDiagramDiv: document.getElementById("umlDiagram"),
+    umlDiagramDiv: document.getElementById('codeOutputUML'),
     xmiData: document.getElementById("xmiData"),
     xmiDiv: document.getElementById("toXMI")
     

@@ -11,11 +11,8 @@ var exportcodebpmn = [];
 
 export async function view(json) {
 
-  
-  if(!json.length || json.length <= 0) return;
-
   document.getElementById("processModel").innerHTML = '';
-
+  if(!json.length || json.length <= 0) return;
   var bpmnJS = [];
 
   json.forEach(async element => { 

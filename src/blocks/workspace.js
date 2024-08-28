@@ -159,8 +159,19 @@ myLayout.registerComponent( 'UML', function( container, componentState ){
 
   document.addEventListener('blocklyCodeGeneratedUML', (event) => {
     
+    console.log('Event detail:', event.detail);
+    const xmiWS = GENERATORS.XMI.convertToXMI(event.detail);
+    console.log('Converted XMI:', xmiWS);
+    COMPONENTS.UML.view(xmiWS);
+    
   // TODO sostituire con viewer plant
-    document.getElementById('codeOutputUML').innerText = COMPONENTS.UML.view(JSON.stringify(event.detail))  
+
+
+    // document.getElementById('codeOutputUML').innerText = VIEWS.displayXMI
+    // displayXMI(event.detail);
+
+    
+
   
   });
 
@@ -247,8 +258,9 @@ myLayout.registerComponent( 'Report', function( container, componentState ){
   container.getElement().html(  componentState.label  );
 
   document.addEventListener('blocklyCodeGeneratedReport', (event) => {
-        //TOOD: sostituire DOM_NODES.reportDiv o variabile con il nome del div, al momento DOM_NODES non è ancora stato inizializzato
-    document.getElementById('codeOutputReport').innerHTML = JSON.stringify(event.detail);
+    //TOOD: sostituire DOM_NODES.reportDiv o variabile con il nome del div, al momento DOM_NODES non è ancora stato inizializzato
+        //Tolto JSON.stringify(event.detail)), per togliere le virgolette
+    document.getElementById('codeOutputReport').innerHTML = event.detail;
 
   });
 

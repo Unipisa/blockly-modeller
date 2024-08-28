@@ -2,24 +2,18 @@
 
 import {icons} from'../../../blocks/icons.js';
 import { getTodayDate } from '../../../utils/utils.js';
+import { displayUML } from '../../views/umlView.js';
 
+//AGGIUNTA
+export function view(xmiWS) {
+  try {
+      displayUML(xmiWS);
 
-export function view(json) { 
-
-    try {
-
-        return json;
-    
-    } catch (error) {
-
-      console.error("Caught error in Component:", error);
-
-      return error;
-
-    }
-  
-
+  } catch (error) {
+      console.error("Caught error in UML view:", error);
+  }
 }
+//
 
 export function addButtonDownload(id) { 
   try {

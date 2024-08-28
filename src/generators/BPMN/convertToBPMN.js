@@ -1,7 +1,6 @@
 import { generateRandID, generateID, cleanName } from '../../utils/utils.js';
 
 
-
 export function convertToBPMN(jsonData) {
     const fixedIDs = {
         definitionsId: "sid-38422fae-e03e-43a3-bef4-bd33b32041b2",
@@ -28,7 +27,7 @@ export function convertToBPMN(jsonData) {
 
     // Creazione dei file BPMN per ogni attore
     validActors.forEach(actor => {
-        const actorNameCleaned = cleanName(actor.name);
+        //const actorNameCleaned = cleanName(actor.name);
         let bpmnString = `<?xml version="1.0" encoding="UTF-8"?>\n`;
 
         // intestazione
@@ -117,11 +116,14 @@ export function convertToBPMN(jsonData) {
         const bpmnStatement = { 'id': actor.name, 'xmlString': bpmnString  }
         bpmnStatements.push(bpmnStatement);
 
+
     });
 
 
-
+    console.log("BPMN_STATEMENT");
+    console.log(bpmnStatements);
     return Array.isArray(bpmnStatements) ? bpmnStatements : [bpmnStatements];
+
 
 }
 

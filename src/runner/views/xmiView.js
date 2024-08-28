@@ -13,3 +13,4 @@ export const displayXMI = (objectWS) => {
   DOM_NODES.xmiDiv.innerHTML = `<pre><code>${sanitizedXMI}</code></pre>`;
   return { sanitizedXMI, xmiWS };
 };
+
