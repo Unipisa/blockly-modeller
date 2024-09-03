@@ -258,10 +258,21 @@ color:#000
 
 /* CHIARA ADDED GOLDEN LAYOUT */
 
+/* Modifica del contenuto dei pannelli Golden Layout */
+.lm_content {
+  background-color: rgb(247, 240, 228); /* Sfondo bianco per il contenuto */
+  color: #0f1111; /* Testo scuro per contrasto */
+  font-family: "Gill Sans", sans-serif; /* Coerenza con altri elementi di testo */
+  border-radius: 8px; /* Arrotondare leggermente i bordi per uniformità */
+}
+
 .outputBox {
   font-family: 'Gill sans';
-  color: #fff;
+  color: #0f1111;
+  padding-left: 10px;
+  padding-top: 5px;   
 }
+
 
 #ieWs {
   position: absolute;
