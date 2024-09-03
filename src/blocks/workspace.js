@@ -162,6 +162,7 @@ myLayout.registerComponent( 'UML', function( container, componentState ){
     console.log('Event detail:', event.detail);
     const xmiWS = GENERATORS.XMI.convertToXMI(event.detail);
     console.log('Converted XMI:', xmiWS);
+
     COMPONENTS.UML.view(xmiWS);
     
   // TODO sostituire con viewer plant
@@ -297,9 +298,6 @@ myLayout.on('stateChanged', function() {
 
 
 });
-
-
-
 
 
 

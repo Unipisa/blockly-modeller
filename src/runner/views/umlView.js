@@ -33,16 +33,17 @@ function displayUmlDiagram(umlUrl) {
 //responsabile dell'intero processo di conversione e visualizzazione del diagramma UML.
 export const displayUML = (xmiWS) => {
   const umlDiagramDiv = document.getElementById('codeOutputUML');
+
   const umlString = GENERATORS.UML.convertToUML(xmiWS);
 
   const isValidUml = umlString && !umlString.includes("BlocklyModel") && umlString.trim() !== "" && umlString.trim() !== "@startuml\n@enduml";
 
+
   if (isValidUml) {
-    console.log(umlString);
 
     const umlUrl = generateUmlUrl(umlString);
     displayUmlDiagram(umlUrl);
-    DOM_NODES.plantUML.value = umlString; //per stampare Plant UML txt nell'hidden field.
+    // DOM_NODES.plantUML.value = umlString; //per stampare Plant UML txt nell'hidden field.
 
     const downloadUMLLink = DOM_NODES.downloadUMLLink;
     if (downloadUMLLink) {
@@ -52,14 +53,12 @@ export const displayUML = (xmiWS) => {
     // Se la stringa UML è vuota, svuota il contenuto del div e dell'input nascosto sennò si vede la pag WEB
     console.log(umlString);
     umlDiagramDiv.innerHTML = "";
-    DOM_NODES.plantUML.value = "";
+    // DOM_NODES.plantUML.value = "";
     const downloadUMLLink = DOM_NODES.downloadUMLLink;
     if (downloadUMLLink) {
       downloadUMLLink.href = "#";
     }
   }
-
-
-
-  DOM_NODES.outputDiv.src = ''; // Usando DOM_NODES per accedere a outputDiv
+  return umlString;
+  // DOM_NODES.outputDiv.src = ''; // Usando DOM_NODES per accedere a outputDiv
 }
