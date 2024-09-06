@@ -22,7 +22,7 @@ export const setupBlocklyWorkspace = (blocklyDiv) => {
 
   var outputUML = "<div id='codeOutputUML' class='outputBox'></div>";
 
-  var outputBPMN = "<div id='codeOutputBPMN' class='outputBox'><div id='processModel'></div></div>";
+  var outputBPMN = "<div id='codeOutputBPMN' class='outputBox style='overflow:auto;'><div id='processModel'></div></div>";
 
   var outputiStar = '<div id="codeOutputiStar" class="outputBox"><div id="menu-plugin" class="menu-body hidden"><div id="appToolbar"></div> <!-- this div is DEPRECATED. Instead, add elements directly to #menu-plugin --></div><div id="tool"><div id="workspace"><div id="sidepanel"></div><div id="out"><div class="cell-selection" style="display: none;"></div><div id="resize-handle" style="display: none;"></div><div id="diagram" style=""></div></div></div></div></div>';
 
@@ -164,14 +164,6 @@ myLayout.registerComponent( 'UML', function( container, componentState ){
     console.log('Converted XMI:', xmiWS);
 
     COMPONENTS.UML.view(xmiWS);
-    
-  // TODO sostituire con viewer plant
-
-
-    // document.getElementById('codeOutputUML').innerText = VIEWS.displayXMI
-    // displayXMI(event.detail);
-
-    
 
   
   });

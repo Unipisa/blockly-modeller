@@ -3,7 +3,13 @@ import { formatResourceReport } from "./resource_report";
 
 
 const generateReportFromJSON = (jsonData) => {
-  let report = '<u>Diagram entities:</u><br>';
+  let report = '';
+  const title = jsonData.title ? jsonData.title.trim() : '';
+  if (title) {
+    report += `<u>${title.toUpperCase()} diagram entities:</u><br>`;
+  } else {
+    report += '<u>Diagram entities:</u><br>';
+  }
 
   if (jsonData.blocks && jsonData.blocks.length > 0) {
     const data = jsonData.blocks[0];
@@ -23,6 +29,8 @@ const generateReportFromJSON = (jsonData) => {
         }
       });
     }
+
+  
   }
   return report;
 }
