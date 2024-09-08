@@ -6,28 +6,15 @@ export const removeBlockType = (name) => {
   return name.replace(/\s*\(.*?\)\s*/g, "");
 };
 
-  export const foundTargetEl = (target) => {
-
-  const index = target.indexOf('(');
-  const result = target.substring(0, index-1).trim();
-  
-  const nameBlockInWS = getAllActorsBlocksinWs();
-  let foundValue = null;
-  let origValue = null;
-
-  
-  for (let value of nameBlockInWS) {
-      origValue = value;
-    if (value.toLowerCase() === result.toLowerCase()) {
-      foundValue = true;
-      break;
-    }
+//trova target e restituisce 
+export const foundTargetEl = (target) => {
+  const index = target.indexOf('('); // Trova l'indice della prima parentesi
+  if (index !== -1) {
+      // Rimuove tutto ciò che è tra parentesi
+      return target.substring(0, index).trim();
   }
-  
-  return origValue;
-  
-
-}
+  return target.trim(); // Ritorna il target ripulito se non ci sono parentesi
+};
 
 export const blockAlreadyInWs = (new_block_name, blockType, ws) => {
   if (
@@ -100,7 +87,6 @@ export const reset = (blockName, type, isDeleted = false, ws) => {
     });
   });
 };
-
 
 
 // Funzione per gestire il cambiamento del campo di testo

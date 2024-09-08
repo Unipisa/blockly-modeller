@@ -1,5 +1,5 @@
 import { parseJSONToIStar } from "./istarElements";
-import { getAllActorsBlocksinWs } from "../../listeners/index.js";
+import { getAllActorsAndDigitalActorsInWs } from "../../listeners/blockDeleteChangeListener";
 
 export function convertToIstar(jsonData) {
     const { arrayistaractors, arrayistardependencies } = parseJSONToIStar(jsonData);
@@ -33,29 +33,19 @@ export function convertToIstar(jsonData) {
     });
 
     arrayistardependencies.forEach(dependency => {
-        if (dependency.type === "istar.Goal") {
-            const link = {
-                id: dependency.id + "_link",
-                type: "istar.DependencyLink",
-                source: dependency.id,
-                target: dependency.target
-            };
-            links.push(link);
-
-            const link2 = {
-                id: dependency.id + "_link2",
-                type: "istar.DependencyLink",
-                source: dependency.source,
-                target: dependency.id
-            };
-            links.push(link2);
-        }
+        const link = {
+            id: dependency.id + "_link",
+            type: "istar.DependencyLink",
+            source: dependency.source,
+            target: dependency.target
+        };
+        links.push(link); 
     });
 
     const istarstatement = {
         actors: arrayistaractors,
-        dependencies: arrayistardependencies,
         orphans: [],
+        dependencies: arrayistardependencies,
         links: links,
         display: {},
         tool: "pistar.2.1.0",
@@ -70,18 +60,16 @@ export function convertToIstar(jsonData) {
         }
     };
 
-    const nameBlockInWS = getAllActorsBlocksinWs();
+    const nameBlockInWS = getAllActorsAndDigitalActorsInWs();
 
-  istarstatement.actors = updateactorslist(arrayistaractors, nameBlockInWS);
+    istarstatement.actors = updateactorslist(arrayistaractors, nameBlockInWS);
 
 
-  return istarstatement;
+    return istarstatement;
 }
 
 
 function updateactorslist(code, nameBlockInWS) {
-
-
   if(code) {
 
     var istarActors = Array.from(code);
@@ -94,7 +82,6 @@ function updateactorslist(code, nameBlockInWS) {
     }
   
 
-
 });
 
 
@@ -102,7 +89,7 @@ function updateactorslist(code, nameBlockInWS) {
 
 }
   
-
+console.log("DEF", istarActors);
     return istarActors;
 }
 

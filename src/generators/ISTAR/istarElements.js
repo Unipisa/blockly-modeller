@@ -5,22 +5,28 @@ import { foundTargetEl } from "../../utils/blockUtils.js";
 
 export function parseJSONToIStar(jsonData) {
  
-    // Controllo della presenza di blocchi e attori
-    if (!jsonData.blocks || jsonData.blocks.length === 0 || !jsonData.blocks[0].actors) {
-        return {}; // Restituisci un oggetto vuoto se il formato JSON non è valido
+ if (!jsonData.blocks || jsonData.blocks.length === 0 || 
+        (!jsonData.blocks[0].actors && !jsonData.blocks[0].resources)) {
+        return {};
     }
 
-    const validActors = jsonData.blocks[0].actors.filter(actor => actor.name && actor.name.trim() !== "" && actor.name.trim() !== "...............");
-    const digitalActors = jsonData.blocks[0].resources.filter(resource => (resource.type === "custom_digital" || resource.type === "custom_digital_component") && resource.name && resource.name.trim() !== "" && resource.name.trim() !== "...............");
+    const validActors = [
+        ...jsonData.blocks[0].actors.filter(actor => actor.name && actor.name.trim() !== "" && actor.name.trim() !== "..............."),
+        ...jsonData.blocks[0].resources.filter(resource => (resource.type === "custom_digital" || resource.type === "custom_digital_component") && resource.name && resource.name.trim() !== "" && resource.name.trim() !== "...............")
+    ];
+    console.log("Valid actors:", validActors);
+    const resources = jsonData.blocks[0].resources.filter(resource => (resource.type === "custom_resource" || resource.type === "custom_tool") && resource.name && resource.name.trim() !== "" && resource.name.trim() !== "...............");
+    
     const arrayistaractors = [];
     const arrayistardependencies = [];
 
     // Creazione dei file iStar per ogni attore
-    [...validActors, ...digitalActors].forEach(actor => {
+    validActors.forEach(actor => {
         const text_name = actor.name;
         const istar_operations = [];
         const activities = actor.activities || [];
         let i = 80;
+        //console.log("blocchi1", validActors, digitalActors);
 
         activities.forEach(activity => {
             if (activity.name && activity.name !== "..............." && activity.name.trim() !== "") {
@@ -29,6 +35,7 @@ export function parseJSONToIStar(jsonData) {
                 const op_goal = activity.motivation || "";
                 const op_ass = activity.target ? cleanName(activity.target) : "none";
 
+//dentro nodes:     "istar.Task"
                 const istar_operation = {
                     id: id_op,
                     text: op_name,
@@ -38,7 +45,8 @@ export function parseJSONToIStar(jsonData) {
                     customProperties: { "Description": "" }
                 };
                 istar_operations.push(istar_operation);
-
+                
+                //"istar.Goal"
                 if (op_goal && op_goal !== "..............." && op_goal.trim() !== "") {
                     const istar_goal = {
                         id: id_op + "_goal",
@@ -51,22 +59,29 @@ export function parseJSONToIStar(jsonData) {
                     istar_operations.push(istar_goal);
                 }
 
+                // Gestione del target:
                 if (op_ass !== "none") {
-                    const blockType = validActors.find(a => cleanName(a.name) === op_ass) ? "custom_actor" : "custom_digital";
-                    if (blockType === "custom_resource" || blockType === "custom_tool") {
-                        let targetcleaned = foundTargetEl(activity.target);
-                        const istar_res = {
-                            id: id_op + "_res",
-                            text: targetcleaned,
-                            type: "istar.Resource",
-                            x: i,
-                            y: 200,
-                            customProperties: { "Description": "" }
-                        };
-                        istar_operations.push(istar_res);
+                    
+                    //let targetcleaned = foundTargetEl(activity.target);
+
+                    // Caso 3: Attore che targetta una risorsa
+                    if (activity.target.includes("(CUSTOM_RESOURCE)") || activity.target.includes("(CUSTOM_TOOL)")) {
+                        // Caso 3: Attore che targetta una risorsa
+                        if (resources.find(r => cleanName(r.name) === op_ass)) {
+                            const istar_res = {
+                                id: id_op + "_res",
+                                text: op_ass,
+                                type: "istar.Resource",
+                                x: i,
+                                y: 200,
+                                customProperties: { "Description": "" }
+                            };
+                            istar_operations.push(istar_res);
+                        }
                     }
-                    if (blockType === "custom_actor" || blockType === "custom_digital" || blockType === "custom_digital_component") {
-                        let targetcleaned = foundTargetEl(activity.target);
+
+                    // Caso 1: Attore che targetta se stesso
+                    else if (cleanName(text_name) === op_ass) {
                         const istar_dep = {
                             id: id_op + "_dep",
                             text: op_name,
@@ -75,12 +90,25 @@ export function parseJSONToIStar(jsonData) {
                             y: 140,
                             customProperties: { "Description": "" },
                             source: text_name,
-                            target: targetcleaned
+                            target: text_name
                         };
                         arrayistardependencies.push(istar_dep);
-                        console.log("value to target:"+activity.target);                        
-                        console.log("value to target:"+istar_dep.target);
                     }
+                    // Caso 2: Attore che targetta un altro attore
+                    else if (validActors.find(a => cleanName(a.name) === op_ass)) {
+                        const istar_dep = {
+                            id: id_op + "_dep",
+                            text: op_name,
+                            type: "istar.Task",
+                            x: i + 50,
+                            y: 140,
+                            customProperties: { "Description": "" },
+                            source: text_name,
+                            target: op_ass
+                        };
+                        arrayistardependencies.push(istar_dep);
+                    }
+                    
                 }
                 i += 120;
             }
@@ -97,6 +125,8 @@ export function parseJSONToIStar(jsonData) {
         };
 
         arrayistaractors.push(actoritem);
+        console.log("blocchiACT:", arrayistaractors);
+        console.log("blocchiDEP:", arrayistardependencies);
     });
 
     return { arrayistaractors, arrayistardependencies };

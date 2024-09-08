@@ -20,4 +20,14 @@ document.addEventListener('DOMContentLoaded', () => {
     textField.addEventListener('change', onTextFieldChange);
   }
 
+
+  // const titleField = document.getElementById('customTitle');
+  // titleField.addEventListener('change', ()=>{ 
+  //   let reportDiv = document.getElementById('codeOutputReport');
+  //   let title = titleField.innerText;
+  //   let newdiv = document.createElement('div');
+  //   newdiv.innerHTML = `<u>${title.toUpperCase()} diagram entities:</u><br>`;
+  //   reportDiv.prepend(newdiv);
+    
+  // })
 });

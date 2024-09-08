@@ -87,3 +87,25 @@ export function getAllActorsBlocksinWs() {
 
   return className;
 }
+
+//per Istar
+export function getAllActorsAndDigitalActorsInWs() {
+  var className = [];
+  let blocksArray = Object.values(nameBlockInWS);
+  let i = 0;
+  while (i < blocksArray.length) {
+    const name = String(blocksArray[i].name).trim();
+    
+    // Includi sia 'custom_actor' che 'custom_digital' e 'custom_digital_component'
+    if (name !== '' && 
+        (blocksArray[i].type == 'custom_actor' || 
+         blocksArray[i].type == 'custom_digital' || 
+         blocksArray[i].type == 'custom_digital_component')) {
+      className.push(`${String(blocksArray[i].name)}`);
+    }
+    
+    i++;
+  }
+
+  return className;
+}
