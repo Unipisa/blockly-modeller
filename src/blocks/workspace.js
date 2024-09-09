@@ -163,7 +163,11 @@ myLayout.registerComponent( 'UML', function( container, componentState ){
     const xmiWS = GENERATORS.XMI.convertToXMI(event.detail);
     console.log('Converted XMI:', xmiWS);
 
-    COMPONENTS.UML.view(xmiWS);
+    //AGGIUNTO
+    const umlDiv = document.getElementById('codeOutputUML');
+    if (umlDiv) {
+        COMPONENTS.UML.view(xmiWS);
+      }
 
   
   });
@@ -175,9 +179,11 @@ myLayout.registerComponent( 'BPMN', function( container, componentState ){
   container.getElement().html(componentState.label);
 
   document.addEventListener('blocklyCodeGeneratedBPMN', (event) => {
-       
-    COMPONENTS.BPMN.view(VIEWS.displayBPMN(event.detail));
- 
+    const bpmnDiv = document.getElementById("codeOutputBPMN");
+    if (bpmnDiv) {
+      COMPONENTS.BPMN.view(VIEWS.displayBPMN(event.detail));
+    }
+  
   });
 
 });
@@ -236,9 +242,11 @@ myLayout.registerComponent( 'iStar', function( container, componentState ){
 
     */
 
-    COMPONENTS.ISTAR.view(VIEWS.displayISTAR(event.detail));
-    //COMPONENTS.ISTAR.view(event.detail);
-
+    //AGGIUNTO:
+    const istarDiv = document.getElementById('codeOutputiStar');
+    if (istarDiv) {
+        COMPONENTS.ISTAR.view(VIEWS.displayISTAR(event.detail)); 
+    }
 
 
     });
@@ -252,10 +260,13 @@ myLayout.registerComponent( 'Report', function( container, componentState ){
 
   document.addEventListener('blocklyCodeGeneratedReport', (event) => {
     //TOOD: sostituire DOM_NODES.reportDiv o variabile con il nome del div, al momento DOM_NODES non è ancora stato inizializzato
-        //Tolto JSON.stringify(event.detail)), per togliere le virgolette
-    document.getElementById('codeOutputReport').innerHTML = event.detail;
-
-  });
+        
+    //AGGIUNTO
+        const reportDiv = document.getElementById('codeOutputReport');
+        if (reportDiv) { // Controlla se l'elemento esiste
+            reportDiv.innerHTML = event.detail;
+        }
+    });
 
 });
 
