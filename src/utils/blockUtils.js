@@ -103,12 +103,15 @@ export function onTextFieldChange(event) {
   // Funzione per rimuovere i blocchi mancanti
   export function removeMissingBlocks(nameArray, blockClass, ws) {
     if(!ws) return;
+    //console.log('Tutti i blocchi nella workspace:', ws.getAllBlocks(true));
     let blocksNow = ws.getAllBlocks(true);
     let nameBlocks = [];
   
     for (let y = 0; y < blocksNow.length; y++) {
+      //console.log('Tipo di blocco:', blocksNow[y].type);
       if (blockClass.includes(blocksNow[y].type)) {
         let name = blocksNow[y].getFieldValue("NAME");
+        //console.log('Nome del blocco:', name);
         if (blockClass[0] === "custom_digital") {
           nameBlocks.push(name);
         } else {
@@ -116,18 +119,23 @@ export function onTextFieldChange(event) {
         }
       }
     }
+
+    //console.log('Blocchi attuali nella workspace:', nameBlocks);
   
     if (Array.isArray(nameArray)) {
       for (let i = nameArray.length - 1; i >= 0; i--) {
         if (!nameBlocks.includes(nameArray[i])) {
+          //console.log(`Rimuovo blocco mancante dall'array: ${nameArray[i]}`);
           nameArray.splice(i, 1);
         }
       }
     } else {
       for (let key in nameArray) {
         if (!nameBlocks.includes(key)) {
+          //console.log(`Rimuovo blocco mancante da object: ${key}`);
           delete nameArray[key];
         }
       }
     }
+    console.log('nameArray aggiornato da removemissing:', nameArray);
   }

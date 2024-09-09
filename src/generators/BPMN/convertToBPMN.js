@@ -120,8 +120,6 @@ export function convertToBPMN(jsonData) {
     });
 
 
-    console.log("BPMN_STATEMENT");
-    console.log(bpmnStatements);
     return Array.isArray(bpmnStatements) ? bpmnStatements : [bpmnStatements];
 
 

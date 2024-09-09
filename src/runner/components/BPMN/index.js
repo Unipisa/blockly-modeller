@@ -16,14 +16,13 @@ export async function view(json) {
   var bpmnJS = [];
 
   json.forEach(async element => { 
-
     const id = element.id;
     const diagramXML = element.xmlString;
 
     const nameBlockInWS = getAllActorsBlocksinWs();
 
-    if(nameBlockInWS.includes(id)) {    
-
+    if(nameBlockInWS.includes(id)) {   
+      console.log("ID in nameBlockInWS.includes(id) :", id); 
       const targetContainer = document.getElementById("processModel");
       const targetDivBpmnContainer = document.createElement('div');
       targetDivBpmnContainer.id = 'processModel_'+id;
@@ -44,7 +43,7 @@ export async function view(json) {
 
         const {
           warnings
-        } = await bpmnJS[id].importXML(parsedDiagram);
+        } = await bpmnJS[id].importXML(parsedDiagram);  //AWAIT?
         //bpmnJS.get('processModel_'+id).zoom('fit-viewport');
 
         //try {
@@ -67,15 +66,22 @@ export async function view(json) {
           //const targetContainer = document.getElementById("processModel");
           let targetDivSvgAlreadyInDOM = document.getElementById(id);
 
-          if (targetDivSvgAlreadyInDOM == undefined) {
+          if (targetDivSvgAlreadyInDOM !== null) {
+            // Se il div esiste già, sostituire il contenuto con il nuovo diagramma
+            targetDivSvgAlreadyInDOM.innerHTML = ''; 
+            targetDivSvgAlreadyInDOM.appendChild(titleElement);
+            targetDivSvgAlreadyInDOM.innerHTML += svg; 
+        } else {
+            // Se il div non esiste, creane uno nuovo
+            targetDivSvg.innerHTML = ''; 
+            targetDivSvg.appendChild(titleElement); 
+            targetDivSvg.innerHTML += svg; 
+            targetContainer.prepend(targetDivSvg); 
+        }
+        
 
-          targetDivSvg.innerHTML = ''; // Clear existing content if necessary
-          targetDivSvg.appendChild(titleElement); // Append the title element
-          targetDivSvg.innerHTML += svg;
-          targetContainer.prepend(targetDivSvg);
-          }
-
-        /*} catch (err) {
+        
+          /*} catch (err) {
   
           console.error(err);
         }*/
@@ -234,9 +240,8 @@ function refreshExportElement(){
 
   exportcodebpmn.forEach(element => {
 
-
-
     if(!nameBlockInWS.includes(element.id)) { 
+      console.log("refreshExportElement():", element.id);
       
       exportcodebpmn = exportcodebpmn.filter(innerelement => innerelement.id !== element.id);
 

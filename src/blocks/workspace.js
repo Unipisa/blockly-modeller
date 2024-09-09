@@ -159,9 +159,8 @@ myLayout.registerComponent( 'UML', function( container, componentState ){
 
   document.addEventListener('blocklyCodeGeneratedUML', (event) => {
     
-    console.log('Event detail:', event.detail);
     const xmiWS = GENERATORS.XMI.convertToXMI(event.detail);
-    console.log('Converted XMI:', xmiWS);
+
 
     //AGGIUNTO
     const umlDiv = document.getElementById('codeOutputUML');
@@ -179,6 +178,7 @@ myLayout.registerComponent( 'BPMN', function( container, componentState ){
   container.getElement().html(componentState.label);
 
   document.addEventListener('blocklyCodeGeneratedBPMN', (event) => {
+    console.log('Dettagli evento.detail BPMN:', event.detail);
     const bpmnDiv = document.getElementById("codeOutputBPMN");
     if (bpmnDiv) {
       COMPONENTS.BPMN.view(VIEWS.displayBPMN(event.detail));

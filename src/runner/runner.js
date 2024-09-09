@@ -15,6 +15,4 @@ export const runCode = () => {
   //VIEWS.displayUML(xmiWS);
   //console.log(VIEWS.displayBPMN(objectWS));
   
-
-  
 };

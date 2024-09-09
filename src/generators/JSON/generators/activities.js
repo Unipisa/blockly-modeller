@@ -1,5 +1,4 @@
 export const login = function (block) {
-    console.log(block)
     if(block.getParent() !== null){
       return {
         type: "activity", 

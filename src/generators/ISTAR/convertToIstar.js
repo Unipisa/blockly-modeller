@@ -89,7 +89,7 @@ function updateactorslist(code, nameBlockInWS) {
 
 }
   
-console.log("DEF", istarActors);
+//console.log("DEF", istarActors);
     return istarActors;
 }
 

@@ -41,6 +41,7 @@ export function addBlockDeleteChangeListener(ws) {
   ws.addChangeListener((e) => {
     if (e.type === Blockly.Events.BLOCK_DELETE || e.type === Blockly.Events.BLOCK_CHANGE) {
       let blocks = ws.getAllBlocks(true);
+  
       let blocksIdInWs = [];
 
       let blockClass = [
@@ -68,6 +69,7 @@ export function addBlockDeleteChangeListener(ws) {
 
       removeMissingBlocks(nameBlockInWS, blockClass, ws);
       removeMissingBlocks(nameCustomDigitalInWS, ['custom_digital'], ws);
+
 
       runCode();
     }

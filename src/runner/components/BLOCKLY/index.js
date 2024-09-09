@@ -51,7 +51,7 @@ var reader = new FileReader();
 reader.onload = function(event) {
     var jsonText = event.target.result;
     var jsonImport = JSON.parse(jsonText);
-    console.log("jsonImport", jsonImport);
+    //console.log("jsonImport", jsonImport);
     Blockly.serialization.workspaces.load(jsonImport, ws);
 };
 reader.readAsText(file);

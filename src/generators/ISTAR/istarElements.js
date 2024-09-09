@@ -14,7 +14,7 @@ export function parseJSONToIStar(jsonData) {
         ...jsonData.blocks[0].actors.filter(actor => actor.name && actor.name.trim() !== "" && actor.name.trim() !== "..............."),
         ...jsonData.blocks[0].resources.filter(resource => (resource.type === "custom_digital" || resource.type === "custom_digital_component") && resource.name && resource.name.trim() !== "" && resource.name.trim() !== "...............")
     ];
-    console.log("Valid actors:", validActors);
+    
     const resources = jsonData.blocks[0].resources.filter(resource => (resource.type === "custom_resource" || resource.type === "custom_tool") && resource.name && resource.name.trim() !== "" && resource.name.trim() !== "...............");
     
     const arrayistaractors = [];
@@ -125,8 +125,8 @@ export function parseJSONToIStar(jsonData) {
         };
 
         arrayistaractors.push(actoritem);
-        console.log("blocchiACT:", arrayistaractors);
-        console.log("blocchiDEP:", arrayistardependencies);
+        // console.log("blocchiACT:", arrayistaractors);
+        // console.log("blocchiDEP:", arrayistardependencies);
     });
 
     return { arrayistaractors, arrayistardependencies };

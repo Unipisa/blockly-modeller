@@ -66,7 +66,7 @@ var autoLayout = new AutoLayout();
   var layoutedDiagramXML = await autoLayout.layoutProcess(diagramXML);
 
   // print diagram XML
-  console.log(layoutedDiagramXML);
+  //console.log(layoutedDiagramXML);
 
   // or write to file
   await fs.writeFile('./layouted.bpmn', layoutedDiagramXML);
