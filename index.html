@@ -1,73 +1,58 @@
 <!DOCTYPE html>
- <html>
-   <head>
-     <meta charset="utf-8" />
-     <title>Blockly ModeLLer</title>
-   <script defer src="bundle.js"></script></head>
-   <body>
-    <div id="pageContainer">
-      <div id="blocklyDiv">
-        <input id="customTitle" type='text' placeholder='Insert title...' style="font-family: Helvetica"/>
-      </div>
-      <div id="outputPane">
-        <h3 style="font-family: Helvetica", id="codeTitle">UML model (XMI)</h3>
-        <pre id="generatedCode"><code id="xmiCode"></code></pre>
-        <h3 style="font-family: Helvetica", id="reportTitle">Report</h3>
-        <div id="schemeReport">
-          <div id="txtReport"></div>
-          <textarea id="comment" rows="2" cols="46" placeholder='Add comment to report (optional)...'></textarea>
-        </div>
-        <div id="buttonArea">
-          <button id="downloadButton" class="button-13" onclick="downloadFile()">Download .xmi file</button>
-          <script>
-            const downloadFile = () => {
-              const link = document.createElement("a");
-              const content = document.getElementById("xmiCode").innerText;
-              const title = document.getElementById("customTitle");
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Blockly ModeLLer</title>
 
-              // get date
-              var today = new Date();
-              var dd = String(today.getDate()).padStart(2, '0');
-              var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
-              var yyyy = today.getFullYear();
-              today = dd + '-' + mm + '-' + yyyy;
-              
-              const file = new Blob([content], { type: 'text/xml' });
-              link.href = URL.createObjectURL(file);
-              link.download = `${today}_diagramUML_${title.value}.xmi`;
-              link.click();
-              URL.revokeObjectURL(link.href);
-            };
-          </script>
-          <button id="downloadButton" class="button-13" onclick="downloadReport()">Download report</button>
-          <script>
-            const downloadReport = () => {
-              const link = document.createElement("a");
-              const comment = document.getElementById("comment");
-              var textComment = new String();
-              if(comment.value != ''){
-                textComment = '\nNOTES: ' + comment.value;
-              }
-              const content = document.getElementById("txtReport").innerText;
-              const title = document.getElementById("customTitle");
-              
-              // get date
-              var today = new Date();
-              var dd = String(today.getDate()).padStart(2, '0');
-              var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0
-              var yyyy = today.getFullYear();
-              today = dd + '-' + mm + '-' + yyyy;
+    <style>
+        
+        body {
+            background: rgb(247, 240, 228);
+            margin: 0;
+            border: 0;
+            font-family: monospace
+        }
+        
+        #container {
+            display: flex;
+            align-items: center;
+            height: 600px;
+            border: 1px solid #000;
+            justify-content: center;
+        }
+        
+        a:visited {
+            color: #333;
+        }
+        
+        a {
+            color: #333;
+            text-decoration: none
+        }
+        
+        li {
+            margin: 10px 0
+        }
+        
+    </style>
+    
+</head>
 
-              const file = new Blob([content, textComment], { type: 'text/xml' });
-              link.href = URL.createObjectURL(file);
-              link.download = `${today}_diagramREPORT_${title.value}.txt`;
-              link.click();
-              URL.revokeObjectURL(link.href);
-            };
-          </script>          
-        </div>
-        <div id="output"></div>
-      </div>
-    </div>    
-   </body>
- </html>
+
+  
+<body>
+
+          
+  <div id="container">
+      all versions:
+      <ul>
+          <li><a href="demo/index.html">ModeLLer (current version)</a></li>
+          <li><a href="demo_v1/index.html">ModeLLer version 1.0 (UML)</a>  </li>
+      </ul>
+  
+  </div>
+
+ 
+</body>
+</html>
+
