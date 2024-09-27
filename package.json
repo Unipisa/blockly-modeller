@@ -1,5 +1,5 @@
 {
-  "name": "modeLLer",
+  "name": "modeller",
   "version": "1.0.0",
   "description": "Tool for modelling UML diagram",
   "main": "index.js",
@@ -12,7 +12,7 @@
   "keywords": [
     "blockly"
   ],
-  "author": "Chiara Mannari, Elisa Anichini, Caterina Frosali, Riccerdo Giovani ",
+  "author": "Chiara Mannari, Elisa Anichini, Caterina Frosali, Riccerdo Giovani",
   "license": "Apache-2.0",
   "devDependencies": {
     "css-loader": "^6.7.1",
@@ -26,6 +26,7 @@
     "backbone": "^1.6.0",
     "blockly": "^9.2.1",
     "bpmn-moddle": "^9.0.1",
+    "cors": "^2.8.5",
     "d3-collection": "^1.0.7",
     "d3-dispatch": "^3.0.1",
     "d3-quadtree": "^3.0.1",
@@ -34,7 +35,8 @@
     "jquery": "^3.7.1",
     "jszip": "^3.10.1",
     "plantuml-encoder": "^1.4.0",
-    "underscore": "^1.13.6"
+    "underscore": "^1.13.6",
+    "winston": "^3.14.2"
   },
   "browser": {
     "fs": false,

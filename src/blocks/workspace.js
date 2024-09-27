@@ -8,7 +8,7 @@ import { onWorkspaceChange } from '../listeners/workspaceChangeListener.js';
 //import { registerExtensions } from './extension.js';
 import { addBlockDeleteChangeListener } from '../listeners/blockDeleteChangeListener.js';
 import { has } from "underscore";
-
+import { logBlocklyEvent } from "../utils/logger.js";
 
 
 export const xmlText =
@@ -30,6 +30,32 @@ export const setupBlocklyWorkspace = (blocklyDiv) => {
 
 
 var config = {
+  settings:{
+    hasHeaders: true,
+    constrainDragToContainer: true,
+    reorderEnabled: true,
+    selectionEnabled: false,
+    popoutWholeStack: false,
+    blockedPopoutsThrowError: true,
+    closePopoutsOnUnload: true,
+    showPopoutIcon: false,
+    showMaximiseIcon: true,
+    showCloseIcon: false
+},
+dimensions: {
+    borderWidth: 10,
+    minItemHeight: 10,
+    minItemWidth: 10,
+    headerHeight: 20,
+    dragProxyWidth: 300,
+    dragProxyHeight: 200
+},
+labels: {
+    close: 'close',
+    maximise: 'maximise',
+    minimise: 'minimise',
+    popout: 'open in new window'
+},
   content: [{
       type: 'row',
       content:[{
@@ -137,6 +163,8 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
         document.dispatchEvent(new CustomEvent('blocklyCodeGeneratedISTAR', { detail: code }));
         document.dispatchEvent(new CustomEvent('blocklyCodeGeneratedReport', { detail: reportText }));
        }
+
+       logBlocklyEvent(event);
 
      });
 
