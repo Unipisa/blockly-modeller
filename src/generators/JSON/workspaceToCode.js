@@ -18,8 +18,8 @@ export const workspaceToCode = function (workspace) {
   // Aggiungo titolo dinamico #customTitle
   const diagramNameElement = document.getElementById('customTitle');
   let title = diagramNameElement.value.trim() || '';
-  
-  
+
+    
     return {
       type: "workspace",
       title: title,

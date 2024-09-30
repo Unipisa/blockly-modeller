@@ -3,7 +3,7 @@ import {icons} from'../icons.js';
 export const SCHEMA_BLOCK = [
   {
     "type": "info",
-    "message0": "• Who are the actors involved? %1 %2 %3 %4 • Which are the resources? %5 Insert resources: %6 %7 %8",
+    "message0": "• Who are the actors involved? %1 Insert actors: %2 %3 %4 • Which are the resources? %5 Insert resources: %6 %7 %8",
     "args0": [
       {
         "type": "input_dummy",
