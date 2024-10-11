@@ -6,6 +6,7 @@ import './lib/app/ui/lib/bootstrap/bootstrap.min.js';
 import './lib/app/ui/lib/bootstrap3-editable/bootstrap-editable.min.js';
 import './lib/app/ui/lib/bootbox/bootbox.min.js';
 import './lib/app/istarcore/istarFunctions.js';
+import { logBlocklyEvent } from "../../../utils/logger.js";
 
 //TODO: aggiungere qua le librerie caricate in index.html. Mettendole qua ci sono problemi di ordine di lettura 
 
@@ -56,12 +57,14 @@ export function addButtonDownload(id) {
               
       } 
 
-      document.getElementById('downloadButtonISTARjson').addEventListener('click', function() {
+      document.getElementById('downloadButtonISTARjson').addEventListener('click', function(event) {
         saveISTAR('txt');
+        logBlocklyEvent(event);
       });
 
-      document.getElementById('downloadButtonISTARsvg').addEventListener('click', function() {
+      document.getElementById('downloadButtonISTARsvg').addEventListener('click', function(event) {
         saveISTAR('svg');
+        logBlocklyEvent(event);
       });
   
   

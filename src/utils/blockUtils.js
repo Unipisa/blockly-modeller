@@ -90,7 +90,10 @@ export const reset = (blockName, type, isDeleted = false, ws) => {
 
 
 // Funzione per gestire il cambiamento del campo di testo
+//TODO: quando viene invocata?
 export function onTextFieldChange(event) {
+
+
     const newValue = event.target.value;
     const matches = newValue.match(/(.*?)\s+\((.*?)\)/);
     if (matches) {

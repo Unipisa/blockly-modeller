@@ -61,25 +61,30 @@ labels: {
       content:[{
           type: 'component',
           componentName: 'Blockly',
-          componentState: { label: blockly }
+          componentState: { label: blockly },
+          isClosable: false
       },{
           type: 'column',
           content:[{
           type: 'component',
-          componentName: 'UML',
-          componentState: { label: outputUML }
+          componentName: 'Structure',
+          componentState: { label: outputUML },
+          isClosable: false
       },{
               type: 'component',
-              componentName: 'BPMN',
-              componentState: { label: outputBPMN }
+              componentName: 'Activity',
+              componentState: { label: outputBPMN },
+              isClosable: false
           },{
               type: 'component',
-              componentName: 'iStar',
-              componentState: { label: outputiStar }
+              componentName: 'Goal',
+              componentState: { label: outputiStar },
+              isClosable: false
           },{
               type: 'component',
               componentName: 'Report',
-              componentState: { label: outputReport }
+              componentState: { label: outputReport },
+              isClosable: false
           }]
       }]
   }]
@@ -127,7 +132,20 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
                 scaleSpeed: 1.2,
                 pinch: true}
       });
+      
+      myLayout.on('componentCreated', function (component) {
+        const container = component.container;
+        console.log('Component created:', container);
+        logBlocklyEvent(container);    
+        // You can also track component size/position changes using `resize` and `drag` events
+        container.on('resize', function () {
+            console.log('Component resized:', container);
+            logBlocklyEvent(container);
 
+        });
+    });
+    
+    
 
       blocklyInit();
 
@@ -143,14 +161,30 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
       //addChangeListener(ws);
       //addUiEventListener(ws);
 
+
+// Event listener for maximized or minimized state change
+/* serve?
+myLayout.on('stateChanged', function() {
+  var isMaximized = myLayout.root.getItemsByType('component').some(function(component) {
+      return component.isMaximised;
+  });
+
+  if (isMaximized) {
+      console.log('Component maximized.');
+  } else {
+      console.log('Component minimized or restored.');
+  }
+});
+*/
     
       ws.addChangeListener((event) => {
 
         let wsHasChanged = onWorkspaceChange(event, ws); 
+        console.log(event);
 
        if(wsHasChanged){
 
-        console.log('hasChanged');
+        //console.log('hasChanged');
 
         // TODO aggiornare con i relativi sourcecode ed eventi corrispondenti
         var code = GENERATORS.JSON.generator.workspaceToCode(ws);
@@ -172,16 +206,22 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
 
     });
 
+
+    document.getElementById('customTitle').addEventListener('input', function(event) {
+      logBlocklyEvent(event);
+  });
+
       
 
     }
+    
   });
 
 
 });
 
 
-myLayout.registerComponent( 'UML', function( container, componentState ){
+myLayout.registerComponent( 'Structure', function( container, componentState ){
 
   container.getElement().html(  componentState.label  );
 
@@ -201,7 +241,7 @@ myLayout.registerComponent( 'UML', function( container, componentState ){
 
 });
 
-myLayout.registerComponent( 'BPMN', function( container, componentState ){
+myLayout.registerComponent( 'Activity', function( container, componentState ){
 
   container.getElement().html(componentState.label);
 
@@ -217,7 +257,7 @@ myLayout.registerComponent( 'BPMN', function( container, componentState ){
 });
 
 
-myLayout.registerComponent( 'iStar', function( container, componentState ){
+myLayout.registerComponent( 'Goal', function( container, componentState ){
 
   container.getElement().html(  componentState.label  );
 
@@ -303,14 +343,14 @@ myLayout.registerComponent( 'Report', function( container, componentState ){
 myLayout.on('componentCreated', function(component, ws) {
   //console.log('Component created:', component);
 
-  if (component.config.componentName === 'UML') {
+  if (component.config.componentName === 'Structure') {
     COMPONENTS.UML.addButtonDownload('codeOutputUML')
   }
-  if (component.config.componentName === 'BPMN') {
+  if (component.config.componentName === 'Activity') {
     COMPONENTS.BPMN.addButtonDownload('codeOutputBPMN')
 
   }
-  if (component.config.componentName === 'iStar') {
+  if (component.config.componentName === 'Goal') {
     COMPONENTS.ISTAR.addButtonDownload('codeOutputiStar')
   }
   if (component.config.componentName === 'Report') {

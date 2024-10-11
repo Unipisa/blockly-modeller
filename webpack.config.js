@@ -1,5 +1,7 @@
-const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
+
 
 module.exports = {
   mode: 'development',
@@ -23,6 +25,23 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    fallback: {
+      "setimmediate": require.resolve("setimmediate"),
+      "fs": false, // Use false if you don't need file system operations in the browser
+      "util": require.resolve("util/"),
+      "buffer": require.resolve("buffer/"),
+      "stream": require.resolve("stream-browserify"),
+      "url": require.resolve("url/"),
+      "assert": require.resolve("assert/"),
+      "os": require.resolve("os-browserify/browser"),
+      "https": require.resolve("https-browserify"),
+      "http": require.resolve("stream-http"),
+      "zlib": require.resolve("browserify-zlib"),
+      "path": require.resolve("path-browserify"),
+      "process": require.resolve("process/browser")  // Ensure process is polyfilled
+   },
+  },
   externals: {
     jquery: 'jQuery' // This will reference the global jQuery object
 },
@@ -30,6 +49,10 @@ module.exports = {
     // Generate the HTML index page based on our template.
     // This will output the same index page with the bundle we
     // created above added in a script tag.
+      new webpack.ProvidePlugin({
+      process: 'process/browser',
+      Buffer: ['buffer', 'Buffer'],
+    }),
     new HtmlWebpackPlugin({
       template: 'src/index.html',
     }),

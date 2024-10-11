@@ -1,7 +1,7 @@
 import { VIEWS } from "../../views";
 import {icons} from'../../../blocks/icons.js';
 import { getTodayDate } from '../../../utils/utils.js';
-
+import { logBlocklyEvent } from "../../../utils/logger.js";
 
 export function view(json) { 
 
@@ -32,8 +32,8 @@ export function addButtonDownload(id) {
           </div>
             `);
 
-          document.getElementById('downloadButtonReport').addEventListener('click', function() {
-              saveReport();
+          document.getElementById('downloadButtonReport').addEventListener('click', function(event) {
+              saveReport(event);
             });
 
     } 
@@ -47,8 +47,10 @@ export function addButtonDownload(id) {
 } 
 
 
-export async function saveReport(){
+export async function saveReport(event){
 
+  logBlocklyEvent(event);
+  
   const content = document.getElementById("codeOutputReport").innerText;
   const title = document.getElementById("customTitle");
   

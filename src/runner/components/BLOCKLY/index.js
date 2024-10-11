@@ -1,5 +1,6 @@
 import * as Blockly from "blockly";
 import {icons} from'../../../blocks/icons.js';
+import { logBlocklyEvent } from "../../../utils/logger.js";
 
 export function addButtonDownload(id, ws) { 
 
@@ -19,7 +20,9 @@ export function addButtonDownload(id, ws) {
 
     var downloadWsLink = document.getElementById('exportWs');
       
-        downloadWsLink.addEventListener('click', function() {
+        downloadWsLink.addEventListener('click', function(event) {
+
+          logBlocklyEvent(event);
       
           const link = document.createElement("a");
       
@@ -31,12 +34,15 @@ export function addButtonDownload(id, ws) {
           link.download = `workspace_state.json`;
           link.click();
           URL.revokeObjectURL(link.href);
+          
       });
       
 
   var upladWsLink = document.getElementById('importWs');
 
-  upladWsLink.addEventListener('click', function() {
+  upladWsLink.addEventListener('click', function(event) {
+
+    logBlocklyEvent(event);
 
     document.getElementById('fileInput').click();
 
@@ -45,6 +51,7 @@ export function addButtonDownload(id, ws) {
 
 document.getElementById('fileInput').addEventListener('change', function(event) {
 
+logBlocklyEvent(event);
 
 var file = event.target.files[0];
 var reader = new FileReader();
