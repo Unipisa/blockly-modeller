@@ -79,7 +79,6 @@ export async function view(json) {
             targetContainer.prepend(targetDivSvg); 
         }
         
-
         
           /*} catch (err) {
   

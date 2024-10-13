@@ -32,9 +32,6 @@ export const default_actor = function (block) {
   export const custom_actor = function(block) {
     if (block.getParent() !== null) {
       let name = block.getFieldValue("NAME");
-      // if (name && name.trim() !== "" && name !== "...............") {
-      //   name += "_act";
-      // }
       var statements_operations = generator.statementToCode(block, "OPERATIONS");
       var statements_attributes = generator.statementToCode(block, "ATTRIBUTES");
       return {
