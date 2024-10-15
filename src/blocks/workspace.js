@@ -62,14 +62,17 @@ labels: {
           type: 'component',
           componentName: 'Blockly',
           componentState: { label: blockly },
-          isClosable: false
+          isClosable: false,
+          width: 60  // 60% width
       },{
           type: 'column',
           content:[{
           type: 'component',
           componentName: 'Structure',
           componentState: { label: outputUML },
-          isClosable: false
+          isClosable: false,
+          width: 40  // 40% width
+
       },{
               type: 'component',
               componentName: 'Activity',
