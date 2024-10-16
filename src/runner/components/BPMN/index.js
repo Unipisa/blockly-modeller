@@ -6,6 +6,7 @@ import {icons} from'../../../blocks/icons.js';
 import {BPMNparser} from './XMLBPMNparser.js';
 import { getAllActorsBlocksinWs } from "../../../listeners/index.js";
 import { getTodayDate } from '../../../utils/utils.js';
+import { logBlocklyEvent } from "../../../utils/logger.js";
 
 var exportcodebpmn = [];
 
@@ -128,12 +129,14 @@ export function addButtonDownload(id) {
           </div>
             `);
 
-            document.getElementById('downloadButtonBPMNxml').addEventListener('click', function() {
+            document.getElementById('downloadButtonBPMNxml').addEventListener('click', function(event) {
               saveBPMN('xml');
+              logBlocklyEvent(event);
             });
 
-            document.getElementById('downloadButtonBPMNsvg').addEventListener('click', function() {
+            document.getElementById('downloadButtonBPMNsvg').addEventListener('click', function(event) {
               saveBPMN('svg');
+              logBlocklyEvent(event);
             });
     } 
 

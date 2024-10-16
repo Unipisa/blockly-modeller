@@ -29,7 +29,11 @@ export function convertToBPMN(jsonData) {
         // Ciclo sulle attività
         (actor.activities || []).forEach(activity => {
             const activityId = `Activity_${generateID(activity.name)}`;
+<<<<<<< HEAD
             const targetName = cleanName(activity.target);
+=======
+            const targetName = cleanName(activity.target).replace(/\s+/g, '_');
+>>>>>>> 07e6717b5d95dcc7721882cdae1c8edceb9adee5
 
             if (targetName && targetName !== "none" && !addedParticipants.has(targetName)) {
                 const targetProcessId = `process_${generateRandID()}`;

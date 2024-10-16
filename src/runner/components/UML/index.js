@@ -1,6 +1,8 @@
 import { icons } from "../../../blocks/icons.js";
 import { getTodayDate } from "../../../utils/utils.js";
 import { displayUML } from "../../views/umlView.js";
+import { logBlocklyEvent } from "../../../utils/logger.js";
+//import { event } from "jquery";
 
 var umlstring = "";
 var xmistring = "";
@@ -29,29 +31,29 @@ export function addButtonDownload(id) {
         "afterbegin",
         `
             <div class="btndwnld">
-            <a id="downloadButtonUMLplant" class="button-13"><img src="${icons.icon_savebpmn}" width="12" height="12" alt="download-bpmn" title="download XMI source" /> XMI</a>
-            <a id="downloadButtonUMLxmi" class="button-13"><img src="${icons.icon_savebpmn}" width="12" height="12" alt="download-bpmn" title="download PlantUML source" /> PlantUML</a>
+            <a id="downloadButtonUMLxmi" class="button-13"><img src="${icons.icon_savebpmn}" width="12" height="12" alt="download-bpmn" title="download XMI source" /> XMI</a>
+            <a id="downloadButtonUMLplant" class="button-13"><img src="${icons.icon_savebpmn}" width="12" height="12" alt="download-bpmn" title="download PlantUML source" /> PlantUML</a>
             <a id="downloadButtonUMLjpg" class="button-13"><img src="${icons.icon_savesvg}" width="20" height="20" alt="download-plantumlimage" title="download image" /></a>
           </div>
             `
       );
 
       document
-        .getElementById("downloadButtonUMLplant")
-        .addEventListener("click", function () {
-          saveUML("xmi");
+        .getElementById("downloadButtonUMLxmi")
+        .addEventListener("click", function (event) {
+          saveUML(event, "xmi");
         });
 
       document
-        .getElementById("downloadButtonUMLxmi")
-        .addEventListener("click", function () {
-          saveUML("plant", umlstring); 
+        .getElementById("downloadButtonUMLplant")
+        .addEventListener("click", function (event) {
+          saveUML(event,"plant",umlstring); 
         });
 
       document
         .getElementById("downloadButtonUMLjpg")
-        .addEventListener("click", function () {
-          saveUML("jpg");
+        .addEventListener("click", function (event) {
+          saveUML(event,"jpg");
         });
     }
   } catch (error) {
@@ -61,7 +63,10 @@ export function addButtonDownload(id) {
 }
 
 // Funzione per salvare i diagrammi UML
-export async function saveUML(type) {
+export async function saveUML(event, type) {
+
+  logBlocklyEvent(event);
+
   let blobType;
   let fileExt;
   const title = document.getElementById("customTitle");
