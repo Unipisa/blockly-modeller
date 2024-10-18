@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-import { cleanName } from "../../utils/utils";
-
-=======
->>>>>>> 07e6717b5d95dcc7721882cdae1c8edceb9adee5
 // Oggetto fixedIDs
 export const fixedIDs = {
     definitionsId: "sid-38422fae-e03e-43a3-bef4-bd33b32041b2",

@@ -9,6 +9,7 @@ import { onWorkspaceChange } from '../listeners/workspaceChangeListener.js';
 import { addBlockDeleteChangeListener } from '../listeners/blockDeleteChangeListener.js';
 import { has } from "underscore";
 import { logBlocklyEvent } from "../utils/logger.js";
+import { Alert_div,closeCustomAlert } from "../utils/alerts.js"
 
 
 export const xmlText =
@@ -92,6 +93,26 @@ labels: {
       }]
   }]
 };
+
+//AGGIUNTO
+const alertDiv = document.createElement('div');
+  alertDiv.id = 'customAlertBox';
+  alertDiv.className = 'custom-alert hidden';
+  alertDiv.innerHTML = `
+    <div class="custom-alert-content">
+      <span id="customAlertMessage"></span>
+      <button onclick="closeCustomAlert()">Close</button>
+    </div>
+  `;
+  document.body.appendChild(alertDiv);
+
+  // Collega i nodi DOM a Alert_div nel file alerts.js
+  Alert_div.alertBox = document.getElementById('customAlertBox');
+  Alert_div.alertMessage = document.getElementById('customAlertMessage');
+
+/////////
+
+
 
 
 var myLayout = new GoldenLayout( config, blocklyDiv );
