@@ -38,11 +38,14 @@ export function onWorkspaceChange(event, ws) {
       }
     } else if (event.type === Blockly.Events.BLOCK_DELETE) {
       let block = event.oldXml;
-      let oldName = block
-        .querySelector('field[name="NAME"]')
-        .textContent.toLowerCase();
-      let type = block.getAttribute("type");
-      reset(oldName, type, true, ws);
+      let nameField = block.querySelector('field[name="NAME"]');
+      if (nameField) {
+        let oldName = block
+          .querySelector('field[name="NAME"]')
+          .textContent.toLowerCase();
+        let type = block.getAttribute("type");
+          reset(oldName, type, true, ws);
+      }
     } else if (
       (event.type === Blockly.Events.CLICK ||
         event.type === Blockly.Events.SELECTED) &&

@@ -40,33 +40,71 @@ export const toolbox = {
       'contents': [
         {
           'kind': 'label',
+          'text': '-- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - --',
+        },  
+        {
+          'kind': 'label',
           'text': 'TASK 1',
         },
         {
           'kind': 'label',
           //'text': wrapped_label1, 
-          'text': 'Model the process described in the following text.',
-
+          'text': 'Leggi la descrizione del processo e crea il modello',
         },  
         {
           'kind': 'label',
-          'text': 'Save all available formats and export workspace file',
-        },      
+          'text': 'Costruisci il modello partendo dagli elementi evidenziati, che sono obbligatori.',
+        },
+        {
+          'kind': 'label',
+          'text': 'Puoi aggiungere elementi anche sulla base di conoscenze pregresse.',
+        },
+        {
+          'kind': 'label',
+          'text': 'Salva il diagramma di stuttura in formato immagine',
+        },          
+        {
+          'kind': 'label',
+          'text': 'Esporta l\'area di lavoro (workspace)',
+        },     
+        {
+          'kind': 'label',
+          'text': 'Tempo massimo: 15 minuti',
+        },  
+        {
+          'kind': 'label',
+          'text': '-- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- ',
+        },           
         {
           'kind': 'label',
           'text': 'TASK 2',
         },
         {
           'kind': 'label',
-          'text': 'Import from local desktop the workspace <test.json>',
+          'text': 'Importa POMODORO.json',
         },
         {
           'kind': 'label',
-          'text': 'edit the model following instructions provided',
+          'text': 'Estendi il modello',
         },
+        {
+          'kind': 'label',
+          'text': 'Salva il diagramma di processo in formato immagine',
+        },          
+        {
+          'kind': 'label',
+          'text': 'Esporta l\'area di lavoro (workspace)',
+        },
+        {
+          'kind': 'label',
+          'text': 'Tempo massimo: 5 minuti',
+        }, 
+        {
+          'kind': 'label',
+          'text': '-- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - --',
+        },   
       ],
-    },
-    
+    },    
     {
       'kind': 'category',
       'name': 'Actors',
@@ -321,4 +359,8 @@ export const toolbox = {
     },                           
   ],
 };
+
+
+
+
 

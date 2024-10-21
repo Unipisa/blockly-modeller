@@ -87,6 +87,7 @@ stroke: #ffffff;
 /* QUESTI COMANDI PER CUSTOMIZZARE IL MENU A TENDINA */
 .blocklyToolboxDiv {
 background-color: rgb(247, 240, 228);
+z-index:1;
 }
 
 .blocklyFlyoutBackground {
@@ -96,8 +97,16 @@ fill-opacity: .8;
 
 .geras-renderer.classic-theme .blocklyFlyoutLabelText {
 fill: black;
-font-size: 17px;
+font-size: 15px;
 white-space: pre;
+margin:0;
+padding: 0;
+}
+
+
+g.blocklyFlyoutLabel rect {
+  transform: scale(1.5);
+  transform-origin: 50% 50%; /* Adjust the origin to control where scaling happens */
 }
 
 .blocklyFlyoutLabelBackground {
