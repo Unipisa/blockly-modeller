@@ -3,12 +3,14 @@ import { removeBlockType } from '../../utils/blockUtils.js';
 
 export function createXMIElement(type, name, attributes = [], operations = [], specialisations = [], aggregations = []) {
     const element_id = generateRandID(name);
-    const formattedName = removeBlockType(name).replace(/[^a-zA-Z0-9À-ž_]/g
+    var formattedName = removeBlockType(name).replace(/[^a-zA-Z0-9À-ž_ ]/g
 , ''); // Rimuove i caratteri non validi
+
     if (formattedName === "") {
         return ""; // Se il nome dell'elemento è vuoto, ritorna una stringa vuota
     }
-    let element_code = `\t\t\t<packagedElement xmi:id="${element_id}" name="${formattedName.toLowerCase()}" xmi:type="uml:${type}">\n`;
+    formattedName = formattedName.replace(/ /g, "_");
+    let element_code = `\t\t\t<packagedElement xmi:id="${element_id}" name="${formattedName}" xmi:type="uml:${type}">\n`;
 
     // Aggiungi attributi
     attributes.forEach(attribute => {

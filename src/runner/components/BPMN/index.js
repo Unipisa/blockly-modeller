@@ -17,12 +17,13 @@ export async function view(json) {
   var bpmnJS = [];
 
   json.forEach(async element => { 
-    const id = element.id;
+    var id = element.id;
+    var id_withSpace = id.replace(/_/g, " ");
     const diagramXML = element.xmlString;
 
     const nameBlockInWS = getAllActorsBlocksinWs();
 
-    if(nameBlockInWS.includes(id)) {   
+    if(nameBlockInWS.includes(id_withSpace)) {   
       console.log("ID in nameBlockInWS.includes(id) :", id); 
       const targetContainer = document.getElementById("processModel");
       const targetDivBpmnContainer = document.createElement('div');

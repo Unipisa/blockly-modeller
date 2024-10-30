@@ -6,7 +6,9 @@ export function convertToBPMN(jsonData) {
     const blocks = jsonData.blocks || [];
     if (blocks.length === 0 || !blocks[0].actors) return {}; 
 
-    const validActors = blocks[0].actors.filter(actor => actor.name?.trim() && actor.name.trim() !== "...............");
+    // Access the actors array
+var validActors = blocks[0].actors;
+
 
     if (validActors.length === 0) return {}; 
 
@@ -14,14 +16,14 @@ export function convertToBPMN(jsonData) {
 
     validActors.forEach(actor => {
         let bpmnString = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-
+        var actorName = actor.name.replace(/ /g, "_");
         // Usa la funzione per generare l'intestazione BPMN
         bpmnString += generateBPMNHeader();
 
         // Creazione della collaborazione
         bpmnString += `
         <bpmn:collaboration id="${fixedIDs.collaborationId}">
-        <bpmn:participant id="${fixedIDs.participantId}" name="${actor.name}" processRef="${fixedIDs.processId}" />`;
+        <bpmn:participant id="${fixedIDs.participantId}" name="${actorName}" processRef="${fixedIDs.processId}" />`;
 
         const addedParticipants = new Set();
         let messageFlows = '';
@@ -89,7 +91,7 @@ export function convertToBPMN(jsonData) {
         </bpmn:process>
         </bpmn:definitions>`;
 
-        bpmnStatements.push({ id: actor.name, xmlString: bpmnString });
+        bpmnStatements.push({ id: actorName, xmlString: bpmnString });
     });
 
     return bpmnStatements;

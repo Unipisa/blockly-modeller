@@ -94,7 +94,7 @@ labels: {
   }]
 };
 
-//AGGIUNTO
+//AGGIUNTO PER ALERT
 const alertDiv = document.createElement('div');
   alertDiv.id = 'customAlertBox';
   alertDiv.className = 'custom-alert hidden';
@@ -106,7 +106,6 @@ const alertDiv = document.createElement('div');
   `;
   document.body.appendChild(alertDiv);
 
-  // Collega i nodi DOM a Alert_div nel file alerts.js
   Alert_div.alertBox = document.getElementById('customAlertBox');
   Alert_div.alertMessage = document.getElementById('customAlertMessage');
 
