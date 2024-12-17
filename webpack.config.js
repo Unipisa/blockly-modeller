@@ -15,6 +15,10 @@ module.exports = {
   // Enable webpack-dev-server to get hot refresh of the app.
   devServer: {
     static: './dist',
+    open: true,
+    server: {
+      type: 'https'
+    }
   },
   module: {
     rules: [
