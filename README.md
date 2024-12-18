@@ -12,7 +12,7 @@ All the items dropped on the workspace are simultaneously translated into UML en
 
 <h3>Working demo</h3>
 
-Try the demo: <https://unipisa.github.io/blockly-UML-modeller/>
+Try the demo: <https://unipisa.github.io/blockly-modeller/>
 
 
 <h3>Video demo</h3
