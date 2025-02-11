@@ -6,105 +6,23 @@
 
 import {icons} from'../icons.js';
 
-/* sistemare
-function wrapText(text, maxLength) {
-  const words = text.split(' ');
-  let result = '';
-  let currentLine = '';
-
-  words.forEach((word) => {
-    if ((currentLine + word).length > maxLength) {
-      result += currentLine.trim() + '\n';
-      currentLine = word + ' ';
-    } else {
-      currentLine += word + ' ';
-    }
-  });
-
-  result += currentLine.trim();
-  return result;
-}
-
-var label_task1 = 'The farm aims to modernize greenhouse farming \n by introducing digital sensors and technology to optimize agricultural practices. Currently, the farm relies on traditional methods, leading to inefficient resource use and lower profits. By incorporating digital tools, the goal is to improve productivity, reduce inputs like water and herbicides, and increase the well-being of farmers through time-saving automation. The process involves installing advanced sensors throughout the greenhouses to monitor critical conditions like temperature, CO2 levels, soil moisture, pH, and light (photosynthetically active radiation). These sensors are connected via a LoRa-based communication system, which allows for real-time data transmission to the AgroSense platform—a digital tool accessible on both mobile devices and computers. The sensors work 24/7, taking readings every hour and sending this data to the platform. Once the data is uploaded to AgroSense, farmers can view the environmental conditions in their greenhouses at any time. This information helps them make more informed decisions about crop management. For example, if the system detects a drop in CO2 levels or an increase in temperature, the farmer can take immediate action to adjust greenhouse conditions, preventing plant stress and potential crop damage. This continuous monitoring also allows farmers to optimize water usage and fertilizer application, minimizing waste and improving sustainability. Advisors, who work closely with the farmers, can also access the data through the same platform, offering tailored recommendations based on real-time conditions. The platform’s historical data and machine learning algorithms further support decision-making by providing insights into long-term trends and potential improvements. This system not only automates some of the more labor-intensive tasks but also ensures that the farmer is notified when sensor maintenance is required, such as a battery replacement. The use of this digital technology is expected to increase yields, reduce production costs, and serve as a model for other farms in the region, encouraging broader adoption of such innovations.';
-var wrapped_label1 = wrapText(label_task1, 10);
-*/
-
 export const toolbox = {
   'kind': 'categoryToolbox',
   'contents': [
+    
     {
       'kind': 'category',
       'name': 'USER TASKS',
       'colour': "#a68c83",
       'imageName': icons.icon_guide,
       'contents': [
-        {
+        /*{
           'kind': 'label',
-          'text': '-- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - --',
-        },  
-        {
-          'kind': 'label',
-          'text': 'TASK 1',
-        },
-        {
-          'kind': 'label',
-          //'text': wrapped_label1, 
-          'text': 'Leggi la descrizione del processo e crea il modello',
-        },  
-        {
-          'kind': 'label',
-          'text': 'Costruisci il modello partendo dagli elementi evidenziati, che sono obbligatori.',
-        },
-        {
-          'kind': 'label',
-          'text': 'Puoi aggiungere elementi anche sulla base di conoscenze pregresse.',
-        },
-        {
-          'kind': 'label',
-          'text': 'Salva il diagramma di stuttura in formato immagine',
-        },          
-        {
-          'kind': 'label',
-          'text': 'Esporta l\'area di lavoro (workspace)',
-        },     
-        {
-          'kind': 'label',
-          'text': 'Tempo massimo: 15 minuti',
-        },  
-        {
-          'kind': 'label',
-          'text': '-- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- ',
-        },           
-        {
-          'kind': 'label',
-          'text': 'TASK 2',
-        },
-        {
-          'kind': 'label',
-          'text': 'Importa POMODORO.json',
-        },
-        {
-          'kind': 'label',
-          'text': 'Estendi il modello',
-        },
-        {
-          'kind': 'label',
-          'text': 'Salva il diagramma di processo in formato immagine',
-        },          
-        {
-          'kind': 'label',
-          'text': 'Esporta l\'area di lavoro (workspace)',
-        },
-        {
-          'kind': 'label',
-          'text': 'Tempo massimo: 5 minuti',
-        }, 
-        {
-          'kind': 'label',
-          'text': '-- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - -- - --',
-        },   
+          'text': '',
+        },*/
       ],
-    },    
+
+    },   
     {
       'kind': 'category',
       'name': 'Actors',
@@ -359,7 +277,6 @@ export const toolbox = {
     },                           
   ],
 };
-
 
 
 

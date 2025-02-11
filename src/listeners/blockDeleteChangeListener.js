@@ -2,6 +2,7 @@ import { ws, runCode } from '../runner/runner.js';
 import Blockly from 'blockly';
 import { generateID } from '../utils/utils.js';
 import { removeMissingBlocks } from '../utils/blockUtils.js';
+import { showCustomAlert, instructions } from "../utils/alerts.js";
 
 var nameBlockInWS = {};
 var nameCustomDigitalInWS = [];
@@ -73,6 +74,61 @@ export function addBlockDeleteChangeListener(ws) {
 
       runCode();
     }
+
+      if (e.type === Blockly.Events.TOOLBOX_ITEM_SELECT) {
+        const selectedCategoryName = e.newItem; // The name of the selected category
+        console.log('Selected toolbox category:', e.newItem);
+    
+
+        if (selectedCategoryName === 'USER TASKS') {
+  
+          showCustomAlert(
+            instructions
+          );
+
+// Get the Blockly workspace
+//const workspace = Blockly.getMainWorkspace();
+
+// Get the toolbox associated with the workspace
+const toolbox = ws.getToolbox();
+
+
+const toolboxItems = Array.from(toolbox.getToolboxItems());
+
+console.log(toolboxItems);
+const categoryName = 'USER TASKS';  // Replace with the category name you want to click on
+
+// Find the toolbox item in the toolbox items array
+const toolboxItem = toolboxItems.find(item => item.getClickTarget().textContent.trim() === categoryName);
+
+if (toolboxItem) {
+  // Get the DOM element associated with this toolbox item (the target element for clicks)
+  const clickTarget = toolboxItem.getClickTarget();
+
+  // Ensure the target exists before triggering a click event
+  if (clickTarget) {
+    // Manually set the selection to simulate user interaction
+    toolbox.setSelectedItem(toolboxItem);
+
+    // Trigger a click event programmatically (for UI feedback)
+    clickTarget.click();
+
+  } else {
+    console.log('No click target found for the toolbox item.');
+  }
+} else {
+  console.log('Toolbox item not found.');
+}
+
+
+            
+        }
+      }
+    
+    
+  
+  
+  
   });
 }
 

@@ -155,8 +155,6 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
                 scaleSpeed: 1.2,
                 pinch: true}
       });
-
-
       
       myLayout.on('componentCreated', function (component) {
         const container = component.container;
@@ -168,7 +166,6 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
             logBlocklyEvent(container);
 
         });
-
     });
     
     
@@ -182,6 +179,26 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
       Blockly.Xml.domToWorkspace(Blockly.Xml.textToDom(xmlText), ws);
 
       addBlockDeleteChangeListener(ws);
+
+      //Sostituite con questa sotto
+      //addChangeListener(ws);
+      //addUiEventListener(ws);
+
+
+// Event listener for maximized or minimized state change
+/* serve?
+myLayout.on('stateChanged', function() {
+  var isMaximized = myLayout.root.getItemsByType('component').some(function(component) {
+      return component.isMaximised;
+  });
+
+  if (isMaximized) {
+      console.log('Component maximized.');
+  } else {
+      console.log('Component minimized or restored.');
+  }
+});
+*/
     
       ws.addChangeListener((event) => {
 
@@ -192,7 +209,9 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
 
         //console.log('hasChanged');
 
+        // TODO aggiornare con i relativi sourcecode ed eventi corrispondenti
         var code = GENERATORS.JSON.generator.workspaceToCode(ws);
+        //var reportText =   VIEWS.displayReport(VIEWS.displayJSON(ws)); 
         var reportText =   COMPONENTS.REPORT.view(VIEWS.displayJSON(ws)); 
 
         // Trigger an event to update the code output
@@ -266,7 +285,55 @@ myLayout.registerComponent( 'Goal', function( container, componentState ){
   container.getElement().html(  componentState.label  );
 
   document.addEventListener('blocklyCodeGeneratedISTAR', (event) => {
- 
+
+  //TODO CANCELLARE: sostituito istarstatement con event.detail che deve contenere il json in formato iStar
+  /*
+      var istarstatement = {
+        "actors": [
+            {
+                "id": "dddd",
+                "text": "actor",
+                "type": "istar.Actor",
+                "x": 15,
+                "y": 10,
+                "customProperties": {
+                    "description": ""
+                },
+                "nodes": [
+                    {
+                        "id": "99999999",
+                        "text": "activity",
+                        "type": "istar.Task",
+                        "x": 80,
+                        "y": 140,
+                        "customProperties": {
+                            "Description": ""
+                        }
+                    }
+                ]
+            }
+        ],
+        "dependencies": [],
+        "orphans": [],
+        "links": [],
+        "display": {},
+        "tool": "pistar.2.1.0",
+        "istar": "2.0",
+        "saveDate": "Fri, 03 May 2024 21:16:31 GMT",
+        "diagram": {
+            "width": 600,
+            "height": 300,
+            "customProperties": {
+                "Description": ""
+            }
+        }
+    }
+
+    COMPONENTS.ISTAR.view(istarstatement)
+
+    */
+
+    //AGGIUNTO:
     const istarDiv = document.getElementById('codeOutputiStar');
     if (istarDiv) {
         COMPONENTS.ISTAR.view(VIEWS.displayISTAR(event.detail)); 
@@ -325,8 +392,6 @@ myLayout.on('stateChanged', function() {
 
 
 });
-
-
 
 
 

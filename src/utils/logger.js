@@ -70,6 +70,9 @@ const rateLimitState = {
 };
 
 export async function logBlocklyEvent(event) {
+
+    return; 
+    
     if (!event) {
         console.error('No event data provided.');
         return;
