@@ -29,16 +29,16 @@ export function closeCustomAlert() {
 export const instructions = `TASK 1
 
 Leggi la descrizione del processo e crea il modello. \n 
-Costruisci il modello partendo dagli elementi evidenziati, che sono obbligatori. Puoi aggiungere elementi anche sulla base di conoscenze pregresse. 
+Costruisci il modello partendo dagli elementi evidenziati in grassetto, che sono obbligatori. Puoi aggiungere elementi anche sulla base di conoscenze pregresse. 
 Esporta il diagramma di struttura in formato immagine e l’area di lavoro (workspace).
 
 Tempo massimo: 15 minuti \n
 
 L’<strong>agricoltore</strong> ha l’obiettivo di modernizzare la coltivazione in serra per ottimizzare le pratiche agricole e migliorare la sostenibilità. L’integrazione di strumenti digitali consente di incrementare la produttività, ridurre l’uso di input come acqua e fertilizzanti e aumentare il benessere degli agricoltori grazie all’automazione, che consente di risparmiare tempo. 
 
-Il nuovo processo prevede l’introduzione un sistema basato su sensori installati nella serra per rilevare temperatura, CO2, umidità del suolo, pH e luce. I sensori sono collegati tramite un sistema di comunicazione basato su LoRa Network, che consente la trasmissione dei dati alla piattaforma AgroSense ogni ora. 
+Il nuovo processo prevede l’introduzione un sistema basato su <strong>sensori</strong> installati nella serra per rilevare temperatura, CO2, umidità del suolo, pH e luce. I sensori sono collegati tramite un sistema di comunicazione basato su LoRa Network, che consente la trasmissione dei dati alla piattaforma AgroSense ogni ora. 
 
-L’agricoltore può accedere per monitorare le condizioni ambientali nella propria serra collegandosi alla piattaforma Agrosense sia da dispositivi mobili che da computer.  Ad esempio, se il sistema rileva una diminuzione della temperatura, l'agricoltore può intervenire immediatamente per accendendo delle lampade, prevenendo così lo stress delle piante e potenziali danni al raccolto
+L’agricoltore può accedere per <strong>monitorare le condizioni ambientali</strong> nella propria <strong>serra</strong> collegandosi alla piattaforma Agrosense sia da dispositivi mobili che da computer.  Ad esempio, se il sistema rileva una diminuzione della temperatura, l'agricoltore può intervenire immediatamente per accendendo delle lampade, prevenendo così lo stress delle piante e potenziali danni al raccolto
 
 I consulenti tecnici, che lavorano a stretto contatto con gli agricoltori, possono accedere ai dati attraverso la stessa piattaforma e offrire raccomandazioni personalizzate basate sulle condizioni rilevate.
 
