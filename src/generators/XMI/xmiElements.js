@@ -10,7 +10,8 @@ export function createXMIElement(type, name, attributes = [], operations = [], s
         return ""; // Se il nome dell'elemento è vuoto, ritorna una stringa vuota
     }
     formattedName = formattedName.replace(/ /g, "_");
-    let element_code = `\t\t\t<packagedElement xmi:id="${element_id}" name="${formattedName}" xmi:type="uml:${type}">\n`;
+    //CM-22/4/25: ripristinato tolowercase per evitare la duplicazione delle classi uml quando si usano le maiuscole
+    let element_code = `\t\t\t<packagedElement xmi:id="${element_id}" name="${formattedName.toLowerCase()}" xmi:type="uml:${type}">\n`;
 
     // Aggiungi attributi
     attributes.forEach(attribute => {
