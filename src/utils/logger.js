@@ -40,6 +40,7 @@ function sendLogToServer(logData) {
 
 // Event listener function for Blockly events
 export function logBlocklyEvent(event) {
+    /*
     const logData = {
         type: event.type,           // Type of event (e.g., create, delete, change)
         blockId: event.blockId,     // ID of the block affected by the event
@@ -49,6 +50,29 @@ export function logBlocklyEvent(event) {
         fieldName: null,       // To capture field name if applicable
         newValue: null,         // To capture new value if applicable
 
+    };
+    */
+    const logData = {
+        type: event.type || 'UNKNOWN',
+        blockId: event.blockId || 'UNKNOWN',
+        element: event.element || 'UNKNOWN',
+        targetType: event.targetType || 'UNKNOWN',
+        blockType: event.blockType || 'UNKNOWN',
+        fieldName: event.fieldName || 'UNKNOWN',
+        newValue: event.newValue || 'UNKNOWN',
+        newItem: event.newItem || 'UNKNOWN',
+        oldItem: event.oldItem || 'UNKNOWN',
+        group: event.group || false,
+        isBlank: event.isBlank || false,
+        isUiEvent: event.isUiEvent || false,
+        oldScale: event.oldScale || 'UNKNOWN',
+        recordUndo: event.recordUndo || false,
+        scale: event.scale || 'UNKNOWN',
+        viewLeft: event.viewLeft || 'UNKNOWN',
+        viewTop: event.viewTop || 'UNKNOWN',
+        workspaceId: event.workspaceId || 'UNKNOWN',
+        target: event.target?.id || 'UNKNOWN',
+        targetValue: event.target?.value || 'UNKNOWN',
     };
 
 
