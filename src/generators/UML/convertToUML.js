@@ -16,7 +16,7 @@ export function convertToUML(xmiString) {
   }
 
   let umlString = "@startuml\n";
-  
+  //umlString += "skinparam monochrome reverse\n";
   elements.forEach(element => {
     if (element.ownedElements != null) {
       element.ownedElements.forEach(e => {
