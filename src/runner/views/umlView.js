@@ -19,7 +19,7 @@ export function cleanXmi(elements) {
 
 function generateUmlUrl(umlString) {
   const encoded = plantumlEncoder.encode(umlString);
-  return `http://www.plantuml.com/plantuml/img/${encoded}`;
+  return `https://www.plantuml.com/plantuml/img/${encoded}`;
 }
 
 //responsabilità di aggiornare il DOM con l'immagine del diagramma UML
