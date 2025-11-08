@@ -30,6 +30,10 @@ const logger = winston.createLogger({
   transports: [new winston.transports.Console()]
 });
 
+app.get("/", (req, res) => {
+  res.send("✅ Server awake and ready!");
+});
+
 // Lists of clients
 let viewers = [];
 let senders = [];

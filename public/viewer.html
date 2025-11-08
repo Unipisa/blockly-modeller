@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Viewer</title>
+  <style>
+    #chat {
+      border: 1px solid #ccc;
+      height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h2>Messaggi ricevuti</h2>
+  <div id="chat"></div>
+
+  <script>
+    const socket = new WebSocket("ws://localhost:3000/viewer");
+    const chat = document.getElementById("chat");
+
+    socket.onmessage = (event) => {
+      const p = document.createElement("p");
+      p.textContent = event.data;
+      chat.appendChild(p);
+      chat.scrollTop = chat.scrollHeight;
+    };
+  </script>
+</body>
+</html>
