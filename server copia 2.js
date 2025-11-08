@@ -2,8 +2,6 @@ import express from "express";
 import cors from "cors";
 import { WebSocketServer } from "ws";
 import winston from "winston";
-import { Logtail } from "@logtail/node";
-import { LogtailTransport } from "@logtail/winston";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -27,11 +25,6 @@ function createLogger() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const filename = `blockly_session_${timestamp}.log`;
 
-    const logtail = new Logtail($598quhbUe8Tnu4E6u7SJLaF6, {
-    // Optional: use default endpoint unless Logtail gives you a custom one
-    endpoint: "https://s1582677.eu-nbg-2.betterstackdata.com", 
-  });
-
   return winston.createLogger({
     level: "info",
     format: winston.format.combine(
@@ -42,9 +35,7 @@ function createLogger() {
       // To console (so logs appear in Render dashboard)
       new winston.transports.Console(),
       // To file (works locally; not persistent on free Render)
-      new winston.transports.File({ filename }),
-            new LogtailTransport(logtail)
-
+      new winston.transports.File({ filename })
     ]
   });
 }

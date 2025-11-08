@@ -7,9 +7,11 @@
     "start": "node server.js"
   },
   "dependencies": {
+    "@logtail/node": "^0.1.17",
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "winston": "^3.18.3",
+    "winston-transport-logtail": "^1.0.2",
     "ws": "^8.18.3"
   },
   "engines": {
