@@ -2,46 +2,65 @@ import express from "express";
 import cors from "cors";
 import { WebSocketServer } from "ws";
 import winston from "winston";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Enable CORS so your GitHub Pages front-end can connect
-app.use(cors({ origin: "*" }));
+app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, "public"))); // serve sender.html etc.
 
-// Optional: serve static files if needed
-app.use(express.static("public"));
+// --- Simple HTTP ping route ---
+app.get("/", (req, res) => {
+  res.send("✅ Unified chat + logger server is awake and ready!");
+});
 
-// Start the HTTP server
+// --- Winston logger setup ---
+function createLogger() {
+  const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const filename = `blockly_session_${timestamp}.log`;
+
+  return winston.createLogger({
+    level: "info",
+    format: winston.format.combine(
+      winston.format.timestamp(),
+      winston.format.json()
+    ),
+    transports: [
+      // To console (so logs appear in Render dashboard)
+      new winston.transports.Console(),
+      // To file (works locally; not persistent on free Render)
+      new winston.transports.File({ filename })
+    ]
+  });
+}
+const logger = createLogger();
+
+// --- HTTP route to receive log events ---
+app.post("/log-event", (req, res) => {
+  const data = req.body;
+  logger.info("📘 Blockly event", data);
+  res.sendStatus(200);
+});
+
+// --- Start HTTP server ---
 const server = app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
 
-// --- Create WebSocket server ---
+// --- WebSocket setup ---
 const wss = new WebSocketServer({ server });
 
-// --- Optional Winston logger ---
-const logger = winston.createLogger({
-  level: "info",
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.printf(({ timestamp, message }) => `[${timestamp}] ${message}`)
-  ),
-  transports: [new winston.transports.Console()]
-});
-
-app.get("/", (req, res) => {
-  res.send("✅ Server awake and ready!");
-});
-
-// Lists of clients
 let viewers = [];
 let senders = [];
 
-// --- WebSocket connection handler ---
 wss.on("connection", (ws, req) => {
   const url = req.url;
-
   if (url === "/sender") {
     senders.push(ws);
     console.log("🟢 New sender connected");
@@ -50,14 +69,10 @@ wss.on("connection", (ws, req) => {
     console.log("👀 New viewer connected");
   }
 
-  ws.on("message", (message) => {
-    logger.info(`📩 Message: ${message}`);
-
-    // Send message to all viewers
+  ws.on("message", (msg) => {
+    logger.info("💬 Chat message", { msg: msg.toString() });
     viewers.forEach((client) => {
-      if (client.readyState === ws.OPEN) {
-        client.send(message.toString());
-      }
+      if (client.readyState === ws.OPEN) client.send(msg.toString());
     });
   });
 
