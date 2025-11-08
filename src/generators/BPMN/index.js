@@ -1,1 +1,0 @@
-export { convertToBPMN } from './convertToBPMN.js';
