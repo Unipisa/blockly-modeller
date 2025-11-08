@@ -1,44 +1,55 @@
 import express from "express";
+import cors from "cors";
 import { WebSocketServer } from "ws";
+import winston from "winston";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-import cors from "cors";
+// Enable CORS so your GitHub Pages front-end can connect
+app.use(cors({ origin: "*" }));
 
-app.use(cors({ origin: "*" })); // or use your exact domain for more security
-
-
-// Serviamo le pagine statiche
+// Optional: serve static files if needed
 app.use(express.static("public"));
 
-
+// Start the HTTP server
 const server = app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  console.log(`✅ Server running on port ${PORT}`);
 });
 
-const ws = new WebSocket("wss://blockly-modeller.onrender.com/sender");
-// or /viewer depending on the page
+// --- Create WebSocket server ---
+const wss = new WebSocketServer({ server });
 
-// Lista dei client
+// --- Optional Winston logger ---
+const logger = winston.createLogger({
+  level: "info",
+  format: winston.format.combine(
+    winston.format.timestamp(),
+    winston.format.printf(({ timestamp, message }) => `[${timestamp}] ${message}`)
+  ),
+  transports: [new winston.transports.Console()]
+});
+
+// Lists of clients
 let viewers = [];
 let senders = [];
 
+// --- WebSocket connection handler ---
 wss.on("connection", (ws, req) => {
-  const url = req.url; // esempio: /sender o /viewer
+  const url = req.url;
 
   if (url === "/sender") {
     senders.push(ws);
-    console.log("New sender connected");
+    console.log("🟢 New sender connected");
   } else {
     viewers.push(ws);
-    console.log("New viewer connected");
+    console.log("👀 New viewer connected");
   }
 
   ws.on("message", (message) => {
-    console.log(`Message received: ${message}`);
+    logger.info(`📩 Message: ${message}`);
 
-    // Inoltra il messaggio a tutti i viewer
+    // Send message to all viewers
     viewers.forEach((client) => {
       if (client.readyState === ws.OPEN) {
         client.send(message.toString());
@@ -47,7 +58,7 @@ wss.on("connection", (ws, req) => {
   });
 
   ws.on("close", () => {
-    viewers = viewers.filter(c => c !== ws);
-    senders = senders.filter(c => c !== ws);
+    viewers = viewers.filter((c) => c !== ws);
+    senders = senders.filter((c) => c !== ws);
   });
 });

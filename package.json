@@ -7,10 +7,10 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.19.0",
-    "ws": "^8.15.0",
     "cors": "^2.8.5",
-    "winston": "^3.15.0"
+    "express": "^4.21.2",
+    "winston": "^3.18.3",
+    "ws": "^8.18.3"
   },
   "engines": {
     "node": ">=18.0.0"
