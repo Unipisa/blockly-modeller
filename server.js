@@ -1,52 +1,53 @@
-const express = require('express');
-const cors = require('cors');  // Import CORS
-const winston = require('winston');
+import express from "express";
+import { WebSocketServer } from "ws";
+
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Enable CORS for all routes
-app.use(cors());
+import cors from "cors";
 
-app.use(express.json());
+app.use(cors({ origin: "*" })); // or use your exact domain for more security
 
-// Function to generate a timestamp string (e.g., 2024-10-10_14-30-45)
-function generateTimestamp() {
-    const now = new Date();
-    return now.toISOString().replace(/T/, '_').replace(/:/g, '-').replace(/\..+/, '');
-}
 
-// Create a new session log file with a timestamp suffix
-function createLoggerWithTimestamp() {
-    const timestamp = generateTimestamp();  // Generate the timestamp
-    const filename = `blockly_session_${timestamp}.log`;  // Create filename with timestamp
+// Serviamo le pagine statiche
+app.use(express.static("public"));
 
-    return winston.createLogger({
-        level: 'info',
-        format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.json()  // Log as JSON for structured logging
-        ),
-        transports: [
-            new winston.transports.File({ filename })  // Use the dynamic filename
-        ]
-    });
-}
 
-// Initialize logger for the current session
-let logger = createLoggerWithTimestamp();
-
-// Endpoint to receive log events
-app.post('/log-event', (req, res) => {
-    // Get the log data sent from the frontend
-    const logData = req.body;
-
-    // Log the entire event data in a structured format
-    logger.info('Received Blockly event', logData);
-
-    res.sendStatus(200);  // Send a success response
+const server = app.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
 });
 
-// Start the server
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
-    // Every time the server starts, a new session log file is created
+const ws = new WebSocket("wss://blockly-modeller.onrender.com/sender");
+// or /viewer depending on the page
+
+// Lista dei client
+let viewers = [];
+let senders = [];
+
+wss.on("connection", (ws, req) => {
+  const url = req.url; // esempio: /sender o /viewer
+
+  if (url === "/sender") {
+    senders.push(ws);
+    console.log("New sender connected");
+  } else {
+    viewers.push(ws);
+    console.log("New viewer connected");
+  }
+
+  ws.on("message", (message) => {
+    console.log(`Message received: ${message}`);
+
+    // Inoltra il messaggio a tutti i viewer
+    viewers.forEach((client) => {
+      if (client.readyState === ws.OPEN) {
+        client.send(message.toString());
+      }
+    });
+  });
+
+  ws.on("close", () => {
+    viewers = viewers.filter(c => c !== ws);
+    senders = senders.filter(c => c !== ws);
+  });
 });
