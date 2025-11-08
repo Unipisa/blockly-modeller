@@ -5,6 +5,7 @@ import * as XMI from "./XMI"
 import * as REPORT from "./REPORT"
 import * as BPMN from "./BPMN"
 import * as ISTAR from "./ISTAR"
+import * as CHAT from "./CHAT"
 
 export const COMPONENTS = {
     BLOCKLY,
@@ -13,5 +14,6 @@ export const COMPONENTS = {
     REPORT,
     XMI,
     BPMN,
-    ISTAR
+    ISTAR,
+    CHAT
 }

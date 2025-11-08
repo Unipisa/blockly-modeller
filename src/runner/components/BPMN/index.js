@@ -119,6 +119,7 @@ export async function view(json) {
 
 export function addButtonDownload(id) { 
   try {
+
     var targetDiv = document.getElementById(id);
 
     if (targetDiv) {

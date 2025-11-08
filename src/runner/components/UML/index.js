@@ -24,6 +24,7 @@ export function view(xmiWS) {
 // Funzione per aggiungere i pulsanti di download
 export function addButtonDownload(id) {
   try {
+
     var targetDiv = document.getElementById(id);
 
     if (targetDiv) {

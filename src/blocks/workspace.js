@@ -23,6 +23,8 @@ export const setupBlocklyWorkspace = (blocklyDiv) => {
 
   var outputUML = "<div id='codeOutputUML' class='outputBox'></div>";
 
+  var outputOZ = '<div id="codeOutputCHAT" class="outputBox"><div id="chat" style="overflow-y:auto;height:100%;display:flex;flex-direction:column"></div></div>';
+
   var outputBPMN = "<div id='codeOutputBPMN' class='outputBox style='overflow:auto;'><div id='processModel'></div></div>";
 
   var outputiStar = '<div id="codeOutputiStar" class="outputBox"><div id="menu-plugin" class="menu-body hidden"><div id="appToolbar"></div> <!-- this div is DEPRECATED. Instead, add elements directly to #menu-plugin --></div><div id="tool"><div id="workspace"><div id="sidepanel"></div><div id="out"><div class="cell-selection" style="display: none;"></div><div id="resize-handle" style="display: none;"></div><div id="diagram" style=""></div></div></div></div></div>';
@@ -76,6 +78,11 @@ labels: {
 
       },{
               type: 'component',
+              componentName: 'Hint',
+              componentState: { label: outputOZ },
+              isClosable: false
+          },/*,{
+              type: 'component',
               componentName: 'Activity',
               componentState: { label: outputBPMN },
               isClosable: false
@@ -89,7 +96,7 @@ labels: {
               componentName: 'Report',
               componentState: { label: outputReport },
               isClosable: false
-          }]
+          }*/]
       }]
   }]
 };
@@ -245,6 +252,21 @@ myLayout.registerComponent( 'Structure', function( container, componentState ){
 
 });
 
+myLayout.registerComponent( 'Hint', function( container, componentState ){
+
+  container.getElement().html(componentState.label);
+
+  document.addEventListener('blocklyCodeGeneratedOZ', (event) => {
+    console.log('Dettagli evento.detail OZ:', event.detail);
+    const ozDiv = document.getElementById("chat");
+    if (ozDiv) {
+      COMPONENTS.OZ.view(VIEWS.displayChat(event.detail));
+    }
+  
+  });
+
+});
+
 myLayout.registerComponent( 'Activity', function( container, componentState ){
 
   container.getElement().html(componentState.label);
@@ -301,6 +323,9 @@ myLayout.on('componentCreated', function(component, ws) {
 
   if (component.config.componentName === 'Structure') {
     COMPONENTS.UML.addButtonDownload('codeOutputUML')
+  }
+  if (component.config.componentName === 'Hint') {
+    COMPONENTS.CHAT.listenChat()
   }
   if (component.config.componentName === 'Activity') {
     COMPONENTS.BPMN.addButtonDownload('codeOutputBPMN')
