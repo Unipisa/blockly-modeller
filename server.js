@@ -27,7 +27,7 @@ function createLogger() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const filename = `blockly_session_${timestamp}.log`;
 
-    const logtail = new Logtail($598quhbUe8Tnu4E6u7SJLaF6, {
+    const logtail = new Logtail($process.env.LOGTAIL_SOURCE_TOKEN, {
     // Optional: use default endpoint unless Logtail gives you a custom one
     endpoint: "https://s1582677.eu-nbg-2.betterstackdata.com", 
   });
