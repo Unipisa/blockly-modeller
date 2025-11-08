@@ -29,7 +29,7 @@ function createLogger() {
 
     const logtail = new Logtail($process.env.LOGTAIL_SOURCE_TOKEN, {
     // Optional: use default endpoint unless Logtail gives you a custom one
-    endpoint: "https://s1582677.eu-nbg-2.betterstackdata.com", 
+    endpoint: "https://s1582689.eu-nbg-2.betterstackdata.com", 
   });
 
   return winston.createLogger({
