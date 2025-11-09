@@ -6,7 +6,6 @@ import { Logtail } from "@logtail/node";
 import { LogtailTransport } from "@logtail/winston";
 import path from "path";
 import { fileURLToPath } from "url";
-import axios from "axios";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -93,34 +92,21 @@ wss.on("connection", (ws, req) => {
 });
 
 
-// --- Endpoint per l’AI ---
+// API groq 
+
 app.post("/ask-ai", async (req, res) => {
   const userMessage = req.body.message;
-  console.log("Ricevuto messaggio:", userMessage);
+  const response = await axios.post(
+    "https://api.groq.com/openai/v1/chat/completions",
+    {
+      model: "mixtral-8x7b-32768",
+      messages: [{ role: "user", content: userMessage }]
+    },
+    {
+      headers: { Authorization: `Bearer ${process.env.GROQ_API_KEY}` }
+    }
+  );
 
-  try {
-    const response = await axios.post(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        model: "mixtral-8x7b-32768",
-        messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: userMessage }
-        ]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    const answer = response.data.choices[0].message.content;
-    res.json({ content: answer });
-  } catch (error) {
-    console.error("❌ Errore Groq API:", error.message);
-    res.status(500).json({ error: "Errore nel contattare l’AI" });
-  }
+  res.json(response.data.choices[0].message);
 });
 
