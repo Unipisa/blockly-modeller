@@ -119,8 +119,10 @@ app.post("/ask-ai", async (req, res) => {
     const answer = response.data.choices[0].message.content;
     res.json({ content: answer });
   } catch (error) {
-    console.error("❌ Errore Groq API:", error.message);
-    res.status(500).json({ error: "Errore nel contattare l’AI" });
+    console.error("❌ Errore Groq API:", error.response?.data || error.message);
+    res.status(500).json({ error: "Errore Groq API", details: error.response?.data });
   }
 });
+
+app.listen(PORT, () => console.log(`🚀 Server attivo su porta ${PORT}`));
 
