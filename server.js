@@ -12,7 +12,9 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+// ✅ Dynamic port: Render provides process.env.PORT automatically
+const PORT = process.env.PORT || 8080;
 
 app.use(cors());
 app.use(express.json());
@@ -20,7 +22,7 @@ app.use(express.static(path.join(__dirname, "public"))); // serve sender.html et
 
 // --- Simple HTTP ping route ---
 app.get("/", (req, res) => {
-  res.send("✅ Unified chat + logger server is awake and ready!");
+  res.send("✅ Unified chat + logger + AI server is awake and ready!");
 });
 
 // --- Winston logger setup ---
@@ -28,9 +30,9 @@ function createLogger() {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const filename = `blockly_session_${timestamp}.log`;
 
-    const logtail = new Logtail(process.env.LOGTAIL_SOURCE_TOKEN, {
-    // Optional: use default endpoint unless Logtail gives you a custom one
-    endpoint: "https://s1582689.eu-nbg-2.betterstackdata.com", 
+  const logtail = new Logtail(process.env.LOGTAIL_SOURCE_TOKEN, {
+    // Default endpoint unless BetterStack gives you a custom one
+    endpoint: "https://s1582689.eu-nbg-2.betterstackdata.com",
   });
 
   return winston.createLogger({
@@ -40,13 +42,10 @@ function createLogger() {
       winston.format.json()
     ),
     transports: [
-      // To console (so logs appear in Render dashboard)
-      new winston.transports.Console(),
-      // To file (works locally; not persistent on free Render)
-      new winston.transports.File({ filename }),
-            new LogtailTransport(logtail)
-
-    ]
+      new winston.transports.Console(), // visible in Render logs
+      new winston.transports.File({ filename }), // local .log file
+      new LogtailTransport(logtail), // cloud logging
+    ],
   });
 }
 const logger = createLogger();
@@ -58,12 +57,46 @@ app.post("/log-event", (req, res) => {
   res.sendStatus(200);
 });
 
-// --- Start HTTP server ---
+// --- Endpoint per l’AI ---
+app.post("/ask-ai", async (req, res) => {
+  const userMessage = req.body.message;
+  logger.info("🧠 Received message", { userMessage });
+
+  try {
+    const response = await axios.post(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        model: "mixtral-8x7b-32768",
+        messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          { role: "user", content: userMessage },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const answer = response.data.choices[0].message.content;
+    logger.info("✅ AI response", { answer });
+    res.json({ content: answer });
+  } catch (error) {
+    logger.error("❌ Errore Groq API", error.response?.data || error.message);
+    res
+      .status(500)
+      .json({ error: "Errore Groq API", details: error.response?.data });
+  }
+});
+
+// --- Start server only once ---
 const server = app.listen(PORT, () => {
   console.log(`✅ Server running on port ${PORT}`);
 });
 
-// --- WebSocket setup ---
+// --- WebSocket setup (attached to the same server) ---
 const wss = new WebSocketServer({ server });
 
 let viewers = [];
@@ -91,38 +124,3 @@ wss.on("connection", (ws, req) => {
     senders = senders.filter((c) => c !== ws);
   });
 });
-
-
-// --- Endpoint per l’AI ---
-app.post("/ask-ai", async (req, res) => {
-  const userMessage = req.body.message;
-  console.log("Ricevuto messaggio:", userMessage);
-
-  try {
-    const response = await axios.post(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        model: "mixtral-8x7b-32768",
-        messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: userMessage }
-        ]
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-          "Content-Type": "application/json"
-        }
-      }
-    );
-
-    const answer = response.data.choices[0].message.content;
-    res.json({ content: answer });
-  } catch (error) {
-    console.error("❌ Errore Groq API:", error.response?.data || error.message);
-    res.status(500).json({ error: "Errore Groq API", details: error.response?.data });
-  }
-});
-
-app.listen(PORT, () => console.log(`🚀 Server attivo su porta ${PORT}`));
-
