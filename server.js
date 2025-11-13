@@ -72,7 +72,7 @@ app.post("/ask-ai", async (req, res) => {
     });*/
     //const result = await model.generateContent(userMessage);
     const result = await genAIai.models.generateContent({
-    model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
+      model: "gemini-1.0-pro",  
     contents: userMessage,
   });
   console.log(response.text);
