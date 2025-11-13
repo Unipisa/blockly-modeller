@@ -73,7 +73,8 @@ app.post("/ask-ai", async (req, res) => {
     //const result = await model.generateContent(userMessage);
     const result = await genAIai.models.generateContent({
     model: process.env.GEMINI_MODEL,
-    contents: userMessage,
+    //contents: userMessage,
+    contents: "describe AI in 3 words"
   });
   console.log(result.text);
     const responseText = result.text();
