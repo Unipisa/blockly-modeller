@@ -65,7 +65,7 @@ app.post("/ask-ai", async (req, res) => {
   try {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({
-      model: GEMINI_MODEL  || "gemini-1.5-flash",
+      model: process.env.GEMINI_MODEL  || "gemini-1.5-flash-001",
     });
     const result = await model.generateContent(userMessage);
     const responseText = result.response.text();
