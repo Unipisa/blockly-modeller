@@ -79,7 +79,7 @@ app.post("/ask-ai", async (req, res) => {
   console.log(result.text);
     const responseText = result.text;
 
-    res.json({ reply: responseText });
+    res.json({ content: responseText });
   } catch (error) {
     console.error("Gemini API error:", error);
     res.status(500).json({ error: "Gemini error" });
