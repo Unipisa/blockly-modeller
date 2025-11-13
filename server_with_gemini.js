@@ -6,7 +6,8 @@ import { Logtail } from "@logtail/node";
 import { LogtailTransport } from "@logtail/winston";
 import path from "path";
 import { fileURLToPath } from "url";
-import axios from "axios";
+//import axios from "axios";
+import { GoogleGenAI } from "@google/genai";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -57,37 +58,31 @@ app.post("/log-event", (req, res) => {
   res.sendStatus(200);
 });
 
-// --- Endpoint per l’AI ---
+// --- Endpoint per l’AI GOOGLE ---
 app.post("/ask-ai", async (req, res) => {
   const userMessage = req.body.message;
-  logger.info("🧠 Received message", { userMessage });
 
   try {
-    const response = await axios.post(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        model: process.env.LLM_MODEL || "llama-3.3-70b-versatile",
-        messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: userMessage },
-        ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const genAIai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY // ✅ Correct: Pass an object with apiKey property
+    });
+    //const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    /*const model = genAI.getGenerativeModel({
+      model: process.env.GEMINI_MODEL  || "gemini-1.5-flash",
+    });*/
+    //const result = await model.generateContent(userMessage);
+    const result = await genAIai.models.generateContent({
+    model: process.env.GEMINI_MODEL,
+    //contents: userMessage,
+    contents: "describe AI in 3 words"
+  });
+  console.log(result.text);
+    const responseText = result.text;
 
-    const answer = response.data.choices[0].message.content;
-    logger.info("✅ AI response", { answer });
-    res.json({ content: answer });
+    res.json({ content: responseText });
   } catch (error) {
-    logger.error("❌ Errore Groq API", error.response?.data || error.message);
-    res
-      .status(500)
-      .json({ error: "Errore Groq API", details: error.response?.data });
+    console.error("Gemini API error:", error);
+    res.status(500).json({ error: "Gemini error" });
   }
 });
 
