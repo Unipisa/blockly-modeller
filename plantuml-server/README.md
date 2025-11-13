@@ -1,2 +1,0 @@
-# PlantUML Server (Render Deployment)
-
