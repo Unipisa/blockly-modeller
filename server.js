@@ -76,7 +76,7 @@ app.post("/ask-ai", async (req, res) => {
     contents: userMessage,
   });
   console.log(response.text);
-    const responseText = result.response.text();
+    const responseText = result.text();
 
     res.json({ reply: responseText });
   } catch (error) {
