@@ -7,7 +7,7 @@ import { LogtailTransport } from "@logtail/winston";
 import path from "path";
 import { fileURLToPath } from "url";
 //import axios from "axios";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,6 +16,8 @@ const app = express();
 
 // ✅ Dynamic port: Render provides process.env.PORT automatically
 const PORT = process.env.PORT || 8080;
+
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 app.use(cors());
 app.use(express.json());
@@ -63,11 +65,17 @@ app.post("/ask-ai", async (req, res) => {
   const userMessage = req.body.message;
 
   try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    const model = genAI.getGenerativeModel({
-      model: process.env.GEMINI_MODEL  || "gemini-1.5-flash-001",
-    });
-    const result = await model.generateContent(userMessage);
+    const genAIai = new GoogleGenAI({});
+    //const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    /*const model = genAI.getGenerativeModel({
+      model: process.env.GEMINI_MODEL  || "gemini-1.5-flash",
+    });*/
+    //const result = await model.generateContent(userMessage);
+    const result = await genAIai.models.generateContent({
+    model: process.env.GEMINI_MODEL || "gemini-1.5-flash",
+    contents: userMessage,
+  });
+  console.log(response.text);
     const responseText = result.response.text();
 
     res.json({ reply: responseText });
