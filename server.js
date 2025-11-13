@@ -75,7 +75,7 @@ app.post("/ask-ai", async (req, res) => {
     model: process.env.GEMINI_MODEL,
     contents: userMessage,
   });
-  console.log(response.text);
+  console.log(result.text);
     const responseText = result.text();
 
     res.json({ reply: responseText });
