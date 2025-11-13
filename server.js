@@ -17,8 +17,6 @@ const app = express();
 // ✅ Dynamic port: Render provides process.env.PORT automatically
 const PORT = process.env.PORT || 8080;
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public"))); // serve sender.html etc.
@@ -65,14 +63,16 @@ app.post("/ask-ai", async (req, res) => {
   const userMessage = req.body.message;
 
   try {
-    const genAIai = new GoogleGenAI({});
+    const genAIai = new GoogleGenAI({
+      apiKey: process.env.GEMINI_API_KEY // ✅ Correct: Pass an object with apiKey property
+    });
     //const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     /*const model = genAI.getGenerativeModel({
       model: process.env.GEMINI_MODEL  || "gemini-1.5-flash",
     });*/
     //const result = await model.generateContent(userMessage);
     const result = await genAIai.models.generateContent({
-      model: "gemini-pro",  
+    model: process.env.GEMINI_MODEL,
     contents: userMessage,
   });
   console.log(response.text);
