@@ -77,7 +77,7 @@ app.post("/ask-ai", async (req, res) => {
     contents: "describe AI in 3 words"
   });
   console.log(result.text);
-    const responseText = result.text();
+    const responseText = result.text;
 
     res.json({ reply: responseText });
   } catch (error) {
