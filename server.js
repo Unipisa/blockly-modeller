@@ -65,7 +65,7 @@ app.post("/ask-ai", async (req, res) => {
   try {
 // --- Local Ollama AI endpoint via Caddy ---
 const response = await axios.post(
-  "http://127.0.0.1:8080/api/chat",
+  "http://79.12.206.45:8080/api/chat",
   {
     model: process.env.LLM_MODEL || "llama3.2",   // or any model you pulled
     messages: [
