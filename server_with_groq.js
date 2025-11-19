@@ -63,28 +63,24 @@ app.post("/ask-ai", async (req, res) => {
   logger.info("🧠 Received message", { userMessage });
 
   try {
-// --- Local Ollama AI endpoint via Caddy ---
-const response = await axios.post(
-  "http://127.0.0.1:8080/api/chat",
-  {
-    model: process.env.LLM_MODEL || "llama3.2",   // or any model you pulled
-    messages: [
-      { role: "system", content: "You are a helpful assistant." },
-      { role: "user", content: userMessage }
-    ],
-    stream: false
-  },
-  {
-    headers: {
-      "Content-Type": "application/json"
-      // ❗ No Authorization header — Caddy already handles Basic Auth
-    }
-  }
-);
+    const response = await axios.post(
+      "https://api.groq.com/openai/v1/chat/completions",
+      {
+        model: process.env.LLM_MODEL || "llama-3.3-70b-versatile",
+        messages: [
+          { role: "system", content: "You are a helpful assistant." },
+          { role: "user", content: userMessage },
+        ],
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-// Extract assistant response
-const answer = response.data.message.content;
-
+    const answer = response.data.choices[0].message.content;
     logger.info("✅ AI response", { answer });
     res.json({ content: answer });
   } catch (error) {
