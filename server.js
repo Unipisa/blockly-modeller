@@ -76,9 +76,9 @@ const response = await axios.post(
   },
   {
     headers: {
-      "Content-Type": "application/json"
-      // ❗ No Authorization header — Caddy already handles Basic Auth
-    }
+  "Content-Type": "application/json",
+  "Authorization": "Basic " + Buffer.from(`admin:${process.env.LLM_PASSWORD}`).toString("base64")
+}
   }
 );
 
@@ -88,10 +88,10 @@ const answer = response.data.message.content;
     logger.info("✅ AI response", { answer });
     res.json({ content: answer });
   } catch (error) {
-    logger.error("❌ Errore Groq API", error.response?.data || error.message);
+    logger.error("❌ Errore LLM API", error.response?.data || error.message);
     res
       .status(500)
-      .json({ error: "Errore Groq API", details: error.response?.data });
+      .json({ error: "Errore LLM API", details: error.response?.data });
   }
 });
 
