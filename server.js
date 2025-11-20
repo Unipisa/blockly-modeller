@@ -67,7 +67,7 @@ app.post("/ask-ai", async (req, res) => {
 const response = await axios.post(
   "http://79.12.206.45:8080/api/chat",
   {
-    model: process.env.LLM_MODEL || "llama3.2",   // or any model you pulled
+    model: process.env.LLM_MODEL || "llama3.2",
     messages: [
       { role: "system", content: "You are a helpful assistant." },
       { role: "user", content: userMessage }
@@ -76,11 +76,14 @@ const response = await axios.post(
   },
   {
     headers: {
-  "Content-Type": "application/json",
-  "Authorization": "Basic " + Buffer.from(`admin:${process.env.LLAMA_PASSWORD}`)
-}
+      "Content-Type": "application/json",
+      "Authorization":
+        "Basic " +
+        Buffer.from(`admin:${process.env.LLAMA_PASSWORD}`).toString("base64")
+    }
   }
 );
+
 
 // Extract assistant response
 const answer = response.data.message.content;
@@ -127,4 +130,16 @@ wss.on("connection", (ws, req) => {
     viewers = viewers.filter((c) => c !== ws);
     senders = senders.filter((c) => c !== ws);
   });
+});
+
+
+app.get("/test-proxy", async (req, res) => {
+  try {
+    const r = await axios.get("http://79.12.206.45:8080/api/version", {
+      auth: { username: "admin", password: process.env.LLAMA_PASSWORD }
+    });
+    res.json(r.data);
+  } catch (err) {
+    res.json({ error: err.toString() });
+  }
 });
