@@ -77,7 +77,7 @@ const response = await axios.post(
   {
     headers: {
   "Content-Type": "application/json",
-  "Authorization": "Basic " + Buffer.from(`admin:${process.env.LLM_PASSWORD}`).toString("base64")
+  "Authorization": "Basic " + Buffer.from(`admin:${process.env.LLAMA_PASSWORD}`)
 }
   }
 );
