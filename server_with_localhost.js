@@ -57,37 +57,68 @@ app.post("/log-event", (req, res) => {
   res.sendStatus(200);
 });
 
+
+
+app.get("/test-proxy", async (req, res) => {
+  try {
+    const r = await axios.get("http://79.12.206.45:8080/api/version", {
+      auth: { username: "admin", password: process.env.LLAMA_PASSWORD }
+    });
+    res.json(r.data);
+  } catch (err) {
+    res.json({ error: err.toString() });
+  }
+});
+
 // --- Endpoint per l’AI ---
 app.post("/ask-ai", async (req, res) => {
   const userMessage = req.body.message;
   logger.info("🧠 Received message", { userMessage });
 
   try {
-    const response = await axios.post(
-      "https://api.groq.com/openai/v1/chat/completions",
-      {
-        model: process.env.LLM_MODEL || "llama-3.3-70b-versatile",
-        messages: [
-          { role: "system", content: "You are a helpful assistant." },
-          { role: "user", content: userMessage },
-        ],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
+// --- Local Ollama AI endpoint via Caddy ---
+const response = await axios.post(
+  "http://79.12.206.45:8080/api/chat",
+  {
+    model: process.env.LLM_MODEL || "llama3.2",
+    messages: [
+      { role: "system", content: "You are a helpful assistant." },
+      { role: "user", content: userMessage }
+    ],
+    stream: false
+  },
+  {
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization":
+        "Basic " +
+        Buffer.from(`admin:${process.env.LLAMA_PASSWORD}`).toString("base64")
+    }
+  }
+);
 
-    const answer = response.data.choices[0].message.content;
+
+// --- Extract assistant response (robust across Ollama versions)
+let answer = null;
+
+if (response.data?.message?.content) {
+  answer = response.data.message.content;
+} else if (Array.isArray(response.data?.messages)) {
+  answer = response.data.messages.at(-1).content;
+} else if (response.data?.response) {
+  answer = response.data.response;
+} else {
+  answer = JSON.stringify(response.data, null, 2);
+}
+
+
     logger.info("✅ AI response", { answer });
     res.json({ content: answer });
   } catch (error) {
-    logger.error("❌ Errore Groq API", error.response?.data || error.message);
+    logger.error("❌ Errore LLM API", error.response?.data || error.message);
     res
       .status(500)
-      .json({ error: "Errore Groq API", details: error.response?.data });
+      .json({ error: "Errore LLM API", details: error.response?.data });
   }
 });
 
@@ -124,3 +155,6 @@ wss.on("connection", (ws, req) => {
     senders = senders.filter((c) => c !== ws);
   });
 });
+
+
+
