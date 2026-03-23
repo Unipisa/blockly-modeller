@@ -25,7 +25,7 @@ export function createUMLClass(element, excludedOperations = []) {
     export function createGeneralizations(e, generalizations) {
       let umlString = "";
       generalizations.forEach(element => {
-        umlString += `${e.name.replace(" ", '_')} <|-- ${element.name.replace(" ", '_')}\n`;
+        umlString += `${e.name.replaceAll(" ", '_')} <|-- ${element.name.replaceAll(" ", '_')}\n`;
       });
       return umlString;
     }
@@ -33,11 +33,10 @@ export function createUMLClass(element, excludedOperations = []) {
     export function createAssociations(e, associations) {
       let umlString = "";
       associations.forEach(association => {
-        let nameActor = association.end2.name.replace(" ", '_');
-        let namePadre = association.end1.name.replace(" ", '_');
-        umlString += `${nameActor} <-- ${namePadre} :${association.name.replace(" ", '_')}\n`;
+        let nameActor = association.end2.name.replaceAll(" ", '_');
+        let namePadre = association.end1.name.replaceAll(" ", '_');
+        umlString += `${nameActor} <-- ${namePadre} :${association.name.replaceAll(" ", '_')}\n`;
       });
-    
       return umlString;
     }
     
@@ -47,8 +46,8 @@ export function createUMLClass(element, excludedOperations = []) {
       let namePadre = "";
       
       aggregations.forEach(aggregation => {
-        nameActor = aggregation.end2.name.replace(" ", '_');
-        namePadre = aggregation.end1.name.replace(" ", '_');
+        nameActor = aggregation.end2.name.replaceAll(" ", '_');
+        namePadre = aggregation.end1.name.replaceAll(" ", '_');
         umlString += `${nameActor} o-- ${namePadre}\n`;
       });
     

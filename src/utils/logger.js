@@ -21,7 +21,8 @@ const logger = createLogger({
 export default logger;
 
 function sendLogToServer(logData) {
-    fetch('http://localhost:3000/log-event', {
+    //fetch('http://localhost:3000/log-event', {
+    fetch('https://blockly-modeller.onrender.com/log-event', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -73,11 +74,16 @@ export function logBlocklyEvent(event) {
         workspaceId: event.workspaceId || 'UNKNOWN',
         target: event.target?.id || 'UNKNOWN',
         targetValue: event.target?.value || 'UNKNOWN',
+        layoutcontainerHeight: event.layoutcontainerHeight || 'UNKNOWN',
+        layoutcontainerWidth: event.layoutcontainerWidth || 'UNKNOWN',
+        layoutcontainerIsHidden: event.layoutcontainerIsHidden || 'UNKNOWN',
+        layoutcontainerTitle: event.layoutcontainerTitle || 'UNKNOWN',
+
     };
 
 
     // Log event data to the console (for debugging) and send to the server
-    console.log('Logging Blockly event:', logData);
+    //console.log('Logging Blockly event:', logData);
 
     //logger.info('Logging message', logData);
     // Send the event log data to the server

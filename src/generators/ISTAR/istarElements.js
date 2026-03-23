@@ -15,7 +15,7 @@ export function parseJSONToIStar(jsonData) {
         ...jsonData.blocks[0].resources.filter(resource => (resource.type === "custom_digital" || resource.type === "custom_digital_component") && resource.name && resource.name.trim() !== "" && resource.name.trim() !== "...............")
     ];
     
-    const resources = jsonData.blocks[0].resources.filter(resource => (resource.type === "custom_resource" || resource.type === "custom_tool") && resource.name && resource.name.trim() !== "" && resource.name.trim() !== "...............");
+    const resources = jsonData.blocks[0].resources.filter(resource => (resource.type === "natural_resource" || resource.type === "custom_tool") && resource.name && resource.name.trim() !== "" && resource.name.trim() !== "...............");
     
     const arrayistaractors = [];
     const arrayistardependencies = [];
@@ -65,7 +65,7 @@ export function parseJSONToIStar(jsonData) {
                     //let targetcleaned = foundTargetEl(activity.target);
 
                     // Caso 3: Attore che targetta una risorsa
-                    if (activity.target.includes("(CUSTOM_RESOURCE)") || activity.target.includes("(CUSTOM_TOOL)")) {
+                    if (activity.target.includes("(NATURAL_RESOURCE)") || activity.target.includes("(CUSTOM_TOOL)")) {
                         // Caso 3: Attore che targetta una risorsa
                         if (resources.find(r => cleanName(r.name) === op_ass)) {
                             const istar_res = {

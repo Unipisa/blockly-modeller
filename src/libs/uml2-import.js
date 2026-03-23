@@ -452,7 +452,7 @@ reader.elements['uml:InterfaceRealization'] = function (node) {
   return json
 }
 
-reader.elements['uml:Association'] = function (node) {
+reader.elements['uml:Association'] = function (node) {  
   var json = reader.elements['uml:Relationship'](node)
   Object.assign(json, reader.elements['uml:Classifier'](node))
   json['_type'] = 'UMLAssociation'

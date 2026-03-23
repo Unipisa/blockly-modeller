@@ -3,7 +3,8 @@ import {icons} from'../icons.js';
 export const OPERATION_BLOCKS = [
   {
     "type": "custom_operation",
-    "message0": "%1 ACTIVITY: %2* %3 • Motivation %4 %5 • Using resource or interacting %6  with actor %7",
+    //"message0": "%1 ACTIVITY: %2* %3 • Motivation %4 %5 • Using resource or interacting %6  with actor %7",
+    "message0": "%1 ACTIVITY: %2* %3 • Using resource or interacting %4  with actor %5",
     "args0": [
       {
         "type": "field_image",
@@ -20,7 +21,7 @@ export const OPERATION_BLOCKS = [
       },
       {
         "type": "input_dummy"
-      },
+      },/*
       {
         "type": "field_input",
         "name": "MOTIVATION",
@@ -28,7 +29,7 @@ export const OPERATION_BLOCKS = [
       },
       {
         "type": "input_dummy"
-      },
+      },*/
       {
         "type": "input_dummy"
       },

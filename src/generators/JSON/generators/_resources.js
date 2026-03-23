@@ -1,12 +1,12 @@
 import {generator} from "..";
 
-export const custom_resource = function (block) {
+export const natural_resource = function (block) {
     if(block.getParent() !== null){
       var statements_operations = generator.statementToCode(block, "OPERATIONS");
       var statements_attributes = generator.statementToCode(block, "ATTRIBUTES");
       var statements_generalizations = generator.statementToCode(block, "GENERALIZATIONS");
       return {
-        type: "custom_resource",
+        type: "natural_resource",
         name: block.getFieldValue("NAME"),
         activities: statements_operations || [],
         attributes: statements_attributes || [],

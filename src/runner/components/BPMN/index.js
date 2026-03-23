@@ -24,7 +24,7 @@ export async function view(json) {
     const nameBlockInWS = getAllActorsBlocksinWs();
 
     if(nameBlockInWS.includes(id_withSpace)) {   
-      console.log("ID in nameBlockInWS.includes(id) :", id); 
+      //console.log("ID in nameBlockInWS.includes(id) :", id); 
       const targetContainer = document.getElementById("processModel");
       const targetDivBpmnContainer = document.createElement('div');
       targetDivBpmnContainer.id = 'processModel_'+id;

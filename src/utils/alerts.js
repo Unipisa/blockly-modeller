@@ -1,3 +1,5 @@
+import { logBlocklyEvent } from "./logger.js";
+
 // import { DOM_NODES } from "./domElements";
 
 // export function showCustomAlert(message) {
@@ -24,9 +26,31 @@ export function showCustomAlert(message) {
 
 export function closeCustomAlert() {
     Alert_div.alertBox.classList.add("hidden");
+    const closeAlertEvent = { type: "closeAlert" };
+    logBlocklyEvent( closeAlertEvent );
+    
 }
 
-export const instructions = `TASK 1
+
+export const instructions = `<div style="width:70%; margin:0 auto"><strong>TASK</strong>
+
+Take inspiration from the digital agriculture scenario described below and use your background knowledge to create a structure model that captures the relevant elements and relationships.
+
+<strong>Time to complete the task: 15–20 minutes</strong>
+
+<div style="border:1px solid #444; padding:12px; margin-top:12px; margin-bottom:12px;"> <em><strong>Digital agriculture scenario: drone technology for crop management</strong></em>
+
+The farmer aims to modernise crop management to improve sustainability and reduce pesticide use.
+
+A remote sensing system—based on drones equipped with imaging and sensor technologies—collects data across the fields to detect plant stress, pest risks, and other agronomic indicators. The collected data is transmitted to a digital platform, where it is processed and transformed into maps and alerts that support targeted interventions.
+
+Various stakeholders, including technical advisors and service providers, can access the platform to analyse field conditions and provide tailored recommendations. \n
+The system can be expanded with additional tools, actors, data sources, or operational steps depending on the farm’s needs.
+
+</div></div>
+`;
+
+export const instructions_previous_test = `TASK 1
 
 Leggi la descrizione del processo e crea il modello. \n 
 Costruisci il modello partendo dagli elementi evidenziati in grassetto, che sono obbligatori. Puoi aggiungere elementi anche sulla base di conoscenze pregresse. 
@@ -52,4 +76,3 @@ Tempo massimo: 5 minuti \n
 `;
 
 window.closeCustomAlert = closeCustomAlert;
-

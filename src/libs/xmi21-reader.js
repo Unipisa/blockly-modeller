@@ -361,6 +361,7 @@ function formatXMItoObjectJS (stringXMI) {
   return XMIData;
 }
 
+
 exports.enumerations = enumerations
 exports.elements = elements
 exports.postprocessors = postprocessors

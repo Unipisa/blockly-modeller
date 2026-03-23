@@ -12,7 +12,7 @@ export const toolbox = {
     
     {
       'kind': 'category',
-      'name': 'USER TASKS',
+      'name': 'USER TASK',
       'colour': "#a68c83",
       'imageName': icons.icon_guide,
       'contents': [
@@ -113,7 +113,7 @@ export const toolbox = {
           'contents': [
             {
               'kind': 'block',
-              'type': 'custom_resource',
+              'type': 'natural_resource',
             },
             /*{
               'kind': 'label',
@@ -198,7 +198,7 @@ export const toolbox = {
         },
       ],
     },
-    
+    /* CHIARA commented
     {
       'kind': 'category',
       'name': 'Attributes',
@@ -235,11 +235,12 @@ export const toolbox = {
           'type': 'id',
         },
         end CHIARA commented */
-      ],
-    },
+     /* ],
+    
+    },*/
     {
       'kind': 'category',
-      'name': 'Specialisations',
+      'name': 'Types',
       'colour': "#D5698E",
       "imageName": icons.icon_specialisations,
       'contents': [

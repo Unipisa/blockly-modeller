@@ -4,7 +4,7 @@ import {icons} from'../icons.js';
 export const SPECIALISATIONS_BLOCKS = [
   {
     "type": "custom_generalization",
-    "message0": "%1 Specialisation: %2*",
+    "message0": "%1 Type: %2*",
     "args0": [
       {
         "type": "field_image",

@@ -41,15 +41,15 @@ stroke: #ffffff;
 }
 
 #customTitle {
+  position: absolute;
+  bottom:50px;
   display: block;
   font-size: 16px;
   text-align: center;
   margin: 0;
-  width: 100%;
   background-color: #ffffff;
   padding:0.5em;
   border: 0;
-  height: 2%;
 }
 
 #codeTitle, #reportTitle {
@@ -275,11 +275,170 @@ color:#000
   border-radius: 8px; /* Arrotondare leggermente i bordi per uniformità */
 }
 
+.AIbox {
+ /**border:5px solid yellow;*/
+ overflow: scroll;
+}
+
+.AIbox h3 {
+ margin-bottom: 0.2em;
+}
+
+#userInputAskAIModel {
+width: 100%;
+}
+
+#askAIBtn {
+margin: 0 0.5em; 
+}
+
+#suggestionChat {
+  text-align: center;
+  margin: 5px 0;
+}
+/*
+#modelAIinstructions {
+  display: flex;
+  padding:5px 10px
+}
+*/
+
+#modelAIinstructions {
+    position: relative;
+    width: 80%;
+    font-family: -apple-system, BlinkMacSystemFont, "San Francisco",
+                 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+/* Campo di testo */
+#modelAIinstructions input {
+    width: 90%;
+    padding: 16px 50px 16px 44px;  /* spazio per il pulsante interno */
+    border: 1px solid #d2d2d7;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: border 0.2s ease;
+    background: transparent;
+}
+
+/* Focus stile Apple */
+#modelAIinstructions input:focus {
+    border-color: #e3db00;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(227, 208, 0, 0.2);
+}
+
+#modelAIinstructions input.stateFail {
+    border-color: rgb(227, 0, 132);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(163, 0, 227, 0.2);
+}
+
+#modelAIinstructions input.stateSuccess {
+    border-color: #00e3aa;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 227, 151, 0.2);
+}
+
+#modelAIinstructions:hover input {
+    background: #efede4;
+
+}
+
+#modelAIinstructions:hover {
+      background-color: #efede4 !important;
+}
+
+#icon_type {
+  position: absolute;
+  top: 25%;
+  left: 20px;
+  transform: translate(-50%);
+}
+
+#icon_instrSubmit {
+  position: absolute;
+  top: 25%;
+  left: 20px;
+  transform: translate(-50%);
+  color: #fff;
+}
+
+/* Pulsante interno */
+#instructionsBtn {
+    position: absolute;
+    right: -30px;
+    top: 37%;
+    transform: translateY(-35%);
+    padding: 8px 12px;
+    font-size: 15px;
+    color: #fff;
+    background-color: #333333;  
+    border: none;
+    border-radius: 24px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+#instructionsHelp {
+    font-size: small;
+    text-decoration: underline;
+    margin-left: 10px;
+}
+
+#instructionsHelp:hover {
+    cursor: pointer;
+}
+
+#AIdisclaimer {
+    position: fixed;
+    bottom: 0;
+    right:0;
+    width:50px
+}
+
+#AIdisclaimer.button-13 img {
+    margin: 0;
+}
+
+.slide-panel {
+  display: none;;
+  position: fixed;
+  bottom: 0;
+  right: 0; /* hidden off screen */
+  width: 300px;
+  background: #f7f7f7;
+  transition: right 0.3s ease;
+  padding: 20px;
+}
+
+.slide-panel.active {
+  display: block;
+} 
+
+
+/* Hover/click Apple style */
+#modelAIinstructions:hover {
+    background-color: #005bbf;
+}
+
+#instructionsBtn:active {
+    background-color: #00479b;
+}
+/* fine test */
+
+
 .outputBox {
   font-family: 'Gill sans';
-  color: #0f1111;
-  padding-left: 10px;
-  padding-top: 5px;   
+  color: #0f1111;  
+}
+
+#codeOutputCHAT > div, #interactCHAT > div {
+  padding: 5px 10px;
+}
+
+#modelAIinstructions  {
+  margin: 5px 10px;
 }
 
 
@@ -309,3 +468,17 @@ color:#000
   left: 0;
 }
 
+/* GD AI - icons */
+
+.lm_header .lm_tab.tab-diagram-reader i.lm_left, .lm_header .lm_tab.tab-hints i.lm_left, .lm_header .lm_tab.tab-instructions i.lm_left {
+  background-image: url('robot-solid-full.svg');
+  background-size: 20px 20px;
+  background-repeat: no-repeat;
+  background-position: center left;
+  padding-left: 18px; /* space for the icon */
+  left: 5px;
+}
+
+.tab-diagram-reader .lm_title, .tab-hints .lm_title, .tab-instructions .lm_title {
+  padding-left: 22px; /* space between icon and text */
+}

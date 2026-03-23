@@ -2,8 +2,9 @@ import {icons} from'../../icons.js';
 
 export const NATURAL_RESOURCES_BLOCKS = [
   {
-    "type": "custom_resource",
-    "message0": "%1 NATURAL RESOURCE: %2* %3 Activities: %4 %5 %6 %7 Advanced settings: %8 Attributes: %9 %10 %11 Specialisation: %12 %13 %14",
+    "type": "natural_resource",
+    //"message0": "%1 NATURAL RESOURCE: %2* %3 Activities: %4 %5 %6 %7 Advanced settings: %8 Attributes: %9 %10 %11 Specialisation: %12 %13 %14",
+    "message0": "%1 NATURAL RESOURCE: %2* %3 Activities: %4 %5 %6 %7 Types: %8 %9 %10",
     "args0": [
       {
         "type": "field_image",
@@ -38,9 +39,11 @@ export const NATURAL_RESOURCES_BLOCKS = [
         "check": "operation",
       },
       {
-        "type": "input_dummy",
-        "align": "CENTRE"
+        "type": "input_dummy"
       },
+      {
+        "type": "input_dummy"
+      },/*
       {
         "type": "input_dummy",
         "align": "CENTRE"
@@ -62,7 +65,7 @@ export const NATURAL_RESOURCES_BLOCKS = [
       },
       {
         "type": "input_dummy"
-      },
+      },*/
       {
         "type": "field_image",
         "src": icons.icon_specialisations,

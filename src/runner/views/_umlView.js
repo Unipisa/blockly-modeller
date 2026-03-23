@@ -5,15 +5,9 @@ import { DOM_NODES } from "../../utils/domElements";
 
 // funzione che scorre elementi e rimuove quelli con nome vuoto.
 export function cleanXmi(elements) {
-  return elements.filter(element => {
-    if (element.name && element.name.trim() !== '') {
-      if (element.ownedElements) {
-        element.ownedElements = cleanXmi(element.ownedElements);
-      }
-      return true;
-    }
-    return false;
-  });
+  
+    return true;
+  
 }
 
 

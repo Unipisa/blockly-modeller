@@ -3,7 +3,8 @@ import {icons} from'../../icons.js';
 export const DIGITAL_TOOLS_BLOCKS = [
   {
     "type": "custom_digital",
-    "message0": "%1 DIGITAL TOOL: %2* %3 Activities: %4 %5 %6 %7 Advanced settings: %8 Attributes: %9 %10 %11",
+    //"message0": "%1 DIGITAL TOOL: %2* %3 Activities: %4 %5 %6 %7 Advanced settings: %8 Attributes: %9 %10 %11",
+    "message0": "%1 DIGITAL TOOL: %2* %3 Activities: %4 %5 %6 %7",    
     "args0": [
       {
         "type": "field_image",
@@ -38,7 +39,7 @@ export const DIGITAL_TOOLS_BLOCKS = [
       {
         "type": "input_dummy",
         "align": "CENTRE"
-      },
+      },/*
       {
         "type": "input_dummy",
         "align": "CENTRE"
@@ -57,7 +58,7 @@ export const DIGITAL_TOOLS_BLOCKS = [
         "type": "input_statement",
         "name": "ATTRIBUTES",
         "check": "attribute",
-      },
+      },*/
     ],
     "previousStatement": "resource",
     "nextStatement": "resource",
@@ -68,7 +69,8 @@ export const DIGITAL_TOOLS_BLOCKS = [
     },
     {
       "type": "custom_digital_component",
-      "message0": "%1 DIGITAL COMPONENT: %2* %3 Activities: %4 %5 %6 %7 Advanced settings: %8 Attributes: %9 %10 %11 Aggregation: %12",
+      //"message0": "%1 DIGITAL COMPONENT: %2* %3 Activities: %4 %5 %6 %7 Advanced settings: %8 Attributes: %9 %10 %11 Aggregation: %12",
+      "message0": "%1 DIGITAL COMPONENT: %2* %3 Activities: %4 %5 %6 %7 is a part of: %8",
       "args0": [
         {
           "type": "field_image",
@@ -103,7 +105,7 @@ export const DIGITAL_TOOLS_BLOCKS = [
         {
           "type": "input_dummy",
           "align": "CENTRE"
-        },
+        }/*,
         {
           "type": "input_dummy",
           "align": "CENTRE"
@@ -122,7 +124,7 @@ export const DIGITAL_TOOLS_BLOCKS = [
           "type": "input_statement",
           "name": "ATTRIBUTES",
           "check": "attribute",
-        },
+        }*/,
         {
           "type": "input_dummy",
           "name": "AGGREGATION",

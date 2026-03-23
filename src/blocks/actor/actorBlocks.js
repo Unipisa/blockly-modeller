@@ -3,7 +3,8 @@ import {icons} from'../icons.js';
 export const ACTOR_BLOCKS = [
   {
   "type": "custom_actor",
-  "message0": " %1 ACTOR: %2* %3 What are the activities carried out by the actor? %4 %5 %6 Attributes: %7 %8 %9",
+  //"message0": " %1 ACTOR: %2* %3 What are the activities carried out by the actor? %4 %5 %6 Attributes: %7 %8 %9",
+  "message0": " %1 ACTOR: %2* %3 What are the activities carried out by the actor? %4 %5 %6",  
   "args0": [
     {
       "type": "field_image",
@@ -34,7 +35,7 @@ export const ACTOR_BLOCKS = [
       "type": "input_statement",
       "name": "OPERATIONS",
       "check": ["operation","parallel_gateway","exclusive_gateway","conditional_gateway"],
-    },
+    }/*,
     {
       "type": "input_dummy"
     },
@@ -49,12 +50,12 @@ export const ACTOR_BLOCKS = [
       "type": "input_statement",
       "name": "ATTRIBUTES",
       "check": "attribute",
-    }
+    }*/
   ],
   "previousStatement": "actor",
   "nextStatement": "actor",
   "colour": '#D87D2D',
-  "tooltip": "vvvvvvv",
+  //"tooltip": "vvvvvvv",
   "helpUrl": ""
     },
     {

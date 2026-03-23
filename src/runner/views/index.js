@@ -14,7 +14,7 @@ export const VIEWS = {
     displayUML,
     displayChat,
     //displayReport,
-    //displayBPMN,
-    //displayISTAR
+    displayBPMN,
+    displayISTAR
 
 }

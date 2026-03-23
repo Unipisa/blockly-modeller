@@ -11,8 +11,8 @@ export const ws = setupBlocklyWorkspace(DOM_NODES.blocklyDiv);
 export const runCode = () => {
   const objectWS = VIEWS.displayJSON(ws);
   //const { sanitizedXMI, xmiWS } = VIEWS.displayXMI(objectWS);
-  VIEWS.displayReport(objectWS);
-    VIEWS.displayChat();
+  //VIEWS.displayReport(objectWS);
+    //VIEWS.displayChat();
 
   //VIEWS.displayUML(xmiWS);
   //console.log(VIEWS.displayBPMN(objectWS));

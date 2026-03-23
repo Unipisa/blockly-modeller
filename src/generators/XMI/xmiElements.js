@@ -3,7 +3,8 @@ import { removeBlockType } from '../../utils/blockUtils.js';
 
 export function createXMIElement(type, name, attributes = [], operations = [], specialisations = [], aggregations = []) {
     const element_id = generateRandID(name);
-    var formattedName = removeBlockType(name).replace(/[^a-zA-Z0-9À-ž_ ]/g
+    /* C.M fix 11-17-25 added space to list - che ck if xmi export works fine */
+    var formattedName = removeBlockType(name).replace(/[^a-zA-Z0-9À-ž_\s]/g
 , ''); // Rimuove i caratteri non validi
 
     if (formattedName === "") {
@@ -16,7 +17,8 @@ export function createXMIElement(type, name, attributes = [], operations = [], s
     // Aggiungi attributi
     attributes.forEach(attribute => {
         const attribute_id = generateID(attribute.name);
-        const formattedAtt = removeBlockType(attribute.name).replace(/[^a-zA-Z0-9À-ž_]/g
+        /* C.M fix 11-17-25 added space to list - che ck if xmi export works fine */
+        const formattedAtt = removeBlockType(attribute.name).replace(/[^a-zA-Z0-9À-ž_\s]/g
 , '');
         if (formattedAtt.name !== "") {
             element_code += `\t\t\t\t<ownedAttribute xmi:id="${attribute_id}" name="${formattedAtt.toLowerCase()}" xmi:type="uml:Property"/>\n`;
@@ -26,7 +28,8 @@ export function createXMIElement(type, name, attributes = [], operations = [], s
     // Aggiungi operazioni
     operations.forEach(operation => {
         const operation_id = generateID(operation.name);
-        const formattedOperationName = removeBlockType(operation.name).replace(/[^a-zA-Z0-9À-ž_]/g
+        /* C.M fix 11-17-25 added space to list - che ck if xmi export works fine */
+        const formattedOperationName = removeBlockType(operation.name).replace(/[^a-zA-Z0-9À-ž_\s]/g
 , ''); // Rimuove i caratteri non validi dall'operazione
         if (formattedOperationName !== "") {
         element_code += `\t\t\t\t<ownedOperation xmi:id="${operation_id}" name="${formattedOperationName.toLowerCase()}" xmi:type="uml:Operation"/>\n`;
@@ -36,7 +39,10 @@ export function createXMIElement(type, name, attributes = [], operations = [], s
             const association_id = generateRandID();
             const member_end_1_id = generateRandID();
             const member_end_2_id = generateRandID();
-            const formattedTarget = removeBlockType(operation.target).replace(/[^a-zA-Z0-9À-ž_]/g
+            //const formattedTarget = removeBlockType(operation.target).replace(/[^a-zA-Z0-9À-ž_]/g
+            /* C.M fix 11-17-25 added space to list - che ck if xmi export works fine */
+            const formattedTarget = removeBlockType(operation.target).replace(/[^a-zA-Z0-9À-ž_\s]/g
+
 , ''); // Rimuove i caratteri non validi dal target
 
             element_code += `\t\t\t\t<ownedMember name="${formattedOperationName.toLowerCase()}" xmi:id="${association_id}" xmi:type="uml:Association">\n`;
@@ -58,7 +64,8 @@ export function createXMIElement(type, name, attributes = [], operations = [], s
             const aggregation_id = generateRandID();
             const member_end_1_id = generateRandID();
             const member_end_2_id = generateRandID();
-            const formattedAgg = removeBlockType(agg).replace(/[^a-zA-Z0-9À-ž_]/g
+            /* C.M fix 11-17-25 added space to list - che ck if xmi export works fine */
+            const formattedAgg = removeBlockType(agg).replace(/[^a-zA-Z0-9À-ž_\s]/g
 , ''); // Rimuove i caratteri non validi dall'aggregazione
 
             element_code += `\t\t\t\t<ownedMember name="aggregation_${formattedName.toLowerCase()}" xmi:id="${aggregation_id}" xmi:type="uml:Association">\n`;
@@ -77,7 +84,8 @@ export function createXMIElement(type, name, attributes = [], operations = [], s
     // Aggiungi specializzazioni
     specialisations.forEach(specialisation => {
         const specialisation_id = generateID(specialisation.name);
-        const formattedSpecialisation = removeBlockType(specialisation.name).replace(/[^a-zA-Z0-9À-ž_]/g
+        /* C.M fix 11-17-25 added space to list - che ck if xmi export works fine */
+        const formattedSpecialisation = removeBlockType(specialisation.name).replace(/[^a-zA-Z0-9À-ž_\s]/g
 , ''); // Rimuove i caratteri non validi dalla specializzazione
         if (formattedSpecialisation !== "") {
             element_code += `\t\t\t\t<generalization xmi:id="${specialisation_id}" name="${capitalizeFirstLetter(formattedSpecialisation)}" type="generalization" xmi:type="uml:Property"/>\n`;

@@ -24,7 +24,6 @@ export function convertToUML(xmiString) {
           let generalizations = [];
           let associations = [];
           let aggregations = [];
-
           e.ownedElements.forEach(subElement => {
             if (subElement.type != null && subElement.type.$ref === "generalization") {
               generalizations.push(subElement);
@@ -62,7 +61,7 @@ export function convertToUML(xmiString) {
       umlString += `${element.name.replace(" ", '_')}\n`;
     }
   });
-
+console.log("UML STRING:", umlString);
   umlString += "@enduml";
   return umlString;
 }

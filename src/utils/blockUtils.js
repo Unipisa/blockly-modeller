@@ -1,6 +1,7 @@
 import { ws } from "../runner/runner.js";
 import { showCustomAlert } from "./alerts.js";
 import { getAllActorsBlocksinWs } from "../listeners/index.js";
+import { rebuildDynamicDropdowns } from "../runner/components/BLOCKLY/index.js";
 
 export const removeBlockType = (name) => {
   return name.replace(/\s*\(.*?\)\s*/g, "");
@@ -55,10 +56,13 @@ export const defaultBlockAlreadyExists = (name, currentBlock) => {
 };
 
 
-export const reset = (blockName, type, isDeleted = false, ws) => {
+export const reset = (blockId,blockName, type, isDeleted = false, ws) => {
   let blocks = ws.getAllBlocks(true);
+  rebuildDynamicDropdowns(ws);
+
+//manage all ASSOCIATIONS
   blocks.forEach((block) => {
-    const fields = ["ASSOCIATIONS", "AGGREGATION"];
+    const fields = ["ASSOCIATIONS","AGGREGATION"];
     fields.forEach((field) => {
       const fieldValue = block.getFieldValue(field)?.toLowerCase();
       if (
@@ -67,7 +71,18 @@ export const reset = (blockName, type, isDeleted = false, ws) => {
           fieldValue ===
             (blockName.toLowerCase() + " (" + type + ")").toLowerCase())
       ) {
-        block.setFieldValue("NONE", field);
+          console.log("Resetting associations for block:", blockName, "of type:", type, "in ws:", ws);
+
+        let action = isDeleted ? "eliminato" : "modificato";
+
+        if(action === "eliminato") {
+          block.setFieldValue("NONE", field);
+        }
+        else {
+        const blockRenamed = ws.getBlockById(blockId);
+        const newName = blockRenamed.getFieldValue("NAME");
+        //block.setFieldValue("NONE", field);
+
         let activityName = block.getFieldValue("NAME");
         let blockType = type
           .replace("_", " ")
@@ -79,13 +94,49 @@ export const reset = (blockName, type, isDeleted = false, ws) => {
           containerBlockType === "Custom Operation"
             ? "attività"
             : containerBlockType;
-        let action = isDeleted ? "eliminato" : "modificato";
-        showCustomAlert(
-          `ATTENZIONE!\n\nHai ${action} il blocco ${blockType} collegato al blocco ${containerName} "${activityName}".\nIMPORTANTE: Ricorda di riselezionare il collegamento tra il campo aggiornato e ${containerName}.\n`
-        );
+
+        const mfield = block.getField('ASSOCIATIONS') || block.getField('AGGREGATION'); 
+        const options = mfield.getOptions();   // ← HERE 
+        
+        const blockTypeStripped = blockType.replaceAll(" ", "_");
+
+        if (block.getField('ASSOCIATIONS')) var target = (`${newName} (${blockTypeStripped})`).toLowerCase()
+          else  var target = newName;
+        console.log(`Resetting field ${field} of block id ${block} with ${newName}`);
+        console.log(`Resetting target ${target}`);
+
+        let foundValue = null;
+
+        for (const [label, value] of options) {
+          console.log(`Checking option label: ${label} and value: ${value}`);
+        if (label.toLowerCase() === target || value.toLowerCase() === target ) {
+            console.log(`cfr ${label.toLowerCase()} with ${target}`);
+            console.log(`setValue ${value} to ${field}`);
+
+            //block.setFieldValue(value, field); 
+            foundValue = value;
+            break       
+        }
+        //else {
+        //    block.setFieldValue(`NONE`, field);
+        //}
+      }
+
+      if (foundValue) {
+  console.log(`Setting ${field} to matched value: ${foundValue}`);
+  block.setFieldValue(foundValue, field);
+} else {
+  console.log(`No match found — setting ${field} to NONE`);
+  block.setFieldValue("NONE", field);
+}
+
+      }
+
       }
     });
   });
+
+
 };
 
 
@@ -140,5 +191,4 @@ export function onTextFieldChange(event) {
         }
       }
     }
-    console.log('nameArray aggiornato da removemissing:', nameArray);
   }

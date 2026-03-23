@@ -22,13 +22,13 @@ export function onWorkspaceChange(event, ws) {
         if (
           [
             "custom_actor",
-            "custom_resource",
+            "natural_resource",
             "custom_tool",
             "custom_digital",
             "custom_digital_component",
           ].includes(type)
         ) {
-          reset(oldValue, type, false, ws);
+          reset(event.blockId,oldValue, type, false, ws);
         }
         if (blockAlreadyInWs(newValue, type, ws)) {
           hasChanged = true;
@@ -44,7 +44,7 @@ export function onWorkspaceChange(event, ws) {
           .querySelector('field[name="NAME"]')
           .textContent.toLowerCase();
         let type = block.getAttribute("type");
-          reset(oldName, type, true, ws);
+          reset(event.blockId,oldName, type, true, ws);
       }
     } else if (
       (event.type === Blockly.Events.CLICK ||

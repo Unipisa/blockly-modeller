@@ -10,6 +10,8 @@ import { addBlockDeleteChangeListener } from '../listeners/blockDeleteChangeList
 import { has } from "underscore";
 import { logBlocklyEvent } from "../utils/logger.js";
 import { Alert_div,closeCustomAlert } from "../utils/alerts.js"
+import {metamodel} from '../blocks/metamodel/metamodel.js';
+
 
 
 export const xmlText =
@@ -172,6 +174,8 @@ myLayout.registerComponent( 'Blockly', function( container, componentState ){
 
       blocklyInit();
 
+
+
       document.addEventListener('DOMContentLoaded', (event) => {
       
       COMPONENTS.BLOCKLY.addButtonDownload('customTitle', ws);
@@ -226,6 +230,9 @@ myLayout.on('stateChanged', function() {
      });
 
 
+     const blocklyMetamodel = exportMetamodelJSON(ws, toolbox);
+
+     console.log("metamodel",blocklyMetamodel);
 
     });
 
@@ -249,7 +256,6 @@ myLayout.registerComponent( 'Structure', function( container, componentState ){
   container.getElement().html(  componentState.label  );
 
   document.addEventListener('blocklyCodeGeneratedUML', (event) => {
-    
     const xmiWS = GENERATORS.XMI.convertToXMI(event.detail);
 
 
@@ -286,54 +292,6 @@ myLayout.registerComponent( 'Goal', function( container, componentState ){
 
   document.addEventListener('blocklyCodeGeneratedISTAR', (event) => {
 
-  //TODO CANCELLARE: sostituito istarstatement con event.detail che deve contenere il json in formato iStar
-  /*
-      var istarstatement = {
-        "actors": [
-            {
-                "id": "dddd",
-                "text": "actor",
-                "type": "istar.Actor",
-                "x": 15,
-                "y": 10,
-                "customProperties": {
-                    "description": ""
-                },
-                "nodes": [
-                    {
-                        "id": "99999999",
-                        "text": "activity",
-                        "type": "istar.Task",
-                        "x": 80,
-                        "y": 140,
-                        "customProperties": {
-                            "Description": ""
-                        }
-                    }
-                ]
-            }
-        ],
-        "dependencies": [],
-        "orphans": [],
-        "links": [],
-        "display": {},
-        "tool": "pistar.2.1.0",
-        "istar": "2.0",
-        "saveDate": "Fri, 03 May 2024 21:16:31 GMT",
-        "diagram": {
-            "width": 600,
-            "height": 300,
-            "customProperties": {
-                "Description": ""
-            }
-        }
-    }
-
-    COMPONENTS.ISTAR.view(istarstatement)
-
-    */
-
-    //AGGIUNTO:
     const istarDiv = document.getElementById('codeOutputiStar');
     if (istarDiv) {
         COMPONENTS.ISTAR.view(VIEWS.displayISTAR(event.detail)); 
@@ -385,6 +343,7 @@ myLayout.init();
 
 
 
+
 // Assume 'layout' is your GoldenLayout instance
 myLayout.on('stateChanged', function() {
   //console.log('Inspecting all items:', myLayout.root.getItemsByType('component'));
@@ -396,5 +355,13 @@ myLayout.on('stateChanged', function() {
 
 
 };
+
+
+
+// Call after workspace is ready
+document.addEventListener("blocklyWorkspaceReady", (event) => {
+  const ws = event.detail;
+  addUndoRedoButtons(ws);
+});
 
 

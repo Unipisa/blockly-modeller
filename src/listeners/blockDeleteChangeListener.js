@@ -3,6 +3,7 @@ import Blockly from 'blockly';
 import { generateID } from '../utils/utils.js';
 import { removeMissingBlocks } from '../utils/blockUtils.js';
 import { showCustomAlert, instructions } from "../utils/alerts.js";
+import { rebuildDynamicDropdowns } from "../runner/components/BLOCKLY/index.js";
 
 var nameBlockInWS = {};
 var nameCustomDigitalInWS = [];
@@ -46,7 +47,7 @@ export function addBlockDeleteChangeListener(ws) {
       let blocksIdInWs = [];
 
       let blockClass = [
-        'default_actor', 'custom_actor', 'field_resource', 'water_resource', 'custom_resource',
+        'default_actor', 'custom_actor', 'field_resource', 'water_resource', 'natural_resource',
         'irrigation_tool', 'custom_tool', 'dss_infrastructure', 'custom_digital', 'wsn',
         'internet_gateway', 'dss_software', 'custom_digital_component'
       ];
@@ -71,16 +72,15 @@ export function addBlockDeleteChangeListener(ws) {
       removeMissingBlocks(nameBlockInWS, blockClass, ws);
       removeMissingBlocks(nameCustomDigitalInWS, ['custom_digital'], ws);
 
-
       runCode();
     }
 
       if (e.type === Blockly.Events.TOOLBOX_ITEM_SELECT) {
         const selectedCategoryName = e.newItem; // The name of the selected category
-        console.log('Selected toolbox category:', e.newItem);
+        //console.log('Selected toolbox category:', e.newItem);
     
 
-        if (selectedCategoryName === 'USER TASKS') {
+        if (selectedCategoryName === 'USER TASK') {
   
           showCustomAlert(
             instructions
@@ -95,7 +95,7 @@ const toolbox = ws.getToolbox();
 
 const toolboxItems = Array.from(toolbox.getToolboxItems());
 
-console.log(toolboxItems);
+//console.log(toolboxItems);
 const categoryName = 'USER TASKS';  // Replace with the category name you want to click on
 
 // Find the toolbox item in the toolbox items array
@@ -130,6 +130,10 @@ if (toolboxItem) {
   
   
   });
+
+queueMicrotask(() => {
+  rebuildDynamicDropdowns(ws);
+});
 }
 
 export function getAllActorsBlocksinWs() {
@@ -167,3 +171,56 @@ export function getAllActorsAndDigitalActorsInWs() {
 
   return className;
 }
+
+export function getAllClassBlocksinWs_NEW() {
+  return Object.values(nameBlockInWS)
+    .filter(entry => entry.name && entry.name.trim() !== "")  // remove empty names
+    .map(entry => {
+      const name = entry.name;
+      const type = entry.type;
+
+      const label = `${name} (${type})`;
+      const value = `${name} (${type})`.toUpperCase();
+
+      return { name, type, label, value };
+    });
+}
+
+export function getAllAggregationBlocksinWs_NEW() {
+  return Object.values(nameBlockInWS)
+    .filter(entry => entry.type === "custom_digital" || entry.type === "custom_digital_component"  &&
+      entry.name && entry.name.trim() !== "")
+    .map(entry => {
+      const name = entry.name;
+      const type = entry.type;
+      const label = `${name}`;
+      const value = `${name}`.toUpperCase();
+      return { name, type, label, value };
+    });
+}
+
+export function getAllClassBlocksinWs_NEW2() {
+  return Object.values(nameBlockInWS).map(entry => {
+    const name = entry.name;
+    const type = entry.type;
+
+    const label = `${name} (${type})`;
+    const value = `${name} (${type})`.toUpperCase();
+
+    return { name, type, label, value };
+  });
+}
+
+
+export function getAllAggregationBlocksinWs_NEW2() {
+  return Object.values(nameBlockInWS)
+    .filter(entry => entry.type === "custom_digital" || entry.type === "custom_digital_component")
+    .map(entry => {
+      const name = entry.name;
+      const type = entry.type;
+      const label = `${name}`;
+      const value = `${name}`.toUpperCase();
+      return { name, type, label, value };
+    });
+}
+

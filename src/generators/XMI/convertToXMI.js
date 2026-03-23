@@ -10,8 +10,6 @@ export function convertToXMI(json) {
     let model_data = `\t<uml:Model xmi:id="${model_id}" xmi:type="uml:Model" name="RootModel">\n`;
     let pack_data = `\t\t<packagedElement xmi:id="${pack_id}" name="BlocklyModel" visibility="public" xmi:type="uml:Model">\n`;
     const close = '</xmi:XMI>\n';
-
-    console.log('json');
     
     if(json.blocks[0].actors){
     // Aggiungi attori
