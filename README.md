@@ -19,7 +19,4 @@ Try the demo: <https://unipisa.github.io/blockly-modeller/>
 
 <h3>Video demo</h3
 
-<video width="1392" controls poster="layout-modeller.png">
-  <source src="ModeLLer-demo.m4v" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+<a href="ModeLLer-demo.m4">Video demo</a>
