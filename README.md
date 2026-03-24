@@ -19,5 +19,7 @@ Try the demo: <https://unipisa.github.io/blockly-modeller/>
 
 <h3>Video demo</h3
 
-https://github.com/Unipisa/blockly-UML-modeller/assets/76447624/fbc104ef-7100-4d1d-91f7-856071e24a4d
-
+<video width="1392" controls poster="layout-modeller.png">
+  <source src="ModeLLer-demo.m4v" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
