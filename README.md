@@ -15,8 +15,3 @@ AI-based features support the model generation through three components: a diagr
 <h3>Working demo</h3>
 
 Try the demo: <https://unipisa.github.io/blockly-modeller/>
-
-
-<h3>Video demo</h3
-
-<a href="ModeLLer-demo.m4">Video demo</a>
